@@ -15,3 +15,10 @@ selenium-debug.log
 *.ntvs*
 *.njsproj
 *.sln
+
+# Semantic UI stuff
+semantic/dist/components
+semantic/dist/themes/*
+!semantic/dist/*.js
+!semantic/dist/*.css
+!semantic/dist/themes/default/
