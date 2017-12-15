@@ -3,6 +3,8 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router'
+import '../semantic/dist/semantic.css'
+import './assets/site.css'
 
 import {store} from './store/store'
 
