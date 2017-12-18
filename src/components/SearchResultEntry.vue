@@ -12,19 +12,19 @@
       </div>
       <div class="two wide right aligned column">
         <div class="ui small image">
-          <img src="/assets/weizen_icon.png">
+          <img src="../assets/weizen_icon.png">
         </div>
       </div>
     </div>
   </div>
   <div class="ui secondary segment">
     <div class="ui buttons">
-      <button class="compact ui basic button">MORE INFORMATION</button>
-      <button class="compact ui basic button">SHARE</button>
-      <button class="compact ui basic button">SELECT</button>
-      <button class="compact ui basic button">PREPROCESS</button>
+      <button class="compact ui basic button">More Information</button>
+      <button class="compact ui basic button">Share</button>
+      <button class="compact ui basic button">Select</button>
+      <button class="compact ui basic button">Preprocess</button>
       <a class="item" href="store.html" target="">
-        <button class="compact ui basic button">STORE</button>
+        <button class="compact ui basic button">Store</button>
         </a>
     </div>
   </div>
