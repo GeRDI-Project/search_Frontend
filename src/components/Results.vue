@@ -1,29 +1,25 @@
 <template>
 <div class="ui container">
   <nav-menu/>
-  <img src="../assets/GeRDI-Logo.svg"/>
   <div class="mask">
     <search-mask/>
+  </div>
+  <div class="ui grid">
+    <div class="four wide column">
+      <search-facetes/>
+    </div>
+    <search-result-list/>
   </div>
 </div>
 </template>
 
 <script>
 export default {
-  name: 'start'
+  name: 'results'
 }
 </script>
 
 <style scoped>
-img {
-  height: 350px;
-  margin: auto;
-  display: block;
-}
-
-.container {
-}
-
 .mask {
   margin-top: 30px;
   margin-bottom: 30px;

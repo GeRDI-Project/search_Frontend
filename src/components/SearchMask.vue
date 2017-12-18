@@ -9,7 +9,6 @@
 </template>
 
 <script>
-/*
 export default {
   name: 'searchmask',
   props: ['loading'],
@@ -28,13 +27,14 @@ export default {
   },
   methods: {
     checkValue () {
-      this.inputvalue = this.$route.query.q
+      //this.inputvalue = this.$route.query.q
     },
     search () {
-      if (this.inputvalue != '') this.$router.push({ name: 'Results', query: { q: this.inputvalue }})
+      //if (this.inputvalue != '')
+      this.$router.push({ name: 'results'})//, query: { q: this.inputvalue }})
     }
   }
-} */
+}
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
@@ -42,6 +42,12 @@ export default {
 .glyphicon-search {
   pointer-events: initial;
 }
+
+i {
+  // background-color: #0000FF;
+  color: #000;
+}
+
 a.form-control-feedback {
   text-decoration: none;
   cursor: pointer;
