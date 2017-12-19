@@ -1,6 +1,5 @@
 <template>
 <div class="ui container">
-  <nav-menu/>
   <div class="mask">
     <search-mask/>
   </div>
@@ -21,7 +20,7 @@ export default {
 
 <style scoped>
 .mask {
-  margin-top: 30px;
-  margin-bottom: 30px;
+  margin-top: 1rem;
+  margin-bottom: 2rem;
 }
 </style>

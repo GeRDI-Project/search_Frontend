@@ -27,11 +27,11 @@ export default {
   },
   methods: {
     checkValue () {
-      //this.inputvalue = this.$route.query.q
+      // this.inputvalue = this.$route.query.q
     },
     search () {
-      //if (this.inputvalue != '')
-      this.$router.push({ name: 'results'})//, query: { q: this.inputvalue }})
+      // if (this.inputvalue != '')
+      this.$router.push({ name: 'results' })//, query: { q: this.inputvalue }})
     }
   }
 }

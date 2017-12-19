@@ -1,6 +1,5 @@
 <template>
 <div class="ui container">
-  <nav-menu/>
   <img src="../assets/GeRDI-Logo.svg"/>
   <div class="mask">
     <search-mask/>
@@ -16,8 +15,11 @@ export default {
 
 <style scoped>
 img {
-  height: 350px;
-  margin: auto;
+  height: 200px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 70px;
+  margin-bottom: 70px;
   display: block;
 }
 

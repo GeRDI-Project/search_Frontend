@@ -6,7 +6,9 @@ import router from './router'
 import '../semantic/dist/semantic.css'
 import './assets/site.css'
 
-import {store} from './store/store'
+import {
+  store
+} from './store/store'
 
 Vue.config.productionTip = false
 
@@ -16,5 +18,7 @@ new Vue({
   store: store,
   router,
   template: '<App/>',
-  components: { App }
+  components: {
+    App
+  }
 })
