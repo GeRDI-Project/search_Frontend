@@ -1,9 +1,7 @@
 <template>
 <div class="ui container">
-  <img src="../assets/GeRDI-Logo.svg"/>
-  <div class="mask">
-    <search-mask/>
-  </div>
+  <img src="../assets/GeRDI-Logo.svg" id="logo" />
+  <search-mask/>
 </div>
 </template>
 
@@ -14,20 +12,10 @@ export default {
 </script>
 
 <style scoped>
-img {
-  height: 200px;
-  margin-left: auto;
-  margin-right: auto;
-  margin-top: 70px;
-  margin-bottom: 70px;
+#logo {
+  width: 90%;
+  max-width: 450px;
+  margin: 4rem auto 4rem auto;
   display: block;
-}
-
-.container {
-}
-
-.mask {
-  margin-top: 30px;
-  margin-bottom: 30px;
 }
 </style>
