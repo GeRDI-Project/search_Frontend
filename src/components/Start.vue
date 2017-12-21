@@ -1,5 +1,5 @@
 <template>
-<div class="ui container">
+<div class="">
   <img src="../assets/GeRDI-Logo.svg" id="logo" />
   <search-mask/>
 </div>

@@ -1,20 +1,24 @@
 <template>
-<div class="item">
-  <div class="content">
-    <div class="header">{{ title }}</div>
-    <div class="meta">{{ category }}</div>
-    <div class="description">{{ infoText }}</div>
-    <div class="extra">
-      <search-result-entry-menu/>
-    </div>
-  </div>
-</div>
+<b-card tag="li">
+  <b-media right-align vertical-align="top">
+    <b-img slot="aside" blank blank-color="#ccc" width="80" alt="placeholder" />
+    <h5 class="mt-0 mb-1">{{ title }}</h5>
+    <h6 class="text-muted">{{ category }}</h6> {{ infoText }}
+    </p>
+    <b-nav type="dark">
+      <b-nav-item>Active</b-nav-item>
+      <b-nav-item>Link</b-nav-item>
+      <b-nav-item>Another Link</b-nav-item>
+      <b-nav-item>Disabled</b-nav-item>
+    </b-nav>
+  </b-media>
+</b-card>
 </template>
 
 <script>
 export default {
   name: 'searchResultEntry',
-  data () {
+  data() {
     return {
       title: 'Brazil Nuts, with Shell',
       category: 'Crops (Production)',
@@ -25,4 +29,7 @@ export default {
 </script>
 
 <style scoped>
+.card {
+  margin-top: 1rem;
+}
 </style>

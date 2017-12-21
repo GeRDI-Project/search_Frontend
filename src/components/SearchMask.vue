@@ -1,11 +1,14 @@
 <template>
-    <form v-on:submit.prevent="search">
-      <div class="ui icon fluid large input" v-bind:class="{ loading: loading }">
-        <input type="text" v-model="inputvalue" :placeholder="placeholder" autofocus>
-        <i v-if="!loading" class="circular search icon link" v-on:click="search"></i>
-        <i v-if="loading" class="loading icon"></i>
-      </div>
-    </form>
+<div>
+  <b-form @submit="search">
+    <b-input-group>
+      <b-input id="inlineFormInputGroupUsername2" placeholder="Enter your search query here" />
+      <b-input-group-button slot="right">
+        <b-btn @click="search" variant="primary">Search</b-btn>
+      </b-input-group-button>
+    </b-input-group>
+  </b-form>
+</div>
 </template>
 
 <script>
@@ -31,7 +34,9 @@ export default {
     },
     search () {
       // if (this.inputvalue != '')
-      this.$router.push({ name: 'results' })//, query: { q: this.inputvalue }})
+      this.$router.push({
+        name: 'results'
+      }) //, query: { q: this.inputvalue }})
     }
   }
 }
@@ -39,7 +44,6 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-
 i {
   // background-color: #0000FF;
   color: #000;
@@ -49,12 +53,14 @@ a.form-control-feedback {
   text-decoration: none;
   cursor: pointer;
 }
-.ui.fluid.input input {
-}
+
+.ui.fluid.input input {}
+
 .ui.fluid.input input:focus {
   box-shadow: 0 4px 7px 2px rgba(0, 0, 0, 0.1);
   border-color: rgba(0, 0, 0, 0.1);
 }
+
 .ui.fluid.input input:hover {
   box-shadow: 0 4px 7px 2px rgba(0, 0, 0, 0.1);
   border-color: rgba(0, 0, 0, 0.1);

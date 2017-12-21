@@ -1,80 +1,76 @@
 <template>
-<div class="ui styled accordion">
-  <div class="title">
-    <i class="dropdown icon"></i> Research Field
-  </div>
-  <div class="content">
-    <p>A dog is a type of domesticated animal. Known for its loyalty and faithfulness, it can be found as a welcome guest in many households across the world.</p>
-  </div>
-  <div class="title">
-    <i class="active dropdown icon"></i> Data Provider
-  </div>
-  <div class="active content">
-    <div class="ui form">
-      <div class="grouped fields">
-        <div class="field">
-          <div class="ui checkbox">
-            <input type="checkbox" name="example">
-            <label>FaoStat</label>
-          </div>
-        </div>
-        <div class="field">
-          <div class="ui checkbox">
-            <input type="checkbox" name="example">
-            <label>SOEP</label>
-          </div>
-        </div>
-        <div class="field">
-          <div class="ui checkbox">
-            <input type="checkbox" name="example">
-            <label>Pangaea</label>
-          </div>
-        </div>
-        <div class="field">
-          <div class="ui checkbox">
-            <input type="checkbox" name="example">
-            <label>GIS</label>
-          </div>
-        </div>
-      </div>
-      <div class="ui submit small button">Apply</div>
-    </div>
-  </div>
-  <div class="title">
-    <i class="dropdown icon"></i> Location
-  </div>
-  <div class="content">
-    Stuff
-  </div>
-  <div class="title">
-    <i class="dropdown icon"></i> Language
-  </div>
-  <div class="content">
-    Stuff
-  </div>
-  <div class="title">
-    <i class="dropdown icon"></i> Data Collection Period
-  </div>
-  <div class="content">
-    Stuff
-  </div>
-  <div class="title">
-    <i class="dropdown icon"></i> Publication Year
-  </div>
-  <div class="content">
-    Stuff
-  </div>
-  <div class="title">
-    <i class="dropdown icon"></i> Access
-  </div>
-  <div class="content">
-    Stuff
-  </div>
-  <div class="title">
-    <i class="dropdown icon"></i> Terms of Reuse
-  </div>
-  <div class="content">
-    Stuff
-  </div>
-</div>
+<b-card title="Filters">
+  <b-nav vertical>
+    <b-nav-item v-b-toggle.collapse1>Research Field</b-nav-item>
+    <b-collapse id="collapse1" class="mt-2">
+      <p class="card-text">{{ text }}</p>
+    </b-collapse>
+
+    <b-nav-item v-b-toggle.collapse2>Location</b-nav-item>
+    <b-collapse id="collapse2" class="mt-2">
+      <p class="card-text">{{ text }}</p>
+    </b-collapse>
+
+    <b-nav-item v-b-toggle.collapse3>Data Provider</b-nav-item>
+    <b-collapse visible id="collapse3" class="mt-2">
+      <b-form>
+        <b-form-checkbox-group stacked :options="options" />
+        <b-button type="submit" variant="primary" size="sm">Apply</b-button>
+      </b-form>
+    </b-collapse>
+
+    <b-nav-item v-b-toggle.collapse4>Language</b-nav-item>
+    <b-collapse id="collapse4" class="mt-2">
+      <p class="card-text">{{ text }}</p>
+    </b-collapse>
+
+    <b-nav-item v-b-toggle.collapse5>Data Collection Period</b-nav-item>
+    <b-collapse id="collapse5" class="mt-2">
+      <p class="card-text">{{ text }}</p>
+    </b-collapse>
+
+    <b-nav-item v-b-toggle.collapse6>Publication Year</b-nav-item>
+    <b-collapse id="collapse6" class="mt-2">
+      <p class="card-text">{{ text }}</p>
+    </b-collapse>
+
+    <b-nav-item v-b-toggle.collapse7>Access</b-nav-item>
+    <b-collapse id="collapse7" class="mt-2">
+      <p class="card-text">{{ text }}</p>
+    </b-collapse>
+
+    <b-nav-item v-b-toggle.collapse8>Terms of Reuse</b-nav-item>
+    <b-collapse id="collapse8" class="mt-2">
+      <p class="card-text">{{ text }}</p>
+    </b-collapse>
+  </b-nav>
+</b-card>
 </template>
+
+<script>
+export default {
+  data() {
+    return {
+      showCollapse: true,
+      text: "This is a super fancy placeholder",
+      options: [{
+          text: 'FAOStat',
+          value: '1'
+        },
+        {
+          text: 'SOEP',
+          value: '2'
+        },
+        {
+          text: 'Pangaea',
+          value: '3'
+        },
+        {
+          text: 'GIS',
+          value: '4'
+        }
+      ]
+    }
+  }
+}
+</script>

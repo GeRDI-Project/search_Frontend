@@ -1,10 +1,9 @@
 <template>
-<div class="twelve wide column">
-  <h5>{{ numResults }} results for "nuts production quantity" found</h5>
-  <div class="ui divided items">
+<div>
+  <h6>{{ numResults }} results for "nuts production quantity" found</h6>
+  <ul class="list-unstyled">
     <search-result-entry v-for="item in 10" />
-    <pagination-bar v-if="totalPages > 1" :totalPages="totalPages" :currentPage="currentPage" />
-  </div>
+  </ul>
 </div>
 </template>
 
