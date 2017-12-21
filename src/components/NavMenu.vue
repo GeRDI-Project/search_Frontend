@@ -8,7 +8,7 @@
     <b-collapse is-nav id="nav_collapse">
 
       <b-navbar-nav>
-        <b-nav-item href="#" active>Search</b-nav-item>
+        <b-nav-item href="/" active>Search</b-nav-item>
         <b-nav-item href="#">Select</b-nav-item>
         <b-nav-item href="#">Store</b-nav-item>
         <b-nav-item href="#">Preprocess</b-nav-item>
