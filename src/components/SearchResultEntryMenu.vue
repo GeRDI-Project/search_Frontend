@@ -1,11 +1,10 @@
 <template>
-<div class="ui secondary segment">
+<div class=" extra content">
   <div class="ui buttons">
-    <button class="compact ui basic button">More Information</button>
-    <button class="compact ui basic button">Share</button>
-    <button class="compact ui basic button">Select</button>
-    <button class="compact ui basic button">Preprocess</button>
-    <button class="compact ui basic button"><a class="item" href="store.html" target="">Store</a></button>
+    <button class="ui basic button">Share</button>
+    <button class="ui basic button">Select</button>
+    <button class="ui basic button">Preprocess</button>
+    <button class="ui basic button" href="" target="">Store</button>
   </div>
 </div>
 </template>

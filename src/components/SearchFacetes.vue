@@ -1,87 +1,80 @@
 <template>
-<div class="ui vertical accordion menu">
-  <div class="item">
-    <a class="title">
-       <i class="dropdown icon"></i>
-       <h5 class="ui header">Research Field</h5>
-    </a>
+<div class="ui styled accordion">
+  <div class="title">
+    <i class="dropdown icon"></i> Research Field
   </div>
-  <div class="item">
-    <a class="title">
-      <i class="dropdown icon"></i>
-      <h5 class="ui header">Data Provider</h5>
-    </a>
-    <div class="active content">
-      <div class="ui form">
-        <div class="grouped fields">
-          <div class="field">
-            <div class="ui checkbox">
-              <input type="checkbox" name="small">
-              <label>FAOSTAT</label>
-            </div>
+  <div class="content">
+    <p>A dog is a type of domesticated animal. Known for its loyalty and faithfulness, it can be found as a welcome guest in many households across the world.</p>
+  </div>
+  <div class="title">
+    <i class="active dropdown icon"></i> Data Provider
+  </div>
+  <div class="active content">
+    <div class="ui form">
+      <div class="grouped fields">
+        <div class="field">
+          <div class="ui checkbox">
+            <input type="checkbox" name="example">
+            <label>FaoStat</label>
           </div>
-          <div class="field">
-            <div class="ui checkbox">
-              <input type="checkbox" name="medium">
-              <label>SOEP</label>
-            </div>
+        </div>
+        <div class="field">
+          <div class="ui checkbox">
+            <input type="checkbox" name="example">
+            <label>SOEP</label>
           </div>
-          <div class="field">
-            <div class="ui checkbox">
-              <input type="checkbox" name="large">
-              <label>PANGAEA</label>
-            </div>
+        </div>
+        <div class="field">
+          <div class="ui checkbox">
+            <input type="checkbox" name="example">
+            <label>Pangaea</label>
           </div>
-          <div class="field">
-            <div class="ui checkbox">
-              <input type="checkbox" name="x-large">
-              <label>GIS</label>
-            </div>
-          </div>
-          <div class="field">
-            <a class="item" href="search_results_filtered.html" target="">
-              <button class="compact ui basic button">APPLY</button>
-            </a>
+        </div>
+        <div class="field">
+          <div class="ui checkbox">
+            <input type="checkbox" name="example">
+            <label>GIS</label>
           </div>
         </div>
       </div>
+      <div class="ui submit small button">Apply</div>
     </div>
   </div>
-  <div class="item">
-    <a class="title">
-      <i class="dropdown icon"></i>
-      <h5 class="ui header">Language</h5>
-    </a>
+  <div class="title">
+    <i class="dropdown icon"></i> Location
   </div>
-  <div class="item">
-    <a class="title">
-      <i class="dropdown icon"></i>
-      <h5 class="ui header">Location</h5>
-    </a>
+  <div class="content">
+    Stuff
   </div>
-  <div class="item">
-    <a class="title">
-      <i class="dropdown icon"></i>
-      <h5 class="ui header">Data Collection Period</h5>
-    </a>
+  <div class="title">
+    <i class="dropdown icon"></i> Language
   </div>
-  <div class="item">
-    <a class="title">
-      <i class="dropdown icon"></i>
-      <h5 class="ui header">Publication Year</h5>
-    </a>
+  <div class="content">
+    Stuff
   </div>
-  <div class="item">
-    <a class="title">
-      <i class="dropdown icon"></i>
-      <h5 class="ui header">Access</h5>
-    </a>
+  <div class="title">
+    <i class="dropdown icon"></i> Data Collection Period
   </div>
-  <div class="item">
-    <a class="title">
-      <i class="dropdown icon"></i>
-      <h5 class="ui header">Terms of Re-use</h5>
-    </a>
+  <div class="content">
+    Stuff
+  </div>
+  <div class="title">
+    <i class="dropdown icon"></i> Publication Year
+  </div>
+  <div class="content">
+    Stuff
+  </div>
+  <div class="title">
+    <i class="dropdown icon"></i> Access
+  </div>
+  <div class="content">
+    Stuff
+  </div>
+  <div class="title">
+    <i class="dropdown icon"></i> Terms of Reuse
+  </div>
+  <div class="content">
+    Stuff
   </div>
 </div>
 </template>
