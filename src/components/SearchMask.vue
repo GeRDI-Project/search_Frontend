@@ -39,9 +39,6 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-.glyphicon-search {
-  pointer-events: initial;
-}
 
 i {
   // background-color: #0000FF;
@@ -53,15 +50,13 @@ a.form-control-feedback {
   cursor: pointer;
 }
 .ui.fluid.input input {
-  box-shadow: 0px 3px 6px 0px rgba(0, 0, 0, 0.15);
-  border-color: rgba(0, 0, 0, 0.1);
 }
 .ui.fluid.input input:focus {
-  box-shadow: 0 4px 7px 2px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 7px 2px rgba(0, 0, 0, 0.1);
   border-color: rgba(0, 0, 0, 0.1);
 }
 .ui.fluid.input input:hover {
-  box-shadow: 0 4px 7px 2px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 7px 2px rgba(0, 0, 0, 0.1);
   border-color: rgba(0, 0, 0, 0.1);
 }
 </style>
