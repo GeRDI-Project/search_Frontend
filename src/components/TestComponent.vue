@@ -30,7 +30,7 @@
 <script>
 export default {
   name: 'TestComponent',
-  data() {
+  data () {
     return {
       msg: 'Test Component for the search frontend of GeRDI'
     }
