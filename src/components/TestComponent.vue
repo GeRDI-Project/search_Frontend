@@ -5,7 +5,7 @@
   <!-- Semantic UI test -->
   <div class="ui centered card">
     <div class="image">
-      <!-- <img src="./src/assets/logo.png"> -->
+      <img src="../assets/kristy.png">
     </div>
     <div class="content">
       <a class="header">Kristy</a>
