@@ -15,39 +15,32 @@
 
 
 <script>
+/* eslint-disable */
 import axios from 'axios'
 
 export default {
-  data () {
+  data() {
     return {
       posts: [],
       errors: []
     }
   },
 
-  mounted () {
-    axios({
-      method: 'get',
-      url: `https://badwlrz-gerdi04.srv.lrz.de/api/admin/gerdi/_search`,
-      headers: {
-        'Access-Control-Allow-Origin': '*',
-        'Content-Type': 'application/json'
-      },
-      withCredentials: true,
-      auth: {
-        username: 'admin',
-        password: 'DssPfG'
-      }
-    })
+  created() {
+	  axios.get ('https://badwlrz-gerdi04.srv.lrz.de/api/admin/gerdi/_search?q=*', {
+		  headers: {
+			  'Access-Control-Allow-Origin': '*'
+		  },
+		  auth: {
+			  username: 'admin',
+	          password: 'DssPfG'
+		  }
+	  })
       .then((response) => {
-        console.log(response.data)
+        console.log(response.headers)
+		console.log(response.data)
         this.posts = response.data
       })
-      // axios.get(`http://jsonplaceholder.typicode.com/posts`)
-      // .then((response) => {
-      // console.log(response.data)
-      // this.posts = response.data
-      // })
       .catch((error) => {
         console.log(error)
         this.errors.push(error)
