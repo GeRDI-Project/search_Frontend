@@ -52,7 +52,7 @@ export default {
   data() {
     return {
       showCollapse: true,
-      text: "This is a super fancy placeholder",
+      text: 'This is a super fancy placeholder',
       options: [{
           text: 'FAOStat',
           value: '1'

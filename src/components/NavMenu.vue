@@ -9,11 +9,11 @@
 
       <b-navbar-nav>
         <b-nav-item href="/" active>Search</b-nav-item>
-        <b-nav-item href="#">Select</b-nav-item>
-        <b-nav-item href="#">Store</b-nav-item>
-        <b-nav-item href="#">Preprocess</b-nav-item>
-        <b-nav-item href="#">Analyze</b-nav-item>
-        <b-nav-item href="#">Publish</b-nav-item>
+        <b-nav-item href="#" disabled>Select</b-nav-item>
+        <b-nav-item href="#" disabled>Store</b-nav-item>
+        <b-nav-item href="#" disabled>Preprocess</b-nav-item>
+        <b-nav-item href="#" disabled>Analyze</b-nav-item>
+        <b-nav-item href="#" disabled>Publish</b-nav-item>
       </b-navbar-nav>
 
       <!-- Right aligned nav items -->
