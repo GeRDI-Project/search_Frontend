@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+
 import Results from '@/components/Results'
 import SearchResultEntry from '@/components/SearchResultEntry'
 import SearchResultEntryMenu from '@/components/SearchResultEntryMenu'
@@ -10,6 +11,7 @@ import SearchMask from '@/components/SearchMask'
 import Start from '@/components/Start'
 import AppFooter from '@/components/AppFooter'
 import PaginationBar from '@/components/PaginationBar'
+import MinimalAxiosComponent from '@/components/MinimalAxiosComponent'
 
 Vue.use(Router)
 Vue.component('search-result-entry', SearchResultEntry)
@@ -22,8 +24,7 @@ Vue.component('app-footer', AppFooter)
 Vue.component('pagination-bar', PaginationBar)
 
 export default new Router({
-  routes: [
-    {
+  routes: [{
       path: '/results',
       name: 'results',
       component: Results
@@ -32,6 +33,11 @@ export default new Router({
       path: '/',
       name: 'start',
       component: Start
+    },
+    {
+      path: '/axios'
+      name: 'MinimalAxiosComponent',
+      component: MinimalAxiosComponent
     }
   ]
 })
