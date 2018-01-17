@@ -1,8 +1,11 @@
 <template>
-  <div id="app">
-
-    <router-view/>
+<div id="app">
+  <nav-menu/>
+  <div class="container content">
+    <router-view />
   </div>
+  <app-footer/>
+</div>
 </template>
 
 <script>
@@ -11,13 +14,17 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 #app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #bb467a;
-  margin-top: 60px;
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+}
+
+.content {
+  flex: 1;
 }
 </style>
