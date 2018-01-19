@@ -19,7 +19,7 @@ export default {
   data () {
     return {
       // loading: false,
-      currentPage: 7,
+      currentPage: 7
     }
   }
 }

@@ -18,7 +18,7 @@
 <script>
 export default {
   name: 'searchResultEntry',
-  data() {
+  data () {
     return {
       title: 'Brazil Nuts, with Shell',
       category: 'Crops (Production)',
