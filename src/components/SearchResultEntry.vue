@@ -1,16 +1,16 @@
 <template>
 <b-card tag="li">
   <b-media right-align vertical-align="top">
-    <b-img slot="aside" blank blank-color="#ccc" width="80" alt="placeholder" />
-    <h6 class="text-muted">{{ category }}</h6>
+    <b-img class="providerLogo" v-if="hasProviderLogo(result._source.webLinks)" slot="aside" alt="Provider Logo" :src="getProviderLogo(result._source.webLinks)" />
+    <h5><a :href='filterForViewURI(result._source.webLinks)'>{{ result._source.titles[0].value }}</a></h5>
     <br>
-    <div class="publisher" v-if="result._source.publicationYear">
-      {{ showPublicationYear(result._source.publicationYear) }}
+    <div class="publisher" v-if="result._source.publisher">
+      <i>{{ showPublicationYear(result._source.publisher) }}</i>
     </div>
     <br>
     <div class="titels" v-if="result._source.descriptions">
-          {{ showDescription(result._source.descriptions[0]) }}
-        </div>
+      {{ showDescription(result._source.descriptions[0].value) }}
+    </div>
 
   </b-media>
 </b-card>
@@ -22,16 +22,30 @@ export default {
   name: 'search-result-entry',
   props: ['result'],
   data() {
-    return {
-      category: 'Crops (Production)',
-    }
+    return {}
   },
   methods: {
+    filterForViewURI(linksArray) {
+      return linksArray.filter(elem => elem.webLinkType == 'ViewURL')[0].webLinkURI
+    },
     showPublicationYear(year) {
-          return year
+      return year
     },
     showDescription(description) {
-      return description
+      let result = description.replace(/(<([^>]+)>)/ig, '')
+      let limit = 850
+      if (result.length > limit) result = result.substr(0,limit) + ' [...]'
+      return result
+    },
+    hasProviderLogo(linksArray) {
+      let val
+      val = linksArray.filter(elem => elem.webLinkType == 'ProviderLogoURL')
+      return val.length > 0
+    },
+    getProviderLogo(linksArray) {
+      let val
+      val = linksArray.filter(elem => elem.webLinkType == 'ProviderLogoURL')
+      return val[0].webLinkURI
     }
   }
 }
@@ -40,5 +54,10 @@ export default {
 <style scoped>
 .card {
   margin-top: 1rem;
+}
+
+.providerLogo {
+  max-height: 100px;
+  width: auto;
 }
 </style>

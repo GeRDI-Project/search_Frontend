@@ -15,8 +15,8 @@ import 'bootstrap-vue/dist/bootstrap-vue.css'
 Vue.use(BootstrapVue)
 
 Vue.config.productionTip = false
-axios.defaults.baseURL = 'https://badwlrz-gerdi04.srv.lrz.de'
-// axios.defaults.baseURL = 'https://nibi-nd-0.ext.gerdi.research.lrz.de'
+// axios.defaults.baseURL = 'https://badwlrz-gerdi04.srv.lrz.de'
+axios.defaults.baseURL = 'https://nibi-nd-0.ext.gerdi.research.lrz.de'
 
 /* eslint-disable no-new */
 new Vue({
