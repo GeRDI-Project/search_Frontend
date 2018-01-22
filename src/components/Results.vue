@@ -9,7 +9,6 @@
       <b-col cols="12">
         <search-result-entry v-for="result in results" :result="result" :key="result._id"></search-result-entry>
         <br>
-        <!-- <search-result-list/> -->
       </b-col>
     </b-row>
   </b-container>

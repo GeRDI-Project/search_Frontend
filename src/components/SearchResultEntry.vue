@@ -5,7 +5,7 @@
     <h5><a :href='filterForViewURI(result._source.webLinks)'>{{ result._source.titles[0].value }}</a></h5>
     <br>
     <div class="publisher" v-if="result._source.publisher">
-      <i>{{ showPublicationYear(result._source.publisher) }}</i>
+      <i>{{ showPublisher(result._source.publisher) }}</i>
     </div>
     <br>
     <div class="titels" v-if="result._source.descriptions">
@@ -30,6 +30,9 @@ export default {
     },
     showPublicationYear(year) {
       return year
+    },
+    showPublisher(publisher) {
+      return publisher
     },
     showDescription(description) {
       let result = description.replace(/(<([^>]+)>)/ig, '')
