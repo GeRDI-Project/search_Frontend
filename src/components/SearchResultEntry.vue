@@ -41,13 +41,11 @@ export default {
       return result
     },
     hasProviderLogo(linksArray) {
-      let val
-      val = linksArray.filter(elem => elem.webLinkType == 'ProviderLogoURL')
+      let val = linksArray.filter(elem => elem.webLinkType == 'ProviderLogoURL')
       return val.length > 0
     },
     getProviderLogo(linksArray) {
-      let val
-      val = linksArray.filter(elem => elem.webLinkType == 'ProviderLogoURL')
+      let val = linksArray.filter(elem => elem.webLinkType == 'ProviderLogoURL')
       return val[0].webLinkURI
     }
   }

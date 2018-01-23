@@ -12,7 +12,7 @@
       </b-col>
     </b-row>
   </b-container>
-  <b-pagination align="center" size="md" :total-rows="100" v-model="currentPage" :per-page="10" />
+  <b-pagination align="center" size="md" :total-rows="totalFoundDocs" v-model="currentPage" :per-page="numDocsPerPage" @input="paginationInput" />
 </div>
 </div>
 </template>
@@ -27,13 +27,12 @@ export default {
     return {
       // loading: false,
       results: [],
+      totalFoundDocs: 0,
+      numDocsPerPage: 10
       // currentPage: 1
     }
   },
   computed: {
-    totalPages: function() {
-      return Math.ceil(this.totalFoundDocs / 10)
-    },
     currentPage: function() {
       if (this.$route.query.p > 1) {
         return this.$route.query.p
@@ -52,14 +51,24 @@ export default {
     search() {
       const self = this
       self.results = []
-      axios.get('/api/search?q='.concat(encodeURIComponent(this.$route.query.q)).concat("&from=").concat(this.currentPage * 10 - 10))
+      axios.get('/api/search?q='.concat(encodeURIComponent(this.$route.query.q)).concat("&from=").concat(this.currentPage * this.numDocsPerPage - this.numDocsPerPage).concat("&size=").concat(this.numDocsPerPage))
         .then(function(response) {
           self.results = response.data.hits.hits;
+          self.totalFoundDocs = response.data.hits.total;
         })
         .catch(function(error) {
           self.errMsg = error.response;
           console.log(error)
         });
+    },
+    paginationInput(num) {
+      this.$router.push({
+        name: 'results',
+        query: {
+          q: this.$route.query.q,
+          p: num
+        }
+      })
     }
   }
 }
