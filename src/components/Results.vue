@@ -51,10 +51,12 @@ export default {
     search() {
       const self = this
       self.results = []
+      console.log('/api/search?q='.concat(encodeURIComponent(this.$route.query.q)).concat("&from=").concat(this.currentPage * this.numDocsPerPage - this.numDocsPerPage).concat("&size=").concat(this.numDocsPerPage))
       axios.get('/api/search?q='.concat(encodeURIComponent(this.$route.query.q)).concat("&from=").concat(this.currentPage * this.numDocsPerPage - this.numDocsPerPage).concat("&size=").concat(this.numDocsPerPage))
         .then(function(response) {
           self.results = response.data.hits.hits;
           self.totalFoundDocs = response.data.hits.total;
+          console.log(self.totalFoundDocs)
         })
         .catch(function(error) {
           self.errMsg = error.response;

@@ -26,7 +26,10 @@ export default {
   },
   methods: {
     filterForViewURI(linksArray) {
-      return linksArray.filter(elem => elem.webLinkType == 'ViewURL')[0].webLinkURI
+      if(linksArray) {
+        return linksArray.filter(elem => elem.webLinkType == 'ViewURL')[0].webLinkURI
+      }
+      return '#'
     },
     showPublicationYear(year) {
       return year
@@ -41,8 +44,11 @@ export default {
       return result
     },
     hasProviderLogo(linksArray) {
-      let val = linksArray.filter(elem => elem.webLinkType == 'ProviderLogoURL')
-      return val.length > 0
+      if(linksArray) {
+        let val = linksArray.filter(elem => elem.webLinkType == 'ProviderLogoURL')
+        return val.length > 0
+      }
+      return false
     },
     getProviderLogo(linksArray) {
       let val = linksArray.filter(elem => elem.webLinkType == 'ProviderLogoURL')
