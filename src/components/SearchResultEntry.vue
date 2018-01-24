@@ -1,28 +1,58 @@
 <template>
 <b-card tag="li">
   <b-media right-align vertical-align="top">
-    <b-img slot="aside" blank blank-color="#ccc" width="80" alt="placeholder" />
-    <h5 class="mt-0 mb-1">{{ title }}</h5>
-    <h6 class="text-muted">{{ category }}</h6> {{ infoText }}
-    </p>
-    <b-nav type="dark">
-      <b-nav-item>Active</b-nav-item>
-      <b-nav-item>Link</b-nav-item>
-      <b-nav-item>Another Link</b-nav-item>
-      <b-nav-item>Disabled</b-nav-item>
-    </b-nav>
+    <b-img class="providerLogo" v-if="hasProviderLogo(result._source.webLinks)" slot="aside" alt="Provider Logo" :src="getProviderLogo(result._source.webLinks)" />
+    <h5><a :href='filterForViewURI(result._source.webLinks)'>{{ result._source.titles[0].value }}</a></h5>
+    <br>
+    <div class="publisher" v-if="result._source.publisher">
+      <i>{{ showPublisher(result._source.publisher) }}</i>
+    </div>
+    <br>
+    <div class="titels" v-if="result._source.descriptions">
+      {{ showDescription(result._source.descriptions[0].value) }}
+    </div>
+
   </b-media>
 </b-card>
 </template>
 
 <script>
+/* eslint-disable */
 export default {
-  name: 'searchResultEntry',
+  name: 'search-result-entry',
+  props: ['result'],
   data() {
-    return {
-      title: 'Brazil Nuts, with Shell',
-      category: 'Crops (Production)',
-      infoText: 'Crop statistics are recorded for 173 products, covering the following categories: Crops Primary, Fibre Crops Crop statistics are recorded for 173 products, covering the following categories: Crops Primary, Fibre Crops Primary, Cereals, Coarse Grain, Citrus Fruit, Fruit, Jute & Jute-like Fibres, Oilcakes Equivalent, Oil crops Primary, Pulses, Roots and Tubers, Treenuts and Vegetables and Melons. Data are expressed in terms of area harvested, production quantity, yield and seed quantity.'
+    return {}
+  },
+  methods: {
+    filterForViewURI(linksArray) {
+      if(linksArray) {
+        return linksArray.filter(elem => elem.webLinkType == 'ViewURL')[0].webLinkURI
+      }
+      return '#'
+    },
+    showPublicationYear(year) {
+      return year
+    },
+    showPublisher(publisher) {
+      return publisher
+    },
+    showDescription(description) {
+      let result = description.replace(/(<([^>]+)>)/ig, '')
+      let limit = 850
+      if (result.length > limit) result = result.substr(0,limit) + ' [...]'
+      return result
+    },
+    hasProviderLogo(linksArray) {
+      if(linksArray) {
+        let val = linksArray.filter(elem => elem.webLinkType == 'ProviderLogoURL')
+        return val.length > 0
+      }
+      return false
+    },
+    getProviderLogo(linksArray) {
+      let val = linksArray.filter(elem => elem.webLinkType == 'ProviderLogoURL')
+      return val[0].webLinkURI
     }
   }
 }
@@ -31,5 +61,10 @@ export default {
 <style scoped>
 .card {
   margin-top: 1rem;
+}
+
+.providerLogo {
+  max-height: 100px;
+  width: auto;
 }
 </style>
