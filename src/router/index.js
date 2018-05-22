@@ -1,16 +1,25 @@
+/* eslint-disable */
 import Vue from 'vue'
 import Router from 'vue-router'
 
+// Search Components
+import SearchMask from '@/components/SearchMask'
 import Results from '@/components/Results'
 import SearchResultEntry from '@/components/SearchResultEntry'
 import SearchResultEntryMenu from '@/components/SearchResultEntryMenu'
 import SearchResultList from '@/components/SearchResultList'
 import SearchFacetes from '@/components/SearchFacetes'
-import NavMenu from '@/components/NavMenu'
-import SearchMask from '@/components/SearchMask'
-import Start from '@/components/Start'
-import AppFooter from '@/components/AppFooter'
 import PaginationBar from '@/components/PaginationBar'
+
+// Bookmark Components
+import Bookmarks from '@/components/Bookmarks'
+import BookmarkList from '@/components/BookmarkList'
+import BookmarkListEntry from '@/components/BookmarkListEntry'
+
+// Statical UI Elements Components
+import NavMenu from '@/components/NavMenu'
+import AppFooter from '@/components/AppFooter'
+import Start from '@/components/Start'
 
 Vue.use(Router)
 
@@ -24,6 +33,7 @@ Vue.component('app-footer', AppFooter)
 Vue.component('pagination-bar', PaginationBar)
 
 export default new Router({
+  mode: 'history',
   routes: [{
     path: '/results',
     name: 'results',

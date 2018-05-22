@@ -1,17 +1,6 @@
 <template>
-<div class="results">
-  <search-mask :query-value="$route.query.q"></search-mask>
-  <b-container>
-    <b-row>
-      <!-- <b-col cols="3"><search-facetes/></b-col> -->
-      <b-col cols="12">
-        <h6 v-if="totalFoundDocs > 0" class="results-annotation">{{ totalFoundDocs }} results found</h6>
-        <search-result-entry v-for="result in results" :result="result" :key="result._id"></search-result-entry>
-        <b-alert class="nothing-found-alert" :show="totalFoundDocs == 0">Nothing to see here</b-alert>
-      </b-col>
-    </b-row>
-  </b-container>
-  <b-pagination align="center" size="md" :total-rows="totalFoundDocs" v-model="currentPage" :per-page="numDocsPerPage" @input="paginationInput" />
+<div class="bookmarks">
+  
 </div>
 
 </template>

@@ -1,5 +1,9 @@
 <template>
-  <div class="ui basic small buttons">
-    <button v-for="label in ['Share','Select','Preprocess','Store']" class="ui button">{{ label }}</button>
-  </div>
+<b-button-group>
+    <b-button variant="outline-primary">More informationen</b-button>
+    <b-button variant="outline-primary">Share</b-button>
+    <b-button variant="outline-primary">Bookmark</b-button>
+    <b-button variant="outline-primary">Preprocess</b-button>
+    <b-button variant="outline-primary">Store</b-button>
+  </b-button-group>
 </template>
