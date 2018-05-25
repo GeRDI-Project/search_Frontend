@@ -1,11 +1,11 @@
 <template>
 <div>
 <b-button-group>
-    <b-button variant="outline-primary" class = "uppercased">More information</b-button>
-    <b-button variant="outline-primary" class = "uppercased">Share</b-button>
-    <b-button @click="showBookmarkAlert" variant="outline-primary" class = "uppercased">Bookmark</b-button>
-    <b-button variant="outline-primary" class = "uppercased">Preprocess</b-button>
-    <b-button variant="outline-primary" class = "uppercased">Store</b-button>
+    <b-button disabled variant="outline-primary" class = "uppercased">More information</b-button>
+    <b-button disabled variant="outline-primary" class = "uppercased">Share</b-button>
+    <b-button @click="showBookmarkAlert(); addBookmark(); setAsBookmarked();" variant="outline-primary" class = "uppercased">{{bookmarkBtn}}</b-button>
+    <b-button disabled variant="outline-primary" class = "uppercased">Preprocess</b-button>
+    <b-button disabled variant="outline-primary" class = "uppercased">Store</b-button>
   </b-button-group>
   <br>
   <br>
@@ -20,23 +20,39 @@
 </template>
 
 <script>
+import axios from 'axios'
 /* eslint-disable */
 export default {
-  data () {
+  data() {
     return {
-      dismissSecs: 5,
-      dismissCountDown: 0
+      dismissSecs: 3,
+      dismissCountDown: 0,
+      bookmarkBtn: 'Add Bookmark'
     }
   },
   methods: {
-     countDownChanged (dismissCountDown) {
+    countDownChanged(dismissCountDown) {
       this.dismissCountDown = dismissCountDown
     },
-    showBookmarkAlert () {
+    showBookmarkAlert() {
       this.dismissCountDown = this.dismissSecs
+    },
+    setAsBookmarked () {
+    this.bookmarkBtn = 'Bookmarked'
+    },
+    addBookmark() {
+      axios.post('/api/v1/collections/tobias')
+        .then(function (response) {
+          console.log(response)
+        })
+        .catch(function (error) {
+          self.errMsg = error.response;
+          console.log(error)
+        });
     }
   }
 }
+
 </script>
 
 

@@ -40,6 +40,7 @@ export default {
       axios.get('/api/v1/collections/tobias')
         .then(function(response) {
           self.bookmarks = response;
+          console.log(response)
         })
         .catch(function(error) {
           self.errMsg = error.response;
