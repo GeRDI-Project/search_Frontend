@@ -8,12 +8,12 @@
     <b-collapse is-nav id="nav_collapse">
 
       <b-navbar-nav>
-        <b-nav-item href="/" active>Search</b-nav-item>
-        <b-nav-item href="#" disabled>Select</b-nav-item>
-        <b-nav-item href="#" disabled>Store</b-nav-item>
-        <b-nav-item href="#" disabled>Preprocess</b-nav-item>
-        <b-nav-item href="#" disabled>Analyze</b-nav-item>
-        <b-nav-item href="#" disabled>Publish</b-nav-item>
+        <b-nav-item href="/" active class = "uppercased">Search</b-nav-item>
+        <b-nav-item href="/bookmark" active class = "uppercased">Bookmark</b-nav-item>
+        <b-nav-item href="#" disabled class = "uppercased">Store</b-nav-item>
+        <b-nav-item href="#" disabled class = "uppercased">Preprocess</b-nav-item>
+        <b-nav-item href="#" disabled class = "uppercased">Analyze</b-nav-item>
+        <b-nav-item href="#" disabled class = "uppercased">Publish</b-nav-item>
       </b-navbar-nav>
 
       <!-- Right aligned nav items -->
@@ -28,4 +28,7 @@
 </template>
 
 <style scoped>
+.uppercased {
+  text-transform: uppercase;
+}
 </style>

@@ -1,6 +1,15 @@
 <template>
 <div class="bookmarks">
-  
+  <b-container>
+    <b-row>
+      
+      <b-col cols="12">
+       
+        <bookmark-list-entry v-for="bookmark in bookmarks" :result="bookmark" :key="bookmark._id"></bookmark-list-entry>
+        
+      </b-col>
+    </b-row>
+  </b-container>
 </div>
 
 </template>
@@ -10,53 +19,32 @@
 
 import axios from 'axios'
 export default {
-  name: 'results',
+  name: 'bookmarks',
   data() {
     return {
       // loading: false,
-      results: [],
-      totalFoundDocs: 0,
-      numDocsPerPage: 10
-      // currentPage: 1
+      bookmarks: [],
+
     }
   },
-  computed: {
-    currentPage: function() {
-      if (this.$route.query.p > 1) {
-        return this.$route.query.p
-      }
-      return 1
-    }
-  },
+
   created() {
     axios.defaults.timeout = 10000;
-    this.search()
+    this.getBookmarks()
   },
-  watch: {
-    '$route.query': 'search'
-  },
+  
   methods: {
-    search() {
+    getBookmarks() {
       const self = this
-      self.results = []
-      axios.get('/api/search?q='.concat(encodeURIComponent(this.$route.query.q)).concat("&from=").concat(this.currentPage * this.numDocsPerPage - this.numDocsPerPage).concat("&size=").concat(this.numDocsPerPage))
+      self.bookmarks = []
+      axios.get('/api/v1/collections/tobias')
         .then(function(response) {
-          self.results = response.data.hits.hits;
-          self.totalFoundDocs = response.data.hits.total;
+          self.bookmarks = response;
         })
         .catch(function(error) {
           self.errMsg = error.response;
           console.log(error)
         });
-    },
-    paginationInput(num) {
-      this.$router.push({
-        name: 'results',
-        query: {
-          q: this.$route.query.q,
-          p: num
-        }
-      })
     }
   }
 }

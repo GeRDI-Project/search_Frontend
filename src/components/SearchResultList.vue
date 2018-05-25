@@ -4,7 +4,7 @@
   <h6>{{ numResults }} results for "nuts production quantity" found</h6>
   <br>
   <ul class="list-unstyled">
-    <search-result-entry v-for="item in 5" v-bind:data="item" />
+    <search-result-entry v-for="result in results" :result="result" :key="result._id"></search-result-entry>
   </ul>
 </div>
 </template>
