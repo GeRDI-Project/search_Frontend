@@ -15,7 +15,7 @@ import 'bootstrap-vue/dist/bootstrap-vue.css'
 Vue.use(BootstrapVue)
 
 Vue.config.productionTip = false
-
+axios.defaults.baseURL = 'https:/www.test.gerdi.org'
 /* eslint-disable no-new */
 new Vue({
   el: '#app',

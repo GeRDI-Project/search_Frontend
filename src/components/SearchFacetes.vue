@@ -1,77 +1,73 @@
 <template>
-<b-card title="Filters">
-  <b-nav vertical>
-    <b-nav-item v-b-toggle.collapse1>Research Field</b-nav-item>
-    <b-collapse id="collapse1" class="mt-2">
-      <p class="card-text">{{ text }}</p>
-    </b-collapse>
-
-    <b-nav-item v-b-toggle.collapse2>Location</b-nav-item>
-    <b-collapse id="collapse2" class="mt-2">
-      <p class="card-text">{{ text }}</p>
-    </b-collapse>
-
-    <b-nav-item v-b-toggle.collapse3>Data Provider</b-nav-item>
-    <b-collapse visible id="collapse3" class="mt-2">
-      <b-form>
-        <b-form-checkbox-group stacked :options="options" />
-        <b-button type="submit" variant="primary" size="sm">Apply</b-button>
-      </b-form>
-    </b-collapse>
-
-    <b-nav-item v-b-toggle.collapse4>Language</b-nav-item>
-    <b-collapse id="collapse4" class="mt-2">
-      <p class="card-text">{{ text }}</p>
-    </b-collapse>
-
-    <b-nav-item v-b-toggle.collapse5>Data Collection Period</b-nav-item>
-    <b-collapse id="collapse5" class="mt-2">
-      <p class="card-text">{{ text }}</p>
-    </b-collapse>
-
-    <b-nav-item v-b-toggle.collapse6>Publication Year</b-nav-item>
-    <b-collapse id="collapse6" class="mt-2">
-      <p class="card-text">{{ text }}</p>
-    </b-collapse>
-
-    <b-nav-item v-b-toggle.collapse7>Access</b-nav-item>
-    <b-collapse id="collapse7" class="mt-2">
-      <p class="card-text">{{ text }}</p>
-    </b-collapse>
-
-    <b-nav-item v-b-toggle.collapse8>Terms of Reuse</b-nav-item>
-    <b-collapse id="collapse8" class="mt-2">
-      <p class="card-text">{{ text }}</p>
-    </b-collapse>
-  </b-nav>
-</b-card>
+<div role="tablist">
+    <b-card no-body class="mb-1">
+      <b-card-header header-tag="header" class="p-1" role="tab">  
+      
+      <b-btn block href="#" v-b-toggle.accordion1 variant="info">Publischer</b-btn> 
+  
+       
+      </b-card-header>
+      <b-collapse id="accordion1" accordion="my-accordion" role="tabpanel">
+        <b-card-body>
+          <p class="card-text">
+            
+            <br>
+            
+          <p class="card-text">
+                <b-form-group>
+      <b-form-checkbox-group stacked v-model="selected" name="flavour2" :options="options">
+      </b-form-checkbox-group>
+    </b-form-group>
+          </p>
+        </b-card-body>
+      </b-collapse>
+    </b-card>
+    <b-card no-body class="mb-1">
+      <b-card-header header-tag="header" class="p-1" role="tab">
+        <b-btn block href="#" v-b-toggle.accordion2 variant="info"> Author </b-btn>
+      </b-card-header>
+      <b-collapse id="accordion2" accordion="my-accordion" role="tabpanel">
+        <b-card-body>
+          <p class="card-text">
+            
+          </p>
+        </b-card-body>
+      </b-collapse>
+    </b-card>
+    <b-card no-body class="mb-1">
+      <b-card-header header-tag="header" class="p-1" role="tab">
+        <b-btn block href="#" v-b-toggle.accordion3 variant="info">Publication year</b-btn>
+      </b-card-header>
+      <b-collapse id="accordion3" accordion="my-accordion" role="tabpanel">
+        <b-card-body>
+          <p class="card-text">
+          
+          </p>
+        </b-card-body>
+      </b-collapse>
+    </b-card>
+  </div>
 </template>
 
 <script>
 /* eslint-disable */
 export default {
-  data() {
+  data () {
     return {
-      showCollapse: true,
-      text: 'This is a super fancy placeholder',
-      options: [{
-          text: 'FAOStat',
-          value: '1'
-        },
-        {
-          text: 'SOEP',
-          value: '2'
-        },
-        {
-          text: 'Pangaea',
-          value: '3'
-        },
-        {
-          text: 'GIS',
-          value: '4'
-        }
+      selected: [], // Must be an array reference!
+      options: [
+        {text: 'Esri', value: ''},
+        {text: 'PANGAEA', value: ''},
+        {text: 'GIS', value: ''},
       ]
     }
   }
 }
 </script>
+<style scoped>
+.card {
+  margin-top: 1rem;
+}
+
+
+</style>
