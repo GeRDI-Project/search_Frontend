@@ -8,8 +8,8 @@
   <br>
   <b-container>
     <b-row>
-      <b-col cols="2"><search-facetes/></b-col>
-      <b-col cols="10">
+      <b-col cols="3"><search-facetes/></b-col>
+      <b-col cols="9">
         <search-result-entry v-for="result in results" :result="result" :key="result._id"></search-result-entry>
         <b-alert class="nothing-found-alert" :show="totalFoundDocs == 0">Nothing to see here</b-alert>
       </b-col>

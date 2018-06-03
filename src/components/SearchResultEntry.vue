@@ -8,9 +8,19 @@
       <i>{{ showPublisher(result._source.publisher) }}</i>
     </div>
     <br>
-    <div class="titels" v-if="result._source.descriptions">
+    <div class="creator" v-if="result._source.creators">
+      {{ result._source.creators[0].creatorName.value }}
+    </div>
+    <br>
+    <div class="year" v-if="result._source.publicationYear">
+      <i>{{ showPublicationYear(result._source.publicationYear) }}</i>
+    </div>
+    <br>
+    <div class="discription" v-if="result._source.descriptions">
       {{ showDescription(result._source.descriptions[0].value) }}
     </div>
+    
+  
 
   </b-media>
 </b-card>
@@ -20,7 +30,7 @@
 /* eslint-disable */
 export default {
   name: 'search-result-entry',
-  props: ['result'],
+  props: ['result'], 
   data() {
     return {}
   },
@@ -53,6 +63,9 @@ export default {
     getProviderLogo(linksArray) {
       let val = linksArray.filter(elem => elem.webLinkType == 'ProviderLogoURL')
       return val[0].webLinkURI
+    },
+    showCreator(creator) {
+      return creator
     }
   }
 }
