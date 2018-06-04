@@ -9,6 +9,8 @@
         <p class="card-text">
           <b-form-group>
             <b-form-checkbox-group stacked v-model="selectedPublishers" name="publisherFacets" :options="publishers"></b-form-checkbox-group>
+            <!-- <br>
+              <span>Checked: {{ selectedPublishers }}</span>  -->         
           </b-form-group>
         </p>
       </b-card-body>
