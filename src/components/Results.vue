@@ -34,6 +34,7 @@ export default {
       // currentPage: 1
     }
   },
+  
   computed: {
     currentPage: function() {
       if (this.$route.query.p > 1) {
