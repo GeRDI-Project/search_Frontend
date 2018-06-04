@@ -9,8 +9,8 @@
         <p class="card-text">
           <b-form-group>
             <b-form-checkbox-group stacked v-model="selectedPublishers" name="publisherFacets" :options="publishers"></b-form-checkbox-group>
-           <br>
-              <span>Checked: {{ selectedPublishers }}</span>     
+           <!-- <br>
+              <span>Checked: {{ selectedPublishers }}</span>    -->  
           </b-form-group>
         </p>
       </b-card-body>
@@ -34,7 +34,7 @@
     <b-card-header header-tag="header" class="p-1" role="tab">
       <b-btn block href="#" v-b-toggle.accordion3 variant="info">Publication year</b-btn>
     </b-card-header>
-    <b-collapse id="accordion3" accordion="my-accordion" role="tabpanel">
+    <b-collapse id="accordion3" visisble accordion="my-accordion" role="tabpanel">
       <b-card-body>
         <p class="card-text">
           <b-form-group>
