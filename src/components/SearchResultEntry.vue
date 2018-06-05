@@ -19,9 +19,6 @@
     <div class="discription" v-if="result._source.descriptions">
       {{ showDescription(result._source.descriptions[0].value) }}
     </div>
-    
-  
-
   </b-media>
 </b-card>
 </template>
@@ -32,7 +29,7 @@ export default {
   name: 'search-result-entry',
   props: ['result'], 
   data() {
-    return {}
+    return { }
   },
   methods: {
     filterForViewURI(linksArray) {
