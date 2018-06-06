@@ -5,8 +5,7 @@
       
       <b-col cols="12">
        
-        <bookmark-list-entry v-for="bookmark in bookmarks" :result="bookmark" :key="bookmark._id"></bookmark-list-entry>
-        
+        {{bookmarks}}
       </b-col>
     </b-row>
   </b-container>
@@ -22,7 +21,6 @@ export default {
   name: 'bookmarks',
   data() {
     return {
-      // loading: false,
       bookmarks: [],
 
     }
@@ -36,11 +34,15 @@ export default {
   methods: {
     getBookmarks() {
       const self = this
-      self.bookmarks = []
-      axios.get('/api/v1/collections/tobias')
+      self.bookmarks = ['blah']
+      axios.get('http://test.gerdi.org:32112/api/v1/collections/tobias')
         .then(function(response) {
-          self.bookmarks = response;
-          console.log(response)
+          self.bookmarks = response.data
+          console.log(response.data)
+          console.log(response.status)
+    console.log(response.statusText)
+    console.log(response.headers)
+    console.log(response.config)
         })
         .catch(function(error) {
           self.errMsg = error.response;

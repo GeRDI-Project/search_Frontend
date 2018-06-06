@@ -11,6 +11,10 @@
     <div class="titels" v-if="result._source.descriptions">
       {{ showDescription(result._source.descriptions[0].value) }}
     </div>
+    <br>
+    <div class="docID" v-if="result._id"> Doc ID: 
+      {{ showDescription(result._id) }}
+    </div>
   </b-media>
   <br>
   <search-result-entry-menu></search-result-entry-menu>

@@ -3,7 +3,7 @@
 <b-button-group>
     <b-button disabled variant="outline-primary" class = "uppercased">More information</b-button>
     <b-button disabled variant="outline-primary" class = "uppercased">Share</b-button>
-    <b-button @click="showBookmarkAlert(); addBookmark(); setAsBookmarked();" variant="outline-primary" class = "uppercased">{{bookmarkBtn}}</b-button>
+    <b-button @click="addBookmark()" variant="outline-primary" class = "uppercased">{{bookmarkBtn}}</b-button>
     <b-button disabled variant="outline-primary" class = "uppercased">Preprocess</b-button>
     <b-button disabled variant="outline-primary" class = "uppercased">Store</b-button>
   </b-button-group>
@@ -41,9 +41,19 @@ export default {
     this.bookmarkBtn = 'Bookmarked'
     },
     addBookmark() {
-      axios.post('/api/v1/collections/tobias')
+      const self = this;
+      self.bookmarks = [];      
+      axios.post('http://test.gerdi.org:32112/api/v1/collections/tobias', {
+        name: "Test Collestion 3",
+        docs: ["b7ba880aac4387f455d1ed864902f322df3feacb"]
+      })
         .then(function (response) {
-          console.log(response)
+          self.bookmarks = response.data
+          console.log(response.data)
+          console.log(response.status)
+          console.log(response.statusText)
+          console.log(response.headers)
+          console.log(response.config)
         })
         .catch(function (error) {
           self.errMsg = error.response;
