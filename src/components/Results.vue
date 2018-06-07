@@ -33,6 +33,7 @@ export default {
     return {
       // loading: false,
       results: [],
+      aggs: [],
       totalFoundDocs: 0,
       numDocsPerPage: 10
       // currentPage: 1
@@ -57,9 +58,38 @@ export default {
     search() {
       const self = this
       self.results = []
-      axios.get('/api/search?q='.concat(encodeURIComponent(this.$route.query.q)).concat("&from=").concat(this.currentPage * this.numDocsPerPage - this.numDocsPerPage).concat("&size=").concat(this.numDocsPerPage))
+      axios.post('/api/search?q='.concat(encodeURIComponent(this.$route.query.q)).concat("&from=").concat(this.currentPage * this.numDocsPerPage - this.numDocsPerPage).concat("&size=").concat(this.numDocsPerPage),
+      {
+        "aggs": {
+          "publicationYear": {
+            "terms": {
+              "field": "publicationYear",
+              "order" : { "_count" : "desc" }
+            }
+          },
+          "publisher": {
+            "terms": {
+              "field": "publisher.raw",
+              "order" : { "_count" : "desc" }
+            }
+          },
+          "creators": {
+            "terms": {
+              "field": "creators.creatorName.value.raw",
+              "order" : { "_count" : "desc" }
+            }
+          },
+          "language": {
+            "terms": {
+              "field": "language",
+              "order" : { "_count" : "desc" }
+            }
+          }
+        }
+      })
         .then(function(response) {
           self.results = response.data.hits.hits;
+          self.aggs = response.data.aggregations;
           self.totalFoundDocs = response.data.hits.total;
         })
         .catch(function(error) {
