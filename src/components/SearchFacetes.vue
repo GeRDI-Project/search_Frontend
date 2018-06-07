@@ -10,7 +10,7 @@
           <b-form-group>
             <b-form-checkbox-group stacked v-model="selectedPublishers" name="publisherFacets" :options="publishers"></b-form-checkbox-group>
            <!-- <br>
-              <span>Checked: {{ selectedPublishers }}</span>    -->  
+              <span>Checked: {{ selectedPublishers }}</span>    -->
           </b-form-group>
         </p>
       </b-card-body>
@@ -66,6 +66,7 @@
 import axios from 'axios'
 export default {
   name: 'search-facetes',
+  props: ['results'],
   data() {
     return {
       fetchedFacets: [],
@@ -92,40 +93,28 @@ export default {
       self.languages = []
       self.years = []
       self.authors = []
-      axios.get('https://www.test.gerdi.org/api/search?q='
-          .concat(encodeURIComponent(this.$route.query.q))
-          .concat("&from=0")
-          .concat("&size=1000"))
-        .then(function (response) {
-          self.totalFoundDocs = response.data.hits.total;
-          console.log(response.data.hits.hits)
-          response.data.hits.hits
-            .forEach(function (search_hit) {
-              if (self.publishers.indexOf(search_hit._source.publisher) == -1) {
-                self.publishers.push(search_hit._source.publisher)
-              }
-              if (self.languages.indexOf(search_hit._source.language) == -1) {
-                self.languages.push(search_hit._source.language)
-              }
-              for (var i = 0; i < search_hit._source.creators.length; i++) {
-                if (self.authors.indexOf(search_hit._source.creators[i].creatorName.value) == -1) {
-                  self.authors.push(search_hit._source.creators[i].creatorName.value)
-                }
-              }
-               if (self.years.indexOf(search_hit._source.publicationYear) == -1) {
-                self.years.push(search_hit._source.publicationYear)
-              }
 
-            });
-          self.publishers.sort()
-          self.authors.sort()
-          self.years.sort()
-          self.languages.sort()
-        })
-        .catch(function (error) {
-          self.errMsg = error.response;
-          console.log(error)
+      self.results.forEach(function (search_hit) {
+          if (self.publishers.indexOf(search_hit._source.publisher) == -1) {
+            self.publishers.push(search_hit._source.publisher)
+          }
+          if (self.languages.indexOf(search_hit._source.language) == -1) {
+            self.languages.push(search_hit._source.language)
+          }
+          for (var i = 0; i < search_hit._source.creators.length; i++) {
+            if (self.authors.indexOf(search_hit._source.creators[i].creatorName.value) == -1) {
+              self.authors.push(search_hit._source.creators[i].creatorName.value)
+            }
+          }
+           if (self.years.indexOf(search_hit._source.publicationYear) == -1) {
+            self.years.push(search_hit._source.publicationYear)
+          }
+
         });
+      self.publishers.sort()
+      self.authors.sort()
+      self.years.sort()
+      self.languages.sort()
     }
   }
 }

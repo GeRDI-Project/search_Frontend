@@ -9,11 +9,11 @@
   <br>
   <b-container>
     <b-row>
-      <b-col cols="3"><search-facetes></search-facetes>
+      <b-col cols="3"><search-facetes v-if="results.length > 0" :results="this.results"></search-facetes>
       </b-col>
       <b-col cols="9">
         <search-result-entry v-for="result in results" :result="result" :key="result._id"></search-result-entry>
-        
+
       </b-col>
     </b-row>
   </b-container>
