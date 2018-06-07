@@ -8,7 +8,7 @@
       <b-card-body>
         <p class="card-text">
           <b-form-group>
-            <b-form-checkbox-group stacked v-model="selectedPublishers" name="publisherFacets" :options="publishers"></b-form-checkbox-group>
+            <b-form-checkbox-group stacked v-model="selectedPublishers" name="publisherFacets" :options="this.aggs.Publisher.buckets.map(it => it.key + ' (' + it.doc_count + ')' )"></b-form-checkbox-group>
            <!-- <br>
               <span>Checked: {{ selectedPublishers }}</span>    -->
           </b-form-group>
@@ -24,7 +24,7 @@
       <b-card-body>
         <p class="card-text">
 <b-form-group>
-            <b-form-checkbox-group stacked v-model="selectedAuthors" name="authorFacets" :options="authors"></b-form-checkbox-group>
+            <b-form-checkbox-group stacked v-model="selectedAuthors" name="authorFacets" :options="this.aggs.Creator.buckets.map(it => it.key + ' (' + it.doc_count + ')' )"></b-form-checkbox-group>
           </b-form-group>
         </p>
       </b-card-body>
@@ -38,7 +38,7 @@
       <b-card-body>
         <p class="card-text">
           <b-form-group>
-            <b-form-checkbox-group stacked v-model="selectedYears" name="pubYearFacets" :options="years"></b-form-checkbox-group>
+            <b-form-checkbox-group stacked v-model="selectedYears" name="pubYearFacets" :options="this.aggs.PublicationYear.buckets.map(it => transformToYear(it.key) + ' (' + it.doc_count + ')' )"></b-form-checkbox-group>
           </b-form-group>
         </p>
       </b-card-body>
@@ -52,7 +52,7 @@
       <b-card-body>
         <p class="card-text">
           <b-form-group>
-            <b-form-checkbox-group stacked v-model="selectedLanguages" name="LanguageFacets" :options="languages"></b-form-checkbox-group>
+            <b-form-checkbox-group stacked v-model="selectedLanguages" name="LanguageFacets" :options="this.aggs.Language.buckets.map(it => it.key + ' (' + it.doc_count + ')' )"></b-form-checkbox-group>
           </b-form-group>
         </p>
       </b-card-body>
@@ -63,10 +63,9 @@
 
 <script>
 /* eslint-disable */
-import axios from 'axios'
 export default {
   name: 'search-facetes',
-  props: ['results'],
+  props: ['aggs'],
   data() {
     return {
       fetchedFacets: [],
@@ -80,41 +79,10 @@ export default {
       languages: []
     }
   },
-  created() {
-    this.fetchFacets()
-  },
 
   methods: {
-
-    fetchFacets() {
-      const self = this
-      self.fetchedFacets = []
-      self.publishers = []
-      self.languages = []
-      self.years = []
-      self.authors = []
-
-      self.results.forEach(function (search_hit) {
-          if (self.publishers.indexOf(search_hit._source.publisher) == -1) {
-            self.publishers.push(search_hit._source.publisher)
-          }
-          if (self.languages.indexOf(search_hit._source.language) == -1) {
-            self.languages.push(search_hit._source.language)
-          }
-          for (var i = 0; i < search_hit._source.creators.length; i++) {
-            if (self.authors.indexOf(search_hit._source.creators[i].creatorName.value) == -1) {
-              self.authors.push(search_hit._source.creators[i].creatorName.value)
-            }
-          }
-           if (self.years.indexOf(search_hit._source.publicationYear) == -1) {
-            self.years.push(search_hit._source.publicationYear)
-          }
-
-        });
-      self.publishers.sort()
-      self.authors.sort()
-      self.years.sort()
-      self.languages.sort()
+    transformToYear(num){
+      return new Date(num).getYear() + 1900
     }
   }
 }
