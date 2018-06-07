@@ -1,6 +1,6 @@
 <template>
 <div role="tablist">
-  <b-card no-body class="mb-1">
+   <b-card no-body class="mb-1">
     <b-card-header header-tag="header" class="p-1" role="tab">
       <b-btn block href="#" v-b-toggle.accordion1 variant="info">Publisher</b-btn>
     </b-card-header>
@@ -58,28 +58,19 @@
       </b-card-body>
     </b-collapse>
   </b-card>
-</div>
-
+  </div>
 </template>
-
 
 <script>
 /* eslint-disable */
 import axios from 'axios'
 export default {
-  
-  
-
-
-  
-  name: 'search-facets',
-  props: ['search', 'result'],
+  name: 'search-facetes',
   data() {
     return {
-      totalFoundDocs: 0,
-      numDocsPerPage: 10,
-      selectedPublishers: [], 
-      selectedYears:[],
+      fetchedFacets: [],
+      selectedPublishers: [],
+      selectedYears: [],
       selectedAuthors: [],
       selectedLanguages: [],
       publishers: [],
@@ -89,119 +80,65 @@ export default {
     }
   },
   created() {
-    this.fetchPublisherFacets(),
-    this.fetchPubYearFacets(),
-    this.fetchAuthors(),
-    this.fetchLanguage()
+    this.fetchFacets()
   },
+
   methods: {
-    fetchPublisherFacets() {
+
+    fetchFacets() {
       const self = this
+      self.fetchedFacets = []
       self.publishers = []
-      axios.get('/api/search?q='
+      self.languages = []
+      self.years = []
+      self.authors = []
+      axios.get('https://www.test.gerdi.org/api/search?q='
           .concat(encodeURIComponent(this.$route.query.q))
           .concat("&from=0")
           .concat("&size=1000"))
-          //.concat(this.numDocsPerPage))
         .then(function (response) {
           self.totalFoundDocs = response.data.hits.total;
+          console.log(response.data.hits.hits)
           response.data.hits.hits
-
             .forEach(function (search_hit) {
               if (self.publishers.indexOf(search_hit._source.publisher) == -1) {
                 self.publishers.push(search_hit._source.publisher)
               }
-            });
-        })
-        .catch(function (error) {
-          self.errMsg = error.response;
-          console.log(error)
-        });
-      },
-      fetchPubYearFacets() {
-      const self = this
-      self.years = []
-      axios.get('/api/search?q='
-          .concat(encodeURIComponent(this.$route.query.q))
-          .concat("&from=0")
-          .concat("&size=1000"))
-          //.concat(this.numDocsPerPage))
-        .then(function (response) {
-          self.totalFoundDocs = response.data.hits.total;
-          response.data.hits.hits
-            .filter(function (search_hit) {
-              return typeof search_hit._source.publicationYear != 'undefine' && search_hit._source.publicationYear != 0
-            })
-            .forEach(function (search_hit) {
-              if (self.years.indexOf(search_hit._source.publicationYear) == -1) {
-                self.years.push(search_hit._source.publicationYear)
+              if (self.languages.indexOf(search_hit._source.language) == -1) {
+                self.languages.push(search_hit._source.language)
               }
-            });
-            self.years.sort()
-        })
-        .catch(function (error) {
-          self.errMsg = error.response;
-          console.log(error)
-        });
-      },
-    fetchAuthors() {
-      const self = this
-      self.authors = []
-      axios.get('/api/search?q='
-          .concat(encodeURIComponent(this.$route.query.q))
-          .concat("&from=0")
-          .concat("&size=1000"))
-        //.concat(this.numDocsPerPage))
-        .then(function (response) {
-          response.data.hits.hits
-            .forEach(function (search_hit) {
               for (var i = 0; i < search_hit._source.creators.length; i++) {
                 if (self.authors.indexOf(search_hit._source.creators[i].creatorName.value) == -1) {
                   self.authors.push(search_hit._source.creators[i].creatorName.value)
                 }
               }
-            });
-            self.authors.sort()
-        })
-        .catch(function (error) {
-          self.errMsg = error.response;
-          console.log(error)
-        });
-      },
-fetchLanguage() {
-      const self = this
-      self.languages = []
-      axios.get('/api/search?q='
-          .concat(encodeURIComponent(this.$route.query.q))
-          .concat("&from=0")
-          .concat("&size=1000"))
-          //.concat(this.numDocsPerPage))
-        .then(function (response) {
-          response.data.hits.hits
-
-            .forEach(function (search_hit) {
-              if (self.languages.indexOf(search_hit._source.language) == -1) {
-                self.languages.push(search_hit._source.language)
+               if (self.years.indexOf(search_hit._source.publicationYear) == -1) {
+                self.years.push(search_hit._source.publicationYear)
               }
+
             });
+          self.publishers.sort()
+          self.authors.sort()
+          self.years.sort()
+          self.languages.sort()
         })
         .catch(function (error) {
           self.errMsg = error.response;
           console.log(error)
         });
-      }
-
     }
   }
+}
+
 </script>
-
-
-
 
 <style scoped>
 .card {
   margin-top: 1rem;
 }
 
-
+.providerLogo {
+  max-height: 100px;
+  width: auto;
+}
 </style>

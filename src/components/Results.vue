@@ -3,15 +3,17 @@
   <search-mask :query-value="$route.query.q"></search-mask>
   <br>
   <h6 v-if="totalFoundDocs > 0" class="results-annotation"><b>{{ totalFoundDocs }}</b> results found for <b> {{$route.query.q}} </b></h6>
+  <b-alert class="nothing-found-alert" :show="totalFoundDocs == 0">Nothing to see here</b-alert>
   <!-- <br>
   <h6 v-if="totalFoundDocs > 0" class="results-annotation">Showing <b>{{num in numDocsPerPage}} </b>of <b> {{ totalFoundDocs }} </b> results for <b> {{$route.query.q}} </b></h6> -->
   <br>
   <b-container>
     <b-row>
-      <b-col cols="3"><search-facetes/></b-col>
+      <b-col cols="3"><search-facetes></search-facetes>
+      </b-col>
       <b-col cols="9">
         <search-result-entry v-for="result in results" :result="result" :key="result._id"></search-result-entry>
-        <b-alert class="nothing-found-alert" :show="totalFoundDocs == 0">Nothing to see here</b-alert>
+        
       </b-col>
     </b-row>
   </b-container>
@@ -23,6 +25,8 @@
 /* eslint-disable */
 
 import axios from 'axios'
+import SearchResultEntry from './SearchResultEntry.vue'
+import SearchFacetes from './SearchFacetes.vue'
 export default {
   name: 'results',
   data() {
@@ -34,7 +38,6 @@ export default {
       // currentPage: 1
     }
   },
-  
   computed: {
     currentPage: function() {
       if (this.$route.query.p > 1) {
