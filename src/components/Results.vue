@@ -9,7 +9,7 @@
   <br>
   <b-container>
     <b-row>
-      <b-col cols="3"><search-facetes v-if="results.length > 0" :results="this.results"></search-facetes>
+      <b-col cols="3"><search-facetes v-if="this.aggs.Creator" :aggs="this.aggs"></search-facetes>
       </b-col>
       <b-col cols="9">
         <search-result-entry v-for="result in results" :result="result" :key="result._id"></search-result-entry>
@@ -33,7 +33,7 @@ export default {
     return {
       // loading: false,
       results: [],
-      aggs: [],
+      aggs: {},
       totalFoundDocs: 0,
       numDocsPerPage: 10
       // currentPage: 1
@@ -61,25 +61,25 @@ export default {
       axios.post('/api/search?q='.concat(encodeURIComponent(this.$route.query.q)).concat("&from=").concat(this.currentPage * this.numDocsPerPage - this.numDocsPerPage).concat("&size=").concat(this.numDocsPerPage),
       {
         "aggs": {
-          "publicationYear": {
+          "PublicationYear": {
             "terms": {
               "field": "publicationYear",
               "order" : { "_count" : "desc" }
             }
           },
-          "publisher": {
+          "Publisher": {
             "terms": {
               "field": "publisher.raw",
               "order" : { "_count" : "desc" }
             }
           },
-          "creators": {
+          "Creator": {
             "terms": {
               "field": "creators.creatorName.value.raw",
               "order" : { "_count" : "desc" }
             }
           },
-          "language": {
+          "Language": {
             "terms": {
               "field": "language",
               "order" : { "_count" : "desc" }
@@ -90,6 +90,8 @@ export default {
         .then(function(response) {
           self.results = response.data.hits.hits;
           self.aggs = response.data.aggregations;
+          console.log(response)
+          console.log(self.aggs)
           self.totalFoundDocs = response.data.hits.total;
         })
         .catch(function(error) {
@@ -105,7 +107,14 @@ export default {
           p: num
         }
       })
+    },
+    isEmpty(obj) {
+    for(var key in obj) {
+        if(obj.hasOwnProperty(key))
+            return false;
     }
+    return true;
+}
   }
 }
 </script>
