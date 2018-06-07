@@ -8,7 +8,7 @@
       <b-card-body>
         <p class="card-text">
           <b-form-group>
-            <b-form-checkbox-group stacked v-model="selectedPublishers" name="publisherFacets" :options="this.aggs.Publisher.buckets.map(it => it.key + ' (' + it.doc_count + ')' )"></b-form-checkbox-group>
+            <b-form-checkbox-group stacked v-model="selectedPublishers" name="publisherFacets" :options="limitArray(this.aggs.Publisher.buckets.map(it => it.key + ' (' + it.doc_count + ')' ))"></b-form-checkbox-group>
            <!-- <br>
               <span>Checked: {{ selectedPublishers }}</span>    -->
           </b-form-group>
@@ -24,7 +24,7 @@
       <b-card-body>
         <p class="card-text">
 <b-form-group>
-            <b-form-checkbox-group stacked v-model="selectedAuthors" name="authorFacets" :options="this.aggs.Creator.buckets.map(it => it.key + ' (' + it.doc_count + ')' )"></b-form-checkbox-group>
+            <b-form-checkbox-group stacked v-model="selectedAuthors" name="authorFacets" :options="limitArray(this.aggs.Creator.buckets.map(it => it.key + ' (' + it.doc_count + ')' ))"></b-form-checkbox-group>
           </b-form-group>
         </p>
       </b-card-body>
@@ -38,7 +38,7 @@
       <b-card-body>
         <p class="card-text">
           <b-form-group>
-            <b-form-checkbox-group stacked v-model="selectedYears" name="pubYearFacets" :options="this.aggs.PublicationYear.buckets.map(it => transformToYear(it.key) + ' (' + it.doc_count + ')' )"></b-form-checkbox-group>
+            <b-form-checkbox-group stacked v-model="selectedYears" name="pubYearFacets" :options="limitArray(this.aggs.PublicationYear.buckets.map(it => transformToYear(it.key) + ' (' + it.doc_count + ')' ))"></b-form-checkbox-group>
           </b-form-group>
         </p>
       </b-card-body>
@@ -52,7 +52,7 @@
       <b-card-body>
         <p class="card-text">
           <b-form-group>
-            <b-form-checkbox-group stacked v-model="selectedLanguages" name="LanguageFacets" :options="this.aggs.Language.buckets.map(it => it.key + ' (' + it.doc_count + ')' )"></b-form-checkbox-group>
+            <b-form-checkbox-group stacked v-model="selectedLanguages" name="LanguageFacets" :options="limitArray(this.aggs.Language.buckets.map(it => it.key + ' (' + it.doc_count + ')' ))"></b-form-checkbox-group>
           </b-form-group>
         </p>
       </b-card-body>
@@ -83,6 +83,12 @@ export default {
   methods: {
     transformToYear(num){
       return new Date(num).getYear() + 1900
+    },
+    limitArray(arr){
+      if (arr.length >= 10) {
+        arr.length = 10;
+      }
+      return arr
     }
   }
 }
