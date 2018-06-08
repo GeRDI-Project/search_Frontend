@@ -5,7 +5,7 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 import BootstrapVue from 'bootstrap-vue'
-import axios from 'axios'
+//import axios from 'axios'
 import Results from '@/components/Results'
 import SearchResultEntry from '@/components/SearchResultEntry'
 import SearchResultEntryMenu from '@/components/SearchResultEntryMenu'
@@ -34,7 +34,7 @@ Vue.component('pagination-bar', PaginationBar)
 Vue.component('results', Results)
 
 Vue.config.productionTip = false
-axios.defaults.baseURL = 'https:/www.test.gerdi.org'
+//axios.defaults.baseURL = 'https:/www.test.gerdi.org'
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
