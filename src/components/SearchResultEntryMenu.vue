@@ -1,6 +1,6 @@
 <template>
 <div>
-<b-button-group>
+<b-button-group size = "sm">
     <b-button disabled variant="outline-primary" class = "text-uppercase">More information</b-button>
     <b-button disabled variant="outline-primary" class = "text-uppercase">Share</b-button>
     <b-button @click="addBookmark()" variant="outline-primary" class = "text-uppercase">{{bookmarkBtn}}</b-button>
