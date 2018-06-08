@@ -1,11 +1,11 @@
 <template>
 <div>
 <b-button-group>
-    <b-button disabled variant="outline-primary" class = "uppercased">More information</b-button>
-    <b-button disabled variant="outline-primary" class = "uppercased">Share</b-button>
-    <b-button @click="addBookmark()" variant="outline-primary" class = "uppercased">{{bookmarkBtn}}</b-button>
-    <b-button disabled variant="outline-primary" class = "uppercased">Preprocess</b-button>
-    <b-button disabled variant="outline-primary" class = "uppercased">Store</b-button>
+    <b-button disabled variant="outline-primary" class = "text-uppercase">More information</b-button>
+    <b-button disabled variant="outline-primary" class = "text-uppercase">Share</b-button>
+    <b-button @click="addBookmark()" variant="outline-primary" class = "text-uppercase">{{bookmarkBtn}}</b-button>
+    <b-button disabled variant="outline-primary" class = "text-uppercase">Preprocess</b-button>
+    <b-button disabled variant="outline-primary" class = "text-uppercase">Store</b-button>
   </b-button-group>
   <br>
   <br>
