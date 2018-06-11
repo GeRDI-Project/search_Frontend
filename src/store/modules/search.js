@@ -52,7 +52,13 @@ const actions = {
     let currentPage = payload.currentPage
     commit('setQueryPayload', payload)
     commit('setResults', [])
-    axios.post('/api/search?q='.concat(encodeURIComponent(q)).concat('&from=').concat(currentPage * state.numDocsPerPage - state.numDocsPerPage).concat('&size=').concat(state.numDocsPerPage),
+    var url = '/api/search?q='
+    url = url.concat(encodeURIComponent(q))
+    if (currentPage) {
+      url = url.concat('&from=').concat(currentPage * state.numDocsPerPage - state.numDocsPerPage)
+    }
+    url = url.concat('&size=').concat(state.numDocsPerPage)
+    axios.post(url,
     {
       'aggs': {
         'PublicationYear': {
@@ -86,7 +92,7 @@ const actions = {
       })
       .catch(function(error) {
         //self.errMsg = error.response;
-        //console.log(error)
+        console.log(error)
       });
   }
 }

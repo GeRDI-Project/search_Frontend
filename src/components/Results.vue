@@ -32,7 +32,7 @@
       </b-col>
     </b-row>
   </b-container>
-  <b-pagination align="center" size="md" :total-rows="totalFoundDocs" v-model="currentPage" :per-page="numDocsPerPage" @input="paginationInput" />
+  <b-pagination align="center" size="md" :total-rows="numResults" v-model="currentPage" :per-page="numDocsPerPage" @change="paginationInput"/>
 </div>
 </template>
 
@@ -45,18 +45,18 @@ export default {
   name: 'results',
   data() {
     return {
-      // loading: false,
-      totalFoundDocs: 0,
       numDocsPerPage: 10
-      // currentPage: 1
     }
   },
   computed: {
-    currentPage: function() {
-      if (this.$route.query.p > 1) {
-        return this.$route.query.p
-      }
-      return 1
+    currentPage: {
+      get: function() {
+        if (isNaN(parseInt(this.$route.query.p))) {
+          return 1
+        }
+        return parseInt(this.$route.query.p)
+      },
+      set: function(val) {}
     },
     results: function() {
       return this.$store.getters.getResults
@@ -73,29 +73,22 @@ export default {
   },
   methods: {
     search() {
-      let q = this.$route.query.q == '*' ? 1 : this.$route.query.q
+      let q = this.$route.query.q
       let page = this.currentPage
       this.$store.dispatch('search', {
         query: q,
         currentPage: page
       })
     },
-    paginationInput(num) {
+    paginationInput(val) {
       this.$router.push({
         name: 'results',
         query: {
           q: this.$route.query.q,
-          p: num
+          p: val
         }
       })
-    },
-    isEmpty(obj) {
-    for(var key in obj) {
-        if(obj.hasOwnProperty(key))
-            return false;
     }
-    return true;
-}
   }
 }
 </script>
