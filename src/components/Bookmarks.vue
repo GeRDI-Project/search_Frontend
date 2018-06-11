@@ -37,7 +37,7 @@ export default {
       const self = this
       self.bookmarks = ['blah']
       console.log(self.bookmarks)
-      axios.get('https://www.test.gerdi.org/api/v1/collections/tobias')
+      axios.get('/api/v1/collections/tobias')
         .then(function(response) {
           self.bookmarks = response.data
           console.log(response.data)

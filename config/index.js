@@ -14,9 +14,7 @@ module.exports = {
       '/api': {
         target: 'https://www.test.gerdi.org',
         changeOrigin: true,
-        pathRewrite: {
-          '^/api': ''
-        }
+        
       }
     },
 
