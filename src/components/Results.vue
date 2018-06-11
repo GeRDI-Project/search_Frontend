@@ -2,14 +2,14 @@
 <div class="results">
   <search-mask :query-value="$route.query.q"></search-mask>
   <br>
-  <h6 v-if="totalFoundDocs > 0" class="results-annotation"><b>{{ totalFoundDocs }}</b> results found for <b> {{$route.query.q}} </b></h6>
-  <b-alert class="nothing-found-alert" :show="totalFoundDocs == 0">Nothing to see here</b-alert>
+  <h6 v-if="results.length > 0" class="results-annotation"><b>{{ results.length }}</b> results found for <b> {{$route.query.q}} </b></h6>
+  <b-alert class="nothing-found-alert" :show="results.length == 0">Nothing to see here</b-alert>
   <!-- <br>
   <h6 v-if="totalFoundDocs > 0" class="results-annotation">Showing <b>{{num in numDocsPerPage}} </b>of <b> {{ totalFoundDocs }} </b> results for <b> {{$route.query.q}} </b></h6> -->
   <br>
   <b-container>
     <b-row>
-      <b-col cols="3"><search-facetes v-if="this.aggs.Creator" :aggs="this.aggs"></search-facetes>
+      <b-col cols="3"><search-facetes v-if="results.length > 0"></search-facetes>
       </b-col>
       <b-col cols="9">
         <search-result-entry v-for="result in results" :result="result" :key="result._id"></search-result-entry>
@@ -24,7 +24,6 @@
 <script>
 /* eslint-disable */
 
-import axios from 'axios'
 import SearchResultEntry from './SearchResultEntry.vue'
 import SearchFacetes from './SearchFacetes.vue'
 export default {
@@ -32,8 +31,6 @@ export default {
   data() {
     return {
       // loading: false,
-      results: [],
-      aggs: {},
       totalFoundDocs: 0,
       numDocsPerPage: 10
       // currentPage: 1
@@ -45,10 +42,12 @@ export default {
         return this.$route.query.p
       }
       return 1
+    },
+    results: function() {
+      return this.$store.getters.getResults
     }
   },
   created() {
-    axios.defaults.timeout = 10000;
     this.search()
   },
   watch: {
@@ -56,48 +55,12 @@ export default {
   },
   methods: {
     search() {
-      const self = this
-      self.results = []
-      axios.post('/api/search?q='.concat(encodeURIComponent(this.$route.query.q)).concat("&from=").concat(this.currentPage * this.numDocsPerPage - this.numDocsPerPage).concat("&size=").concat(this.numDocsPerPage),
-      {
-        "aggs": {
-          "PublicationYear": {
-            "terms": {
-              "field": "publicationYear",
-              "order" : { "_count" : "desc" }
-            }
-          },
-          "Publisher": {
-            "terms": {
-              "field": "publisher.raw",
-              "order" : { "_count" : "desc" }
-            }
-          },
-          "Creator": {
-            "terms": {
-              "field": "creators.creatorName.value.raw",
-              "order" : { "_count" : "desc" }
-            }
-          },
-          "Language": {
-            "terms": {
-              "field": "language",
-              "order" : { "_count" : "desc" }
-            }
-          }
-        }
+      let q = this.$route.query.q == '*' ? 1 : this.$route.query.q
+      let page = this.currentPage
+      this.$store.dispatch('search', {
+        query: q,
+        currentPage: page
       })
-        .then(function(response) {
-          self.results = response.data.hits.hits;
-          self.aggs = response.data.aggregations;
-          console.log(response)
-          console.log(self.aggs)
-          self.totalFoundDocs = response.data.hits.total;
-        })
-        .catch(function(error) {
-          self.errMsg = error.response;
-          console.log(error)
-        });
     },
     paginationInput(num) {
       this.$router.push({

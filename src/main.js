@@ -34,7 +34,7 @@ Vue.component('pagination-bar', PaginationBar)
 Vue.component('results', Results)
 
 Vue.config.productionTip = false
-//axios.defaults.baseURL = 'https:/www.test.gerdi.org'
+
 /* eslint-disable no-new */
 new Vue({
   el: '#app',

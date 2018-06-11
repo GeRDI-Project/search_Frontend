@@ -65,18 +65,18 @@
 /* eslint-disable */
 export default {
   name: 'search-facetes',
-  props: ['aggs'],
   data() {
     return {
-      fetchedFacets: [],
       selectedPublishers: [],
       selectedYears: [],
       selectedAuthors: [],
-      selectedLanguages: [],
-      publishers: [],
-      years: [],
-      authors: [],
-      languages: []
+      selectedLanguages: []
+    }
+  },
+
+  computed: {
+    aggs: function() {
+      return this.$store.getters.getAggregations
     }
   },
 
