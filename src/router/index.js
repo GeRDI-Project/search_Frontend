@@ -31,6 +31,7 @@ Vue.component('nav-menu', NavMenu)
 Vue.component('search-mask', SearchMask)
 Vue.component('app-footer', AppFooter)
 Vue.component('pagination-bar', PaginationBar)
+Vue.component('bookmarks', Bookmarks)
 
 export default new Router({
   mode: 'history',

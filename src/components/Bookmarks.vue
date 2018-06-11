@@ -1,6 +1,7 @@
 <template>
 <div class="bookmarks">
   <b-container>
+    Hallo!
     <b-row>
       
       <b-col cols="12">
@@ -35,7 +36,8 @@ export default {
     getBookmarks() {
       const self = this
       self.bookmarks = ['blah']
-      axios.get('http://test.gerdi.org:32112/api/v1/collections/tobias')
+      console.log(self.bookmarks)
+      axios.get('https://www.test.gerdi.org/api/v1/collections/tobias')
         .then(function(response) {
           self.bookmarks = response.data
           console.log(response.data)

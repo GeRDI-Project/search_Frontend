@@ -21,6 +21,7 @@
 
 <script>
 import axios from 'axios'
+import qs from 'qs'
 /* eslint-disable */
 export default {
   data() {
@@ -42,21 +43,23 @@ export default {
     },
     addBookmark() {
       const self = this;
-      self.bookmarks = [];      
-      axios.post('http://test.gerdi.org:32112/api/v1/collections/tobias', {
-        name: "Test Collestion 3",
-        docs: ["b7ba880aac4387f455d1ed864902f322df3feacb"]
-      })
+      self.bookmarks = [];  
+      const data = qs.stringify({
+      name:"TestCollection",
+      docs:["b7ba880aac4387f455d1ed864902f322df3feacb"]
+      });
+      const headers ={
+        'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
+      }
+      axios.post('/api/v1/collections/tobias', data, headers)
         .then(function (response) {
-          self.bookmarks = response.data
-          console.log(response.data)
+          console.log(response)
           console.log(response.status)
           console.log(response.statusText)
           console.log(response.headers)
           console.log(response.config)
         })
         .catch(function (error) {
-          self.errMsg = error.response;
           console.log(error)
         });
     }
