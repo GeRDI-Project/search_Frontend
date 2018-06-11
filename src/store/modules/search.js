@@ -1,22 +1,47 @@
+/**
+ * Copyright 2018 Nelson Tavares de Sousa
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 import axios from 'axios'
 
 /* eslint-disable */
 // initial state
 const state = {
-  items: 0,
-  results: [],
-  aggs: {},
-  totalFoundDocs: 0,
+  results: {},
+  queryPayload: {},
   numDocsPerPage: 10
 }
 
 // getters
 const getters = {
   getResults: state => {
-    return state.results
+    if (state.results.hits) {
+      return state.results.hits.hits
+    }
+    return []
   },
   getAggregations: state => {
-    return state.aggs
+    if (state.results.aggregations) {
+      return state.results.aggregations
+    }
+    return {}
+  },
+  getResultsAmount: state => {
+    if (state.results.hits) {
+      return state.results.hits.total
+    }
+    return 0
   }
 }
 
@@ -25,8 +50,8 @@ const actions = {
   search({ commit, state }, payload) {
     let q = payload.query
     let currentPage = payload.currentPage
-    commit('newResults', [])
-    commit('newAggs', {})
+    commit('setQueryPayload', payload)
+    commit('setResults', [])
     axios.post('/api/search?q='.concat(encodeURIComponent(q)).concat('&from=').concat(currentPage * state.numDocsPerPage - state.numDocsPerPage).concat('&size=').concat(state.numDocsPerPage),
     {
       'aggs': {
@@ -57,8 +82,7 @@ const actions = {
       }
     })
       .then(function(response) {
-        commit('newAggs', response.data.aggregations)
-        commit('newResults', response.data.hits.hits)
+        commit('setResults', response.data)
       })
       .catch(function(error) {
         //self.errMsg = error.response;
@@ -69,11 +93,11 @@ const actions = {
 
 // mutations
 const mutations = {
-  newResults (state, results) {
+  setResults (state, results) {
     state.results = results
   },
-  newAggs (state, aggs) {
-    state.aggs = aggs
+  setQueryPayload (state, payload) {
+    state.queryPayload = payload
   }
 }
 
