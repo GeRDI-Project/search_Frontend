@@ -21,7 +21,6 @@
 
 <script>
 import axios from 'axios'
-import qs from 'qs'
 /* eslint-disable */
 export default {
   data() {
@@ -44,14 +43,10 @@ export default {
     addBookmark() {
       const self = this;
       self.bookmarks = [];  
-      const data = qs.stringify({
+      axios.post('/api/v1/collections/tobias', {
       name:"TestCollection",
       docs:["b7ba880aac4387f455d1ed864902f322df3feacb"]
-      });
-      const headers ={
-        'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
-      }
-      axios.post('/api/v1/collections/tobias', data, headers)
+      })
         .then(function (response) {
           console.log(response)
           console.log(response.status)
