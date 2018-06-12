@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 import axios from 'axios'
+import querybuilder from '../../util/querybuilder.js'
 
 /* eslint-disable */
 // initial state
@@ -48,52 +49,42 @@ const getters = {
 // actions
 const actions = {
   search({ commit, state }, payload) {
-    let q = payload.query
+    let querystring = payload.query
     let currentPage = payload.currentPage
     commit('setQueryPayload', payload)
     commit('setResults', [])
-    var url = '/api/search?q='
-    url = url.concat(encodeURIComponent(q))
+    var url = '/api/search?'
     if (currentPage) {
       url = url.concat('&from=').concat(currentPage * state.numDocsPerPage - state.numDocsPerPage)
     }
     url = url.concat('&size=').concat(state.numDocsPerPage)
     axios.post(url,
-    {
-      'aggs': {
-        'PublicationYear': {
-          'terms': {
-            'field': 'publicationYear',
-            'order' : { '_count' : 'desc' }
-          }
-        },
-        'Publisher': {
-          'terms': {
-            'field': 'publisher.raw',
-            'order' : { '_count' : 'desc' }
-          }
-        },
-        'Creator': {
-          'terms': {
-            'field': 'creators.creatorName.value.raw',
-            'order' : { '_count' : 'desc' }
-          }
-        },
-        'Language': {
-          'terms': {
-            'field': 'language',
-            'order' : { '_count' : 'desc' }
-          }
-        }
-      }
+      querybuilder.buildQuery(querystring, {}))//{selectedPublishers:['European Nucleotide Archive (ENA)', 'Esri'], selectedAuthors: ['Esri Inc.']})) // TODO: REMOVE
+    .then(function(response) {
+      commit('setResults', response.data)
     })
-      .then(function(response) {
-        commit('setResults', response.data)
-      })
-      .catch(function(error) {
-        //self.errMsg = error.response;
-        console.log(error)
-      });
+    .catch(function(error) {
+      //self.errMsg = error.response;
+      console.log(error)
+    });
+  },
+  filter({ commit, state }, facetsModel) {
+    let currentPage = state.queryPayload.currentPage
+    commit('setResults', [])
+    var url = '/api/search?'
+    if (currentPage) {
+      url = url.concat('&from=').concat(currentPage * state.numDocsPerPage - state.numDocsPerPage)
+    }
+    url = url.concat('&size=').concat(state.numDocsPerPage)
+    axios.post(url,
+      querybuilder.buildQuery(state.queryPayload.query, facetsModel))//{selectedPublishers:['European Nucleotide Archive (ENA)', 'Esri'], selectedAuthors: ['Esri Inc.']})) // TODO: REMOVE
+    .then(function(response) {
+      commit('setResults', response.data)
+    })
+    .catch(function(error) {
+      //self.errMsg = error.response;
+      console.log(error)
+    });
   }
 }
 

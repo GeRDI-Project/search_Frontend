@@ -16,10 +16,10 @@
       <i>{{ showPublicationYear(result._source.publicationYear) }}</i>
     </div>
     <br>
-    <div class="discription" v-if="result._source.descriptions">
-      {{ showDescription(result._source.descriptions[0].value) }}
-    </div>
   </b-media>
+  <div class="description" v-if="result._source.descriptions">
+    {{ showDescription(result._source.descriptions[0].value) }}
+  </div>
 </b-card>
 </template>
 
@@ -27,7 +27,7 @@
 /* eslint-disable */
 export default {
   name: 'search-result-entry',
-  props: ['result'], 
+  props: ['result'],
   data() {
     return { }
   },
@@ -76,5 +76,11 @@ export default {
 .providerLogo {
   max-height: 100px;
   width: auto;
+  max-width: 250px;
+  height: auto;
+}
+
+.description {
+  text-align: justify;
 }
 </style>
