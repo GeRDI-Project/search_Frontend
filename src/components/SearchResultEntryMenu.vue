@@ -3,7 +3,7 @@
 <b-button-group size = "sm">
     <b-button disabled variant="outline-primary" class = "text-uppercase">More information</b-button>
     <b-button disabled variant="outline-primary" class = "text-uppercase">Share</b-button>
-    <b-button @click="addBookmark()" variant="outline-primary" class = "text-uppercase">{{bookmarkBtn}}</b-button>
+    <b-button :results="results" @click="addBookmark(); showBookmarkAlert(); setAsBookmarked () " variant="outline-primary" class = "text-uppercase">{{bookmarkBtn}}</b-button>
     <b-button disabled variant="outline-primary" class = "text-uppercase">Preprocess</b-button>
     <b-button disabled variant="outline-primary" class = "text-uppercase">Store</b-button>
   </b-button-group>
@@ -23,6 +23,8 @@
 import axios from 'axios'
 /* eslint-disable */
 export default {
+  name: 'search-result-entry-menue',
+  props: ['results'],
   data() {
     return {
       dismissSecs: 3,
@@ -43,10 +45,16 @@ export default {
     addBookmark() {
       const self = this;
       self.bookmarks = [];  
-      axios.post('/api/v1/collections/tobias', {
-      name:"TestCollection",
-      docs:["b7ba880aac4387f455d1ed864902f322df3feacb"]
-      })
+      var collectionName
+      var docID = "9afa288d94b30aa2ea6c426ad1051abc478bb79b"
+      axios.post('/api/v1/collections/nastja', {
+        docs: [docID]
+      },
+      {
+        headers: {
+        'Content-Type': 'application/json'
+        }
+      })
         .then(function (response) {
           console.log(response)
           console.log(response.status)

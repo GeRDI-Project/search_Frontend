@@ -1,15 +1,22 @@
 <template>
-<div class="bookmarks">
-  <b-container>
-    Hallo!
-    <b-row>
-      
-      <b-col cols="12">
-       
-        {{bookmarks}}
-      </b-col>
-    </b-row>
-  </b-container>
+<div>
+
+  <br>
+  <h3>Collections for Robin</h3>
+  <br>
+<b-card class="mb-3" no-body v-for="collection in collections" :collection="collection" :key="collection._id">
+        <h4 slot="header"> {{collection.name}} <br> <h6>{{collection._id}}</h6> </h4>
+    
+        <b-card-body>
+<b-list-group v-for= "bookmark in bookmarks" :bookmark="bookmark">
+  <b-list-group-item>{{bookmark._source.publisher}}</b-list-group-item>
+  
+</b-list-group>
+        </b-card-body>
+        <b-card-footer><a href="#" class="card-link">Remove collection</a>
+            <a href="#" class="card-link">Edit collection</a>
+        </b-card-footer>
+</b-card>
 </div>
 
 </template>
@@ -20,31 +27,41 @@
 import axios from 'axios'
 export default {
   name: 'bookmarks',
+  props: ['results'],
   data() {
     return {
-      bookmarks: [],
+      collections: [],
+      bookmarks: []
 
     }
   },
 
   created() {
     axios.defaults.timeout = 10000;
+    this.getCollections(),
     this.getBookmarks()
   },
   
   methods: {
+    getCollections() {
+      const self = this
+      self.collections = [ ]
+      axios.get('/api/v1/collections/nastja')
+        .then(function(response) {
+          self.collections = response.data
+        })
+        .catch(function(error) {
+          self.errMsg = error.response;
+          console.log(error)
+        });
+    },
     getBookmarks() {
       const self = this
-      self.bookmarks = ['blah']
+      self.bookmarks = [ ]
       console.log(self.bookmarks)
-      axios.get('/api/v1/collections/tobias')
+      axios.get('/api/v1/collections/nastja/5b1ff4423756c90001c5b022')
         .then(function(response) {
           self.bookmarks = response.data
-          console.log(response.data)
-          console.log(response.status)
-    console.log(response.statusText)
-    console.log(response.headers)
-    console.log(response.config)
         })
         .catch(function(error) {
           self.errMsg = error.response;
