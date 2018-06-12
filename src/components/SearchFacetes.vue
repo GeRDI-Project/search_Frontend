@@ -82,19 +82,21 @@
 export default {
   name: 'search-facetes',
   data() {
-    return {
-      facetsModel: {
-        selectedPublishers: [],
-        selectedYears: [],
-        selectedAuthors: [],
-        selectedLanguages: []}
-    }
+    return {}
   },
 
   computed: {
     aggs: function() {
       return this.$store.getters.getAggregations
-    }
+    },
+    facetsModel: {
+      get: function() {
+        return this.$store.getters.getFacetsModel
+      },
+      set: function(val) {
+        this.$store.commit('updateFacetsModel', val)
+      }
+    },
   },
 
   methods: {

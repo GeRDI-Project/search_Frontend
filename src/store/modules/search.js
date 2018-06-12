@@ -21,7 +21,13 @@ import querybuilder from '../../util/querybuilder.js'
 const state = {
   results: {},
   queryPayload: {},
-  numDocsPerPage: 10
+  numDocsPerPage: 10,
+  facetsModel: {
+    selectedPublishers: [],
+    selectedYears: [],
+    selectedAuthors: [],
+    selectedLanguages: []
+  }
 }
 
 // getters
@@ -43,6 +49,9 @@ const getters = {
       return state.results.hits.total
     }
     return 0
+  },
+  getFacetsModel: state => {
+    return state.facetsModel
   }
 }
 
@@ -82,7 +91,6 @@ const actions = {
       commit('setResults', response.data)
     })
     .catch(function(error) {
-      //self.errMsg = error.response;
       console.log(error)
     });
   }
@@ -95,6 +103,9 @@ const mutations = {
   },
   setQueryPayload (state, payload) {
     state.queryPayload = payload
+  },
+  updateFacetsModel (state, newModel) {
+    state.facetsModel = newModel
   }
 }
 

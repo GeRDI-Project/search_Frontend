@@ -56,7 +56,6 @@ export default {
                         }
                       }
                     }
-    console.log(facets)
 
     if (facets.selectedPublishers != undefined && facets.selectedPublishers.length > 0) {
       queryBody.query.bool.must.push(buildSubQuery(facets.selectedPublishers, 'publisher'))
@@ -64,7 +63,6 @@ export default {
     if (facets.selectedAuthors != undefined && facets.selectedAuthors.length > 0) {
       queryBody.query.bool.must.push(buildSubQuery(facets.selectedAuthors, 'creators.creatorName.value'))
     }
-    console.log(queryBody)
     return queryBody
   }
 }
