@@ -1,46 +1,71 @@
+/**
+ * Copyright 2018 Nelson Tavares de Sousa
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 <template>
 <div class="results">
   <search-mask :query-value="$route.query.q"></search-mask>
+  <br>
+  <h6 v-if="numResults > 0" class="results-annotation"><b>{{ numResults }}</b> results found for <b> {{$route.query.q}} </b></h6>
+  <b-alert class="nothing-found-alert" :show="numResults == 0">Nothing to see here</b-alert>
+  <!-- <br>
+  <h6 v-if="totalFoundDocs > 0" class="results-annotation">Showing <b>{{num in numDocsPerPage}} </b>of <b> {{ totalFoundDocs }} </b> results for <b> {{$route.query.q}} </b></h6> -->
+  <br>
   <b-container>
     <b-row>
-      <!-- <b-col cols="3"><search-facetes/></b-col> -->
-      <b-col cols="12">
-        <h6 v-if="totalFoundDocs > 0" class="results-annotation">{{ totalFoundDocs }} results found</h6>
+      <b-col cols="3"><search-facetes v-if="numResults > 0"></search-facetes>
+      </b-col>
+      <b-col cols="9">
         <search-result-entry v-for="result in results" :result="result" :key="result._id"></search-result-entry>
-        <b-alert class="nothing-found-alert" :show="totalFoundDocs == 0">Nothing to see here</b-alert>
+
       </b-col>
     </b-row>
   </b-container>
-  <b-pagination align="center" size="md" :total-rows="totalFoundDocs" v-model="currentPage" :per-page="numDocsPerPage" @input="paginationInput" />
-</div>
+  <b-pagination align="center" size="md" :total-rows="numResults" v-model="currentPage" :per-page="numDocsPerPage" @change="paginationInput"/>
 </div>
 </template>
 
 <script>
 /* eslint-disable */
 
-import axios from 'axios'
+import SearchResultEntry from './SearchResultEntry.vue'
+import SearchFacetes from './SearchFacetes.vue'
 export default {
   name: 'results',
   data() {
     return {
-      // loading: false,
-      results: [],
-      totalFoundDocs: 0,
       numDocsPerPage: 10
-      // currentPage: 1
     }
   },
   computed: {
-    currentPage: function() {
-      if (this.$route.query.p > 1) {
-        return this.$route.query.p
-      }
-      return 1
+    currentPage: {
+      get: function() {
+        if (isNaN(parseInt(this.$route.query.p))) {
+          return 1
+        }
+        return parseInt(this.$route.query.p)
+      },
+      set: function(val) {}
+    },
+    results: function() {
+      return this.$store.getters.getResults
+    },
+    numResults: function() {
+      return this.$store.getters.getResultsAmount
     }
   },
   created() {
-    axios.defaults.timeout = 10000;
     this.search()
   },
   watch: {
@@ -48,24 +73,19 @@ export default {
   },
   methods: {
     search() {
-      const self = this
-      self.results = []
-      axios.get('/api/search?q='.concat(encodeURIComponent(this.$route.query.q)).concat("&from=").concat(this.currentPage * this.numDocsPerPage - this.numDocsPerPage).concat("&size=").concat(this.numDocsPerPage))
-        .then(function(response) {
-          self.results = response.data.hits.hits;
-          self.totalFoundDocs = response.data.hits.total;
-        })
-        .catch(function(error) {
-          self.errMsg = error.response;
-          console.log(error)
-        });
+      let q = this.$route.query.q
+      let page = this.currentPage
+      this.$store.dispatch('search', {
+        query: q,
+        currentPage: page
+      })
     },
-    paginationInput(num) {
+    paginationInput(val) {
       this.$router.push({
         name: 'results',
         query: {
           q: this.$route.query.q,
-          p: num
+          p: val
         }
       })
     }

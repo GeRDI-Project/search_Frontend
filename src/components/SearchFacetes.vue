@@ -1,77 +1,129 @@
+/**
+ * Copyright 2018 Nelson Tavares de Sousa
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 <template>
-<b-card title="Filters">
-  <b-nav vertical>
-    <b-nav-item v-b-toggle.collapse1>Research Field</b-nav-item>
-    <b-collapse id="collapse1" class="mt-2">
-      <p class="card-text">{{ text }}</p>
+<div role="tablist">
+   <b-card no-body class="mb-1">
+    <b-card-header header-tag="header" class="p-1" role="tab">
+      <b-btn block href="#" v-b-toggle.accordion1 variant="info">Publisher</b-btn>
+    </b-card-header>
+    <b-collapse id="accordion1" visible accordion="my-accordion" role="tabpanel">
+      <b-card-body>
+        <p class="card-text">
+          <b-form-group>
+            <b-form-checkbox-group stacked v-model="facetsModel.selectedPublishers" name="publisherFacets" :options="limitArray(this.aggs.Publisher.buckets.map(it => it.key))"></b-form-checkbox-group>
+           <!-- <br>
+              <span>Checked: {{ selectedPublishers }}</span>    -->
+          </b-form-group>
+        </p>
+      </b-card-body>
     </b-collapse>
-
-    <b-nav-item v-b-toggle.collapse2>Location</b-nav-item>
-    <b-collapse id="collapse2" class="mt-2">
-      <p class="card-text">{{ text }}</p>
+  </b-card>
+  <b-card no-body class="mb-1">
+    <b-card-header header-tag="header" class="p-1" role="tab">
+      <b-btn block href="#" v-b-toggle.accordion2 variant="info"> Author </b-btn>
+    </b-card-header>
+    <b-collapse id="accordion2" accordion="my-accordion" role="tabpanel">
+      <b-card-body>
+        <p class="card-text">
+<b-form-group>
+            <b-form-checkbox-group stacked v-model="facetsModel.selectedAuthors" name="authorFacets" :options="limitArray(this.aggs.Creator.buckets.map(it => it.key))"></b-form-checkbox-group>
+          </b-form-group>
+        </p>
+      </b-card-body>
     </b-collapse>
-
-    <b-nav-item v-b-toggle.collapse3>Data Provider</b-nav-item>
-    <b-collapse visible id="collapse3" class="mt-2">
-      <b-form>
-        <b-form-checkbox-group stacked :options="options" />
-        <b-button type="submit" variant="primary" size="sm">Apply</b-button>
-      </b-form>
+  </b-card>
+  <b-card no-body class="mb-1">
+    <b-card-header header-tag="header" class="p-1" role="tab">
+      <b-btn block href="#" v-b-toggle.accordion3 variant="info">Publication year</b-btn>
+    </b-card-header>
+    <b-collapse id="accordion3" visisble accordion="my-accordion" role="tabpanel">
+      <b-card-body>
+        <p class="card-text">
+          <b-form-group>
+            <b-form-checkbox-group stacked v-model="facetsModel.selectedYears" name="pubYearFacets" :options="limitArray(this.aggs.PublicationYear.buckets.map(it => transformToYear(it.key)))"></b-form-checkbox-group>
+          </b-form-group>
+        </p>
+      </b-card-body>
     </b-collapse>
-
-    <b-nav-item v-b-toggle.collapse4>Language</b-nav-item>
-    <b-collapse id="collapse4" class="mt-2">
-      <p class="card-text">{{ text }}</p>
+  </b-card>
+  <b-card no-body class="mb-1">
+    <b-card-header header-tag="header" class="p-1" role="tab">
+      <b-btn block href="#" v-b-toggle.accordion4 variant="info">Language</b-btn>
+    </b-card-header>
+    <b-collapse id="accordion4" accordion="my-accordion" role="tabpanel">
+      <b-card-body>
+        <p class="card-text">
+          <b-form-group>
+            <b-form-checkbox-group stacked v-model="facetsModel.selectedLanguages" name="LanguageFacets" :options="limitArray(this.aggs.Language.buckets.map(it => it.key))"></b-form-checkbox-group>
+          </b-form-group>
+        </p>
+      </b-card-body>
     </b-collapse>
-
-    <b-nav-item v-b-toggle.collapse5>Data Collection Period</b-nav-item>
-    <b-collapse id="collapse5" class="mt-2">
-      <p class="card-text">{{ text }}</p>
-    </b-collapse>
-
-    <b-nav-item v-b-toggle.collapse6>Publication Year</b-nav-item>
-    <b-collapse id="collapse6" class="mt-2">
-      <p class="card-text">{{ text }}</p>
-    </b-collapse>
-
-    <b-nav-item v-b-toggle.collapse7>Access</b-nav-item>
-    <b-collapse id="collapse7" class="mt-2">
-      <p class="card-text">{{ text }}</p>
-    </b-collapse>
-
-    <b-nav-item v-b-toggle.collapse8>Terms of Reuse</b-nav-item>
-    <b-collapse id="collapse8" class="mt-2">
-      <p class="card-text">{{ text }}</p>
-    </b-collapse>
-  </b-nav>
-</b-card>
+  </b-card>
+  <b-button @click="doFilter">Apply</b-button>
+  </div>
 </template>
 
 <script>
 /* eslint-disable */
 export default {
+  name: 'search-facetes',
   data() {
-    return {
-      showCollapse: true,
-      text: 'This is a super fancy placeholder',
-      options: [{
-          text: 'FAOStat',
-          value: '1'
-        },
-        {
-          text: 'SOEP',
-          value: '2'
-        },
-        {
-          text: 'Pangaea',
-          value: '3'
-        },
-        {
-          text: 'GIS',
-          value: '4'
-        }
-      ]
+    return {}
+  },
+
+  computed: {
+    aggs: function() {
+      return this.$store.getters.getAggregations
+    },
+    facetsModel: {
+      get: function() {
+        return this.$store.getters.getFacetsModel
+      },
+      set: function(val) {
+        this.$store.commit('updateFacetsModel', val)
+      }
+    },
+  },
+
+  methods: {
+    transformToYear(num){
+      return new Date(num).getYear() + 1900
+    },
+    limitArray(arr){
+      if (arr.length >= 10) {
+        arr.length = 10;
+      }
+      return arr
+    },
+    doFilter() {
+      this.$store.dispatch('filter', this.facetsModel)
     }
   }
 }
+
 </script>
+
+<style scoped>
+.card {
+  margin-top: 1rem;
+}
+
+.providerLogo {
+  max-height: 100px;
+  width: auto;
+}
+</style>
