@@ -63,6 +63,24 @@ export default {
     if (facets.selectedAuthors != undefined && facets.selectedAuthors.length > 0) {
       queryBody.query.bool.must.push(buildSubQuery(facets.selectedAuthors, 'creators.creatorName.value'))
     }
+    if (facets.selectedLanguages != undefined && facets.selectedLanguages.length > 0) {
+      queryBody.query.bool.must.push(buildSubQuery(facets.selectedLanguages, 'language'))
+    }
+    if (facets.selectedYears != undefined && facets.selectedYears.length > 0) {
+      let max = Math.max.apply(null, facets.selectedYears)
+      let min = Math.min.apply(null, facets.selectedYears)
+      let subQuery = {
+        range: {
+          publicationYear: {
+            gte: 0,
+            lte: 0
+          }
+        }
+      }
+      subQuery.range.publicationYear.gte = min
+      subQuery.range.publicationYear.lte = max
+      queryBody.query.bool.must.push(subQuery)
+    }
     return queryBody
   }
 }
