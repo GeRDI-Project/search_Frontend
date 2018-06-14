@@ -1,4 +1,5 @@
 <template>
+<div>
 <b-card>
   <b-media right-align vertical-align="top">
     <b-img class="providerLogo" v-if="hasProviderLogo(result._source.webLinks)" slot="aside" alt="Provider Logo" :src="getProviderLogo(result._source.webLinks)" />
@@ -8,28 +9,30 @@
       <i>{{ showPublisher(result._source.publisher) }}</i>
     </div>
     <br>
-    <div class="creator" v-if="result._source.creators">
-      {{ result._source.creators[0].creatorName.value }}
+    <div class="titels" v-if="result._source.descriptions">
+      {{ showDescription(result._source.descriptions[0].value) }}
     </div>
     <br>
-    <div class="year" v-if="result._source.publicationYear">
-      <i>{{ showPublicationYear(result._source.publicationYear) }}</i>
+    <div class="docID" v-if="result._id"> Doc ID: 
+      {{ showDescription(result._id) }}
     </div>
-    <br>
   </b-media>
   <div class="description" v-if="result._source.descriptions">
     {{ showDescription(result._source.descriptions[0].value) }}
   </div>
+  <search-result-entry-menu :results="this.result"></search-result-entry-menu>
 </b-card>
+
+</div>
 </template>
 
 <script>
 /* eslint-disable */
 export default {
   name: 'search-result-entry',
-  props: ['result'],
+  props: ['result', 'results'],
   data() {
-    return { }
+    return {}
   },
   methods: {
     filterForViewURI(linksArray) {
@@ -60,9 +63,6 @@ export default {
     getProviderLogo(linksArray) {
       let val = linksArray.filter(elem => elem.webLinkType == 'ProviderLogoURL')
       return val[0].webLinkURI
-    },
-    showCreator(creator) {
-      return creator
     }
   }
 }
@@ -76,11 +76,5 @@ export default {
 .providerLogo {
   max-height: 100px;
   width: auto;
-  max-width: 250px;
-  height: auto;
-}
-
-.description {
-  text-align: justify;
 }
 </style>

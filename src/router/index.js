@@ -12,7 +12,7 @@ import SearchFacetes from '@/components/SearchFacetes'
 import PaginationBar from '@/components/PaginationBar'
 
 // Bookmark Components
-import Bookmarks from '@/components/Bookmarks'
+import Collections from '@/components/Collections'
 import BookmarkList from '@/components/BookmarkList'
 import BookmarkListEntry from '@/components/BookmarkListEntry'
 
@@ -31,7 +31,8 @@ Vue.component('nav-menu', NavMenu)
 Vue.component('search-mask', SearchMask)
 Vue.component('app-footer', AppFooter)
 Vue.component('pagination-bar', PaginationBar)
-Vue.component('bookmarks', Bookmarks)
+Vue.component('collections', Collections)
+Vue.component('bookmark-list-entry', BookmarkListEntry)
 
 export default new Router({
   mode: 'history',
@@ -46,8 +47,8 @@ export default new Router({
     component: Start
   },
   { path: '/bookmarks',
-    name: 'bookmarks',
-    component: Bookmarks,    
+    name: 'collections',
+    component: Collections,    
     }
   ]
 })

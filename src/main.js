@@ -5,8 +5,6 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 import BootstrapVue from 'bootstrap-vue'
-<<<<<<< HEAD
-=======
 //import axios from 'axios'
 import Results from '@/components/Results'
 import SearchResultEntry from '@/components/SearchResultEntry'
@@ -17,7 +15,6 @@ import NavMenu from '@/components/NavMenu'
 import SearchMask from '@/components/SearchMask'
 import AppFooter from '@/components/AppFooter'
 import PaginationBar from '@/components/PaginationBar'
->>>>>>> feature/SAI-844-review-and-update-the-faceted-search
 
 import { store } from './store/store'
 

@@ -46,7 +46,7 @@ export default {
       const self = this;
       self.bookmarks = [];  
       var collectionName
-      var docID = "9afa288d94b30aa2ea6c426ad1051abc478bb79b"
+      var docID = this.results._id
       axios.post('/api/v1/collections/nastja', {
         docs: [docID]
       },
