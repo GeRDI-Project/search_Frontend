@@ -35,7 +35,6 @@ Vue.component('collections', Collections)
 Vue.component('bookmark-list-entry', BookmarkListEntry)
 
 export default new Router({
-  mode: 'history',
   routes: [{
     path: '/results',
     name: 'results',
@@ -48,7 +47,7 @@ export default new Router({
   },
   { path: '/bookmarks',
     name: 'collections',
-    component: Collections,    
+    component: Collections,
     }
   ]
 })
