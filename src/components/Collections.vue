@@ -1,26 +1,30 @@
 <template>
 <div>
+<br>
+<b-tabs>
+  <b-tab title="Collections" active>
+
   <br>
-  <h3>Collections for Nastja</h3>
-  <br>
-  <b-list-group v-for="collection in collections" :collection="collection" :key="collection._id">
-    <b-list-group-item href="#" class="flex-column align-items-start">
-      <div class="d-flex w-100 justify-content-between">
-        <h5 class="mb-1">{{collection.name}}</h5>
-        <small>{{collection._id}}</small>
-      </div>
-      <br>
-      <p class="mb-1">
-        <b-button-group size="sm">
-          <b-button variant="link">Remove collection</b-button>
-          <b-button variant="link">Edit collection</b-button>
+  <b-card class="mb-3" v-for="collection in collections" :collection="collections" :key="collection._id" 
+   :title = "collection.name"
+            :sub-title=collection._id>
+        <p>
+        </p>
+          <b-button-group>
+            <b-button disabled variant="link">Show bookmarks</b-button>
+            <b-button disabled variant="link">Edit name</b-button>
+          <b-button disabled variant="link">Remove collection</b-button>
         </b-button-group>
-      </p>
-    </b-list-group-item>
-  </b-list-group>
-  <br><br>
-  <hr>
+    </b-card>
+  </b-tab>
+  <b-tab title="Bookmarks" >
+    
   <bookmark-list-entry v-if="collections.length > 0" :collections="collections"></bookmark-list-entry>
+  </b-tab>
+</b-tabs>
+
+  
+  
 </div>
 </template>
 
@@ -39,9 +43,7 @@ export default {
 
   created() {
     axios.defaults.timeout = 10000;
-    this.getCollections()
-    this.deleteCollections()
-   
+    this.getCollections()   
   },
   
   methods: {

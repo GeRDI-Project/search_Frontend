@@ -3,7 +3,8 @@
 <b-button-group size = "sm">
     <b-button disabled variant="outline-primary" class = "text-uppercase">More information</b-button>
     <b-button disabled variant="outline-primary" class = "text-uppercase">Share</b-button>
-    <b-button :results="results" @click="addBookmark(); showBookmarkAlert(); setAsBookmarked () " variant="outline-primary" class = "text-uppercase">{{bookmarkBtn}}</b-button>
+    <!-- <b-button :results="results" @click="addBookmark(); showBookmarkAlert(); setAsBookmarked () " variant="outline-primary" class = "text-uppercase">{{bookmarkBtn}}</b-button> -->
+    <b-button @click="showModal" variant="outline-primary" class = "text-uppercase">{{bookmarkBtn}}</b-button>
     <b-button disabled variant="outline-primary" class = "text-uppercase">Preprocess</b-button>
     <b-button disabled variant="outline-primary" class = "text-uppercase">Store</b-button>
   </b-button-group>
@@ -16,6 +17,17 @@
              @dismiss-count-down="countDownChanged">
              The bookmark is succesfully set!
 </b-alert>
+
+<div>
+    <b-modal ref="myModalRef" hide-footer title="Saving the colliction">
+      <div class="d-block text-center">
+        <b-form-input type="text"
+                      placeholder="Enter the name of your collection"
+                      v-model="collectionName"></b-form-input>
+      </div>
+      <b-btn class="mt-3" variant="outline-success" block @click="hideModal (); addBookmark(); showBookmarkAlert(); setAsBookmarked ()">Ok</b-btn>
+    </b-modal>
+  </div>
 </div>
 </template>
 
@@ -29,10 +41,18 @@ export default {
     return {
       dismissSecs: 3,
       dismissCountDown: 0,
-      bookmarkBtn: 'Add Bookmark'
+      bookmarkBtn: 'Add Bookmark',
+      collectionName: ' '
+      
     }
   },
   methods: {
+    showModal () {
+      this.$refs.myModalRef.show()
+    },
+    hideModal () {
+      this.$refs.myModalRef.hide()
+    },
     countDownChanged(dismissCountDown) {
       this.dismissCountDown = dismissCountDown
     },
@@ -42,12 +62,13 @@ export default {
     setAsBookmarked () {
     this.bookmarkBtn = 'Bookmarked'
     },
+
     addBookmark() {
       const self = this;
       self.bookmarks = [];  
-      var collectionName
       var docID = this.results._id
       axios.post('/api/v1/collections/nastja', {
+        name: this.collectionName,
         docs: [docID]
       },
       {
