@@ -33,6 +33,7 @@
 
 <script>
 import axios from 'axios'
+import usercookie from '../util/usercookie.js'
 /* eslint-disable */
 export default {
   name: 'search-result-entry-menue',
@@ -62,43 +63,11 @@ export default {
     setAsBookmarked () {
     this.bookmarkBtn = 'Bookmarked'
     },
-    getCookie(cname) {
-      var name = cname + '=';
-      if (document.cookie == "") return ""
-      var ca = document.cookie.split(';');
-      for(var i = 0; i < ca.length; i++) {
-          var c = ca[i];
-          while (c.charAt(0) == ' ') {
-              c = c.substring(1);
-          }
-          if (c.indexOf(name) == 0) {
-              return c.substring(name.length, c.length);
-          }
-      }
-      return "";
-    },
-    makeid() {
-      var text = "";
-      var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-
-      for (var i = 0; i < 10; i++)
-        text += possible.charAt(Math.floor(Math.random() * possible.length));
-
-      return text;
-    },
-    getUsername() {
-      var username = this.getCookie('username')
-      if (username == "") {
-        username = this.makeid()
-        document.cookie = 'username=' + username
-      }
-      return username
-    },
     addBookmark() {
       const self = this;
       self.bookmarks = [];
       var docID = this.results._id
-      axios.post('/api/v1/collections/' + this.getUsername(), {
+      axios.post('/api/v1/collections/' + usercookie.getUsername(), {
         name: this.collectionName,
         docs: [docID]
       },

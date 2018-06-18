@@ -32,6 +32,7 @@
 /* eslint-disable */
 
 import axios from 'axios'
+import usercookie from '../util/usercookie.js'
 export default {
   name: 'collections',
   props: ['results'],
@@ -47,42 +48,10 @@ export default {
   },
 
   methods: {
-    getCookie(cname) {
-      var name = cname + '=';
-      if (document.cookie == "") return ""
-      var ca = document.cookie.split(';');
-      for(var i = 0; i < ca.length; i++) {
-          var c = ca[i];
-          while (c.charAt(0) == ' ') {
-              c = c.substring(1);
-          }
-          if (c.indexOf(name) == 0) {
-              return c.substring(name.length, c.length);
-          }
-      }
-      return "";
-    },
-    makeid() {
-      var text = "";
-      var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-
-      for (var i = 0; i < 10; i++)
-        text += possible.charAt(Math.floor(Math.random() * possible.length));
-
-      return text;
-    },
-    getUsername() {
-      var username = this.getCookie('username')
-      if (username == "") {
-        username = this.makeid()
-        document.cookie = 'username=' + username
-      }
-      return username
-    },
     getCollections() {
       const self = this
       self.collections = [ ]
-      axios.get('/api/v1/collections/' + this.getUsername())
+      axios.get('/api/v1/collections/' + usercookie.getUsername())
         .then(function(response) {
           self.collections = response.data
         })
