@@ -23,6 +23,7 @@
 <script>
 
 /* eslint-disable */
+import usercookie from '../util/usercookie.js'
 import axios from 'axios'
 export default {
   name: 'bookmark-list-entry',
@@ -41,7 +42,7 @@ export default {
     getBookmarkList() {
       const self = this
       self.collections.forEach(function (elem){
-          axios.get('/api/v1/collections/nastja/'.concat(elem._id))
+          axios.get('/api/v1/collections/'.concat(usercookie.getUsername()).concat('/').concat(elem._id))
             .then(function(response) {
             self.bookmarks.push(response.data)
         })
