@@ -12,7 +12,7 @@ import PaginationBar from '@/components/PaginationBar'
 
 // Bookmark Components
 import Collections from '@/components/Collections'
-import BookmarkListEntry from '@/components/BookmarkListEntry'
+import BookmarkList from '@/components/BookmarkList'
 
 // Statical UI Elements Components
 import NavMenu from '@/components/NavMenu'
@@ -29,7 +29,7 @@ Vue.component('search-mask', SearchMask)
 Vue.component('app-footer', AppFooter)
 Vue.component('pagination-bar', PaginationBar)
 Vue.component('collections', Collections)
-Vue.component('bookmark-list-entry', BookmarkListEntry)
+Vue.component('bookmark-list', BookmarkList)
 
 export default new Router({
   routes: [{
@@ -42,7 +42,7 @@ export default new Router({
     name: 'start',
     component: Start
   },
-  { path: '/bookmark',
+  { path: '/bookmarks',
     name: 'collections',
     component: Collections,    
     }

@@ -1,7 +1,7 @@
 <template>
 <div>
 <br>    
-  <bookmark-list-entry v-if="collections.length > 0" :collections="collections"></bookmark-list-entry>
+  <bookmark-list v-if="collections.length > 0" :collections="collections"></bookmark-list>
 </div>
 </template>
 
