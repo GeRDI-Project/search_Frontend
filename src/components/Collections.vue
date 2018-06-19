@@ -1,6 +1,6 @@
 <template>
 <div>
-<br>    
+<br>
   <bookmark-list-entry v-if="collections.length > 0" :collections="collections"></bookmark-list-entry>
 </div>
 </template>
@@ -9,6 +9,7 @@
 /* eslint-disable */
 
 import axios from 'axios'
+import usercookie from '../util/usercookie.js'
 export default {
   name: 'collections',
   data() {
@@ -19,21 +20,18 @@ export default {
   },
 
   created() {
- 
-    this.getCollections()   
+    this.getCollections()
   },
-  
+
   methods: {
-    
     getCollections() {
       const self = this
       self.collections = [ ]
-    
-      axios.get('/api/v1/collections/nastja')
+      axios.get('/api/v1/collections/' + usercookie.getUsername())
         .then(function(response) {
           self.collections = response.data
         })
-        
+
         .catch(function(error) {
           self.errMsg = error.response;
           console.log(error)

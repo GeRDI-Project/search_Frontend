@@ -4,12 +4,12 @@
 <b-card class="mb-3" v-for="bookmark in bookmarks"  :key="bookmark._id">
    <h5><a :href='filterForViewURI(bookmark[0]._source.webLinks)'>{{ bookmark[0]._source.titles[0].value }}</a></h5>
    <h6>{{bookmark[0]._source.publisher}}</h6>
-   
+
         <p>
-         {{bookmark[0]._source.publicationYear}} 
+         {{bookmark[0]._source.publicationYear}}
          <br>
          {{bookmark[0]._source.descriptions[0].value}}
-         
+
         </p>
           <b-button-group>
             <b-button disabled variant="link">More information</b-button>
@@ -23,6 +23,7 @@
 <script>
 
 /* eslint-disable */
+import usercookie from '../util/usercookie.js'
 import axios from 'axios'
 export default {
   name: 'bookmark-list-entry',
@@ -35,13 +36,13 @@ export default {
   created() {
     axios.defaults.timeout = 10000;
     this.getBookmarkList()
-   
+
   },
   methods: {
     getBookmarkList() {
       const self = this
       self.collections.forEach(function (elem){
-          axios.get('/api/v1/collections/nastja/'.concat(elem._id))
+          axios.get('/api/v1/collections/'.concat(usercookie.getUsername()).concat('/').concat(elem._id))
             .then(function(response) {
             self.bookmarks.push(response.data)
         })
@@ -49,7 +50,7 @@ export default {
           self.errMsg = error.response;
           console.log(error)
         });
-      }); 
+      });
     },
     filterForViewURI(linksArray) {
       if(linksArray) {

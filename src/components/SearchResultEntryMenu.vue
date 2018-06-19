@@ -32,6 +32,7 @@
 
 <script>
 import axios from 'axios'
+import usercookie from '../util/usercookie.js'
 /* eslint-disable */
 export default {
   name: 'search-result-entry-menue',
@@ -42,7 +43,7 @@ export default {
       dismissCountDown: 0,
       bookmarkBtn: 'Add Bookmark',
       collectionName: ' '
-      
+
     }
   },
   methods: {
@@ -61,12 +62,11 @@ export default {
     setAsBookmarked () {
     this.bookmarkBtn = 'Bookmarked'
     },
-
     addBookmark() {
       const self = this;
-      self.bookmarks = [];  
+      self.bookmarks = [];
       var docID = this.results._id
-      axios.post('/api/v1/collections/nastja', {
+      axios.post('/api/v1/collections/' + usercookie.getUsername(), {
         name: this.collectionName,
         docs: [docID]
       },

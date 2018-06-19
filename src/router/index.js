@@ -44,7 +44,7 @@ export default new Router({
   },
   { path: '/bookmark',
     name: 'collections',
-    component: Collections,    
+    component: Collections,
     }
   ]
 })
