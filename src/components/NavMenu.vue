@@ -9,7 +9,7 @@
 
       <b-navbar-nav>
         <b-nav-item :to ="'/'" class = "text-uppercase">Search</b-nav-item>
-        <b-nav-item :to="'/bookmarks'" class = "text-uppercase">Bookmark</b-nav-item>
+        <b-nav-item :to="'/bookmark'" class = "text-uppercase">Bookmark</b-nav-item>
         <b-nav-item href="#" disabled class = "text-uppercase">Store</b-nav-item>
         <b-nav-item href="#" disabled class = "text-uppercase">Preprocess</b-nav-item>
         <b-nav-item href="#" disabled class = "text-uppercase">Analyze</b-nav-item>

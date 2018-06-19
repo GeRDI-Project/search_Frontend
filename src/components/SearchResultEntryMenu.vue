@@ -3,7 +3,6 @@
 <b-button-group size = "sm">
     <b-button disabled variant="outline-primary" class = "text-uppercase">More information</b-button>
     <b-button disabled variant="outline-primary" class = "text-uppercase">Share</b-button>
-    <!-- <b-button :results="results" @click="addBookmark(); showBookmarkAlert(); setAsBookmarked () " variant="outline-primary" class = "text-uppercase">{{bookmarkBtn}}</b-button> -->
     <b-button @click="showModal" variant="outline-primary" class = "text-uppercase">{{bookmarkBtn}}</b-button>
     <b-button disabled variant="outline-primary" class = "text-uppercase">Preprocess</b-button>
     <b-button disabled variant="outline-primary" class = "text-uppercase">Store</b-button>

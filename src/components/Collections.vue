@@ -1,30 +1,7 @@
 <template>
 <div>
-<br>
-<b-tabs>
-  <b-tab title="Collections" active>
-
-  <br>
-  <b-card class="mb-3" v-for="collection in collections" :collection="collections" :key="collection._id" 
-   :title = "collection.name"
-            :sub-title=collection._id>
-        <p>
-        </p>
-          <b-button-group>
-            <b-button disabled variant="link">Show bookmarks</b-button>
-            <b-button disabled variant="link">Edit name</b-button>
-          <b-button disabled variant="link">Remove collection</b-button>
-        </b-button-group>
-    </b-card>
-  </b-tab>
-  <b-tab title="Bookmarks" >
-    
+<br>    
   <bookmark-list-entry v-if="collections.length > 0" :collections="collections"></bookmark-list-entry>
-  </b-tab>
-</b-tabs>
-
-  
-  
 </div>
 </template>
 
@@ -36,12 +13,13 @@ export default {
   name: 'collections',
   data() {
     return {
-      collections: []
+      collections: [],
+      bookmarksForCollection: []
     }
   },
 
   created() {
-    axios.defaults.timeout = 10000;
+ 
     this.getCollections()   
   },
   
