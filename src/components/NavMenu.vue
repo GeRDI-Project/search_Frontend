@@ -8,8 +8,8 @@
     <b-collapse is-nav id="nav_collapse">
 
       <b-navbar-nav>
-        <b-nav-item href="/" active class = "text-uppercase">Search</b-nav-item>
-        <b-nav-item href="/bookmarks" active class = "text-uppercase">Bookmark</b-nav-item>
+        <b-nav-item :to ="'/'" class = "text-uppercase">Search</b-nav-item>
+        <b-nav-item :to="'/bookmark'" class = "text-uppercase">Bookmark</b-nav-item>
         <b-nav-item href="#" disabled class = "text-uppercase">Store</b-nav-item>
         <b-nav-item href="#" disabled class = "text-uppercase">Preprocess</b-nav-item>
         <b-nav-item href="#" disabled class = "text-uppercase">Analyze</b-nav-item>
@@ -65,7 +65,4 @@ export default {
 </script>
 
 <style scoped>
-.uppercased {
-  text-transform: uppercase;
-}
 </style>

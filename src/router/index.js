@@ -7,13 +7,11 @@ import SearchMask from '@/components/SearchMask'
 import Results from '@/components/Results'
 import SearchResultEntry from '@/components/SearchResultEntry'
 import SearchResultEntryMenu from '@/components/SearchResultEntryMenu'
-import SearchResultList from '@/components/SearchResultList'
 import SearchFacetes from '@/components/SearchFacetes'
 import PaginationBar from '@/components/PaginationBar'
 
 // Bookmark Components
 import Collections from '@/components/Collections'
-import BookmarkList from '@/components/BookmarkList'
 import BookmarkListEntry from '@/components/BookmarkListEntry'
 
 // Statical UI Elements Components
@@ -25,7 +23,6 @@ Vue.use(Router)
 
 Vue.component('search-result-entry', SearchResultEntry)
 Vue.component('search-result-entry-menu', SearchResultEntryMenu)
-Vue.component('search-result-list', SearchResultList)
 Vue.component('search-facetes', SearchFacetes)
 Vue.component('nav-menu', NavMenu)
 Vue.component('search-mask', SearchMask)
@@ -45,7 +42,7 @@ export default new Router({
     name: 'start',
     component: Start
   },
-  { path: '/bookmarks',
+  { path: '/bookmark',
     name: 'collections',
     component: Collections,
     }
