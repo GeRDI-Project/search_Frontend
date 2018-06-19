@@ -34,7 +34,6 @@
 import axios from 'axios'
 export default {
   name: 'collections',
-  props: ['results'],
   data() {
     return {
       collections: []
