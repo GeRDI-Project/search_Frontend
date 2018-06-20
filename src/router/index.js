@@ -42,7 +42,7 @@ export default new Router({
     name: 'start',
     component: Start
   },
-  { path: '/bookmarks',
+  { path: '/bookmark',
     name: 'collections',
     component: Collections,
     }

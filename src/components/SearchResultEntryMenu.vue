@@ -18,7 +18,7 @@
 </b-alert>
 
 <div>
-    <b-modal ref="myModalRef" hide-footer title="Saving the colliction">
+    <b-modal ref="myModalRef" hide-footer title="Saving the collection">
       <div class="d-block text-center">
         <b-form-input type="text"
                       placeholder="Enter the name of your collection"

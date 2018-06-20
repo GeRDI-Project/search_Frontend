@@ -1,6 +1,5 @@
 <template>
 <div>
-  {{collections}}
    <br>
 <b-card class="mb-3" v-for="bookmark in bookmarks"  :key="bookmark._id">
    <h5><a :href='filterForViewURI(bookmark[0]._source.webLinks)'>{{ bookmark[0]._source.titles[0].value }}</a></h5>
@@ -23,7 +22,7 @@
 
 <script>
 
-/* eslint-disable */d
+/* eslint-disable */
 import usercookie from '../util/usercookie.js'
 import axios from 'axios'
 export default {
@@ -58,13 +57,13 @@ export default {
         return linksArray.filter(elem => elem.webLinkType == 'ViewURL')[0].webLinkURI
       }
       return '#'
-    }/* ,
+    },
     showDescription(description) {
       let result = description.replace(/(<([^>]+)>)/ig, '')
       let limit = 850
       if (result.length > limit) result = result.substr(0,limit) + ' [...]'
       return result
-    } */
+    } 
   }
 }
 </script>
