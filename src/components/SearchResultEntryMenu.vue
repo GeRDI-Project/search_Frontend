@@ -18,12 +18,31 @@
 </b-alert>
 
 <div>
-    <b-modal ref="myModalRef" hide-footer title="Saving the collection">
+    <b-modal ref="myModalRef" hide-footer title="Saving data set to collection">
+{{collectionList}}
+      <hr>
       <div class="d-block text-center">
-        <b-form-input type="text"
-                      placeholder="Enter the name of your collection"
-                      v-model="collectionName"></b-form-input>
+        <h5>Save to a new collection</h5>
+        <br>
+        <b-form-input  v-model="collectionName" 
+        type="text"
+                      placeholder="Enter the name of your collection">
+                      </b-form-input>
+      
+      <br>
+
+<h5>Select an existing collection</h5>
+ <b-form-select v-model="selected" :options="collectionList" class="mb-3">
+      <template slot="first">
+        <!-- this slot appears above the options from 'options' prop -->
+        <option :value="null" disabled>Please select an option </option>
+      </template>
+    </b-form-select>
+
+
       </div>
+
+
       <b-btn class="mt-3" variant="outline-success" block @click="hideModal (); addBookmark(); showBookmarkAlert(); setAsBookmarked ()">Ok</b-btn>
     </b-modal>
   </div>
@@ -42,9 +61,13 @@ export default {
       dismissSecs: 3,
       dismissCountDown: 0,
       bookmarkBtn: 'Add Bookmark',
-      collectionName: ' '
-
+      collectionName: '',
+      collectionList: [],
+      selected: null
     }
+  },
+   created() {
+    this.getCollectionList()
   },
   methods: {
     showModal () {
@@ -61,6 +84,20 @@ export default {
     },
     setAsBookmarked () {
     this.bookmarkBtn = 'Bookmarked'
+    },
+    getCollectionList() {
+const self = this
+      axios.get('/api/v1/collections/' + usercookie.getUsername())
+        .then(function(response) {
+          self.collectionList = response.data
+          console.log("CollectionList")
+          console.log(self.collectionList)
+        })
+
+        .catch(function(error) {
+          self.errMsg = error.response;
+          console.log(error)
+        });
     },
     addBookmark() {
       const self = this;
