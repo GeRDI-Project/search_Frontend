@@ -1,7 +1,24 @@
 <template>
 <div>
 <br>
-  <bookmark-list v-if="collections.length > 0" :collections="collections"></bookmark-list>
+  <b-tabs>
+  <b-tab title="Collections">
+    
+    <br>
+    <b-list-group v-for="collection in collections" :key="collection.id">
+  <b-list-group-item >{{collection.name}} <br> {{collection._id}}
+  <br>
+  <b-btn class="mt-3" variant="outline-success" block @click="">Show bookmarks</b-btn>
+  </b-list-group-item>
+  
+  
+</b-list-group>
+  </b-tab>
+  <b-tab title="Bookmarks" >
+    <br><bookmark-list v-if="collections.length > 0" :collections="collections"></bookmark-list>
+  </b-tab>
+</b-tabs>
+  
 </div>
 </template>
 
@@ -36,26 +53,24 @@ export default {
           self.errMsg = error.response;
           console.log(error)
         });
+    },
+    showBookmarks() {
+      const self = this
+  self.bookmarksForCollection = []
+      axios.get('/api/v1/collections/' + usercookie.getUsername() + '/' + '5b30ec0465e12d00013d008b')
+        .then(function(response) {
+          self.bookmarksForCollection = response.data
+          console.log(self.bookmarksForCollection)
+        })
+        .catch(function(error) {
+          self.errMsg = error.response;
+          console.log(error)
+        });
     }
   }
 }
 </script>
 
 <style scoped>
-.mask {
-  margin-top: 2rem;
-  margin-bottom: 2rem;
-}
-.results {
-  margin-top: 1rem;
-}
-.nothing-found-alert {
-  margin-top: 1rem;
-}
-.pagination {
-  margin-top: 1rem;
-}
-.results-annotation {
-  margin-top: 1rem;
-}
+
 </style>
