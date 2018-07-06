@@ -19,25 +19,28 @@
 
 <div>
     <b-modal ref="myModalRef" hide-footer title="Saving data set to collection">
-{{collectionList}}
+{{this.$store.state.search.collectionList}}
       <hr>
       <div class="d-block text-center">
         <h5>Save to a new collection</h5>
         <br>
-        <b-form-input  v-model="collectionName" 
+        <b-form-input  v-model="collectionName"
         type="text"
                       placeholder="Enter the name of your collection">
                       </b-form-input>
-      
-    
+
+
 <b-btn class="mt-3" variant="outline-success" block @click="hideModal (); addBookmark(); showBookmarkAlert(); setAsBookmarked ()">Ok</b-btn>
 <br>
 <h5>Select an existing collection</h5>
- <b-form-select v-model="collectionID" :options="collectionList" class="mb-3">
+ <b-form-select v-model="collectionID" class="mb-3">
       <template slot="first">
         <!-- this slot appears above the options from 'options' prop -->
         <option :value="null">Please select a collection name </option>
       </template>
+      <option v-for="collection in this.$store.state.search.collectionList" v-bind:value="collection.id">
+      {{ collection.name }}
+      </option>
     </b-form-select>
 
 
@@ -53,6 +56,7 @@
 <script>
 import axios from 'axios'
 import usercookie from '../util/usercookie.js'
+
 /* eslint-disable */
 export default {
   name: 'search-result-entry-menue',
@@ -63,12 +67,11 @@ export default {
       dismissCountDown: 0,
       bookmarkBtn: 'Add Bookmark',
       collectionName: '',
-      collectionList: [],
-      collectionID: null
+      collectionID: null,
     }
   },
-   created() {
-    this.getCollectionList()
+  created() {
+
   },
   methods: {
     showModal () {
@@ -84,41 +87,28 @@ export default {
       this.dismissCountDown = this.dismissSecs
     },
     setAsBookmarked () {
-    this.bookmarkBtn = 'Bookmarked'
-    },
-    getCollectionList() {
-      const self = this
-      self.collectionList = [ ]
-      axios.get('/api/v1/collections/' + usercookie.getUsername())
-        .then(function(response) {
-          response.data
-          .forEach(function(elem) {
-            self.collectionList.push(elem.name)
-          });
-        })
-        .catch(function(error) {
-          self.errMsg = error.response;
-          console.log(error)
-        });
-
+      this.bookmarkBtn = 'Bookmarked'
     },
     addBookmark() {
-      const docID = this.results._id
+      const self = this
+      const docID = this.results._id;
       axios.post('/api/v1/collections/' + usercookie.getUsername(), {
         name: this.collectionName,
         docs: [docID]
       },
       {
-        headers: {
-        'Content-Type': 'application/json'
-        }
-      })
+        headers: {
+        'Content-Type': 'application/json'
+        }
+      })
         .then(function (response) {
-          console.log(response)
-          console.log(response.status)
-          console.log(response.statusText)
-          console.log(response.headers)
-          console.log(response.config)
+          self.$store.commit('refreshCollections');
+          console.log("Adding bookmark to new collection named: "+self.collectionName)
+//          console.log(response);
+//          console.log(response.status);
+//          console.log(response.statusText);
+//          console.log(response.headers);
+//          console.log(response.config)
         })
         .catch(function (error) {
           console.log(error)
@@ -126,27 +116,32 @@ export default {
     },
     addBookmarkToExistingCollection() {
       const self = this;
-      const docID = this.results._id
-      axios.put('/api/v1/collections/' + usercookie.getUsername() + '/' + this.collectionID, {
-        docs: [docID]
-      },
-      {
-        headers: {
-        'Content-Type': 'application/json'
-        }
-      })
-        .then(function (response) {
-          console.log(response)
-          console.log(response.status)
-          console.log(response.statusText)
-          console.log(response.headers)
-          console.log(response.config)
+      const docID = this.results._id;
+      if (this.collectionID != null) {
+        axios.put('/api/v1/collections/' + usercookie.getUsername() + '/' + this.collectionID, {
+          docs: [docID]
+        },
+        {
+          headers: {
+          'Content-Type': 'application/json'
+          }
         })
-        .catch(function (error) {
-          console.log(error)
-        });
-    }
-  }
+          .then(function (response) {
+            console.log("Adding bookmark to collection "+self.collectionName+" with ID: "+self.collectionID);
+//            console.log(response);
+//            console.log(response.status);
+//            console.log(response.statusText);
+//            console.log(response.headers);
+//            console.log(response.config);
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
+        } else {
+        console.log("Empty collection ID");
+      }
+   }
+   }
 }
 
 </script>

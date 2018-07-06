@@ -15,6 +15,7 @@
  */
 import axios from 'axios'
 import querybuilder from '../../util/querybuilder.js'
+import usercookie from '../../util/usercookie.js'
 
 /* eslint-disable */
 // initial state
@@ -22,6 +23,7 @@ const state = {
   results: {},
   queryPayload: {},
   numDocsPerPage: 10,
+  collectionList: [],
   facetsModel: {
     selectedPublishers: [],
     selectedYears: [],
@@ -52,6 +54,9 @@ const getters = {
   },
   getFacetsModel: state => {
     return state.facetsModel
+  },
+  getCollectionList: state => {
+    return state.collectionList
   }
 }
 
@@ -106,6 +111,26 @@ const mutations = {
   },
   updateFacetsModel (state, newModel) {
     state.facetsModel = newModel
+  },
+  addCollection(state, collection) {
+    state.collectionList.push(collection);
+  },
+  refreshCollections(state) {
+    console.log("Refreshing collections")
+    state.collectionList = [];
+    var self = this;
+    axios.get('/api/v1/collections/' + usercookie.getUsername())
+      .then(function(response) {
+        response.data
+        .forEach(function(elem) {
+          state.collectionList.push({"id": elem._id, "name": elem.name});
+          console.log("Pushing id:"+elem._id+" name: "+elem.name+" for username: "+usercookie.getUsername());
+        });
+      })
+      .catch(function(error) {
+        self.errMsg = error.response;
+        console.log(error);
+      });
   }
 }
 
@@ -113,5 +138,5 @@ export default {
   state,
   getters,
   actions,
-  mutations
+  mutations,
 }

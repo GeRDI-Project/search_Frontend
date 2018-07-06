@@ -47,5 +47,10 @@ new Vue({
   template: '<App/>',
   components: {
     App
+  },
+  created() {
+    console.log('Created')
+    this.$store.commit('refreshCollections')
   }
+
 })
