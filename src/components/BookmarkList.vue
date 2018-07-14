@@ -4,11 +4,11 @@
   <b-collapse v-bind:id="'bookmarks-'+collection._id" class="mt-2" accordion="bookmarks">
     <b-card v-if="bookmarksForCollection !=='processing'">
       <div v-if="bookmarksForCollection.length === 0">
-        No results
+        No Bookmark in this collection
       </div>
       <div v-else>
         <div class="m-2" v-for="bookmark  in bookmarksForCollection" :key="bookmark._id" v-bind:id="'bookmark-'+bookmark._id">
-          
+          <div v-if="bookmark._source">
           <b-media right-align vertical-align="top">
             <b-img class="providerLogo" v-if="hasProviderLogo(bookmark._source.webLinks)" slot="aside" alt="Provider Logo" :src="getProviderLogo(bookmark._source.webLinks)"
             />
@@ -30,6 +30,10 @@
             <b-button disabled variant="link">More information</b-button>
             <b-button disabled variant="link">Remove</b-button>
           </b-button-group>
+          </div>
+          <div v-else>
+            no data set in this bookmark
+          </div>
         </div>
       </div>
     </b-card>
