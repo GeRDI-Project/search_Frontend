@@ -8,13 +8,8 @@
       </div>
       <div v-else>
         <div class="m-2" v-for="bookmark  in bookmarksForCollection" :key="bookmark._id" v-bind:id="'bookmark-'+bookmark._id">
-          <div class="docID" v-if="bookmark._id">
-              <i>Docment ID: {{ showPublisher(bookmark._id) }}</i>
-            </div>
-            <div class="docSource" v-if="bookmark._source">
-              <i>SOurce: {{ showPublisher(bookmark._source) }}</i>
-            </div>
-          <!-- <b-media right-align vertical-align="top">
+          
+          <b-media right-align vertical-align="top">
             <b-img class="providerLogo" v-if="hasProviderLogo(bookmark._source.webLinks)" slot="aside" alt="Provider Logo" :src="getProviderLogo(bookmark._source.webLinks)"
             />
             <h5>
@@ -28,7 +23,7 @@
             <div class="titels" v-if="bookmark._source.descriptions">
               {{ showDescription(bookmark._source.descriptions[0].value) }}
             </div>
-          </b-media> -->
+          </b-media>
           <br>
           <br>
           <b-button-group>
