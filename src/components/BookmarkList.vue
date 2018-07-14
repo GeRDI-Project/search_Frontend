@@ -42,7 +42,7 @@ export default {
     getBookmarkList() {
       const self = this
       self.collections.forEach(function (elem){
-          axios.get('/api/v1/collections/'.concat(usercookie.getUsername()).concat('/').concat(elem._id))
+          axios.get('/api/v1/collections/'.concat(usercookie.getUsername()).concat('/').concat('5b30ec0465e12d00013d008b'))
             .then(function(response) {
             self.bookmarks.push(response.data)
         })
