@@ -3,7 +3,6 @@
 <br>
   <b-card class="m-2" v-for="(collection, ckey, cindex) in collections" v-bind:key="collection._id" v-bind:id="'collection-'+collection._id">
       <h3>{{collection.name}}</h3>
-      <h5>{{collection._id}}</h5>
       <br>
       <bookmark-list :collection="collection"></bookmark-list>
   </b-card>
