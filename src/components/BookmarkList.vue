@@ -2,15 +2,17 @@
 <div>
    <br>
 <b-card class="mb-3" v-for="bookmark in bookmarks"  :key="bookmark._id">
-   <h5><a :href='filterForViewURI(bookmark[0]._source.webLinks)'>{{ bookmark[0]._source.titles[0].value }}</a></h5>
-   <h6>{{bookmark[0]._source.publisher}}</h6>
+  {{bookmark}}
+<hr>
+   <!-- <h5><a :href='filterForViewURI(bookmark._source.webLinks)'>{{ bookmark._source.titles[0].value }}</a></h5>
+   <h6>{{bookmark._source.publisher}}</h6>
 
         <p>
-         {{bookmark[0]._source.publicationYear}}
+         {{bookmark._source.publicationYear}}
          <br>
-        {{bookmark[0]._source.descriptions[0].value}}
+        {{bookmark._source.descriptions[0].value}}
 
-        </p>
+        </p> -->
           <b-button-group>
             <b-button disabled variant="link">More information</b-button>
             <b-button disabled variant="link">Remove</b-button>
@@ -41,16 +43,15 @@ export default {
   methods: {
     getBookmarkList() {
       const self = this
-      self.collections.forEach(function (elem){
-          axios.get('/api/v1/collections/'.concat(usercookie.getUsername()).concat('/').concat('5b30ec0465e12d00013d008b'))
+          axios.get('/api/v1/collections/'.concat(usercookie.getUsername()).concat('/').concat('5b435dc5a47aec0001ee4c8a'))
             .then(function(response) {
-            self.bookmarks.push(response.data)
+            self.bookmarks = response.data
         })
         .catch(function(error) {
           self.errMsg = error.response;
           console.log(error)
         });
-      });
+      
     },
     filterForViewURI(linksArray) {
       if(linksArray) {

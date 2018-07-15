@@ -19,6 +19,7 @@
 
 <div>
     <b-modal ref="myModalRef" hide-footer title="Saving data set to collection">
+      <hr>
 {{this.$store.state.search.collectionList}}
       <hr>
       <div class="d-block text-center">
@@ -32,17 +33,22 @@
 
 <b-btn class="mt-3" variant="outline-success" block @click="hideModal (); addBookmark(); showBookmarkAlert(); setAsBookmarked ()">Ok</b-btn>
 <br>
+
 <h5>Select an existing collection</h5>
  <b-form-select v-model="collectionID" class="mb-3">
+   <!-- <b-form-select v-model="selectedCollectionName" class="mb-3"> -->
       <template slot="first">
         <!-- this slot appears above the options from 'options' prop -->
-        <option :value="null">Please select a collection name </option>
+        <option :value="null" disabled>Please select a collection name </option>
       </template>
-      <option v-for="collection in this.$store.state.search.collectionList" v-bind:value="collection.id">
+      <option v-for="collection in this.$store.state.search.collectionList" :key="collection.id" :value="collection.id">
       {{ collection.name }}
+      <br>
+      <hr>
+      {{collection._id}}
       </option>
     </b-form-select>
-
+<div>Selected Collection:  <strong>{{ collectionID }}</strong></div>
 
       </div>
 
@@ -116,10 +122,13 @@ export default {
     },
     addBookmarkToExistingCollection() {
       const self = this;
-      const docID = this.results._id;
+      const actualDocID = this.results._id;
+      const colName = this.$store.state.search.collectionList
+      const resColName = colName.find(collection => collection.id === self.collectionID);
       if (this.collectionID != null) {
         axios.put('/api/v1/collections/' + usercookie.getUsername() + '/' + this.collectionID, {
-          docs: [docID]
+          name: resColName.name,
+          docs: [actualDocID]
         },
         {
           headers: {
@@ -127,7 +136,7 @@ export default {
           }
         })
           .then(function (response) {
-            console.log("Adding bookmark to collection "+self.collectionName+" with ID: "+self.collectionID);
+            console.log("Adding bookmark to collection "+resColName.name+" with ID: "+self.collectionID);
 //            console.log(response);
 //            console.log(response.status);
 //            console.log(response.statusText);
