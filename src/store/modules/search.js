@@ -24,6 +24,7 @@ const state = {
   queryPayload: {},
   numDocsPerPage: 10,
   collectionList: [],
+  dataSetsIDs: [],
   facetsModel: {
     selectedPublishers: [],
     selectedYears: [],

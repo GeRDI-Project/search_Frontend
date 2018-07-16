@@ -19,7 +19,7 @@
 
 <div>
     <b-modal ref="myModalRef" hide-footer title="Saving data set to collection">
-      <hr>
+  
 {{this.$store.state.search.collectionList}}
       <hr>
       <div class="d-block text-center">
@@ -74,6 +74,7 @@ export default {
       bookmarkBtn: 'Add Bookmark',
       collectionName: '',
       collectionID: null,
+      dataSetsIDs: []
     }
   },
   created() {
@@ -122,13 +123,24 @@ export default {
     },
     addBookmarkToExistingCollection() {
       const self = this;
-      const actualDocID = this.results._id;
+      const currentDocID = this.results._id;
       const colName = this.$store.state.search.collectionList
       const resColName = colName.find(collection => collection.id === self.collectionID);
+      self.dataSetsIDs = []
+    
       if (this.collectionID != null) {
-        axios.put('/api/v1/collections/' + usercookie.getUsername() + '/' + this.collectionID, {
+        console.log('/api/v1/collections/' + usercookie.getUsername() + '/' + this.collectionID)
+      axios.get('/api/v1/collections/' + usercookie.getUsername() + '/' + this.collectionID)
+        .then(function(response) {
+         response.data
+          .forEach(function(elem) {
+            self.dataSetsIDs.push(elem._id);
+           console.log("Pushing id:"+elem._id);
+          });
+          console.log("DataSetIDs Array " + self.dataSetsIDs)
+          axios.put('/api/v1/collections/' + usercookie.getUsername() + '/' + self.collectionID, {
           name: resColName.name,
-          docs: [actualDocID]
+          docs: [self.dataSetsIDs[0],currentDocID]
         },
         {
           headers: {
@@ -136,7 +148,7 @@ export default {
           }
         })
           .then(function (response) {
-            console.log("Adding bookmark to collection "+resColName.name+" with ID: "+self.collectionID);
+             console.log("Adding bookmark to collection "+resColName.name+" with ID: "+self.collectionID);
 //            console.log(response);
 //            console.log(response.status);
 //            console.log(response.statusText);
@@ -146,6 +158,14 @@ export default {
           .catch(function (error) {
             console.log(error);
           });
+      })
+      .catch(function(error) {
+        self.errMsg = error.response;
+        console.log(error);
+      });
+      var oldDocID = self.dataSetsIDs[0]
+      console.log("oldDocID " + oldDocID)
+        
         } else {
         console.log("Empty collection ID");
       }
