@@ -10,6 +10,7 @@
       <bookmark-entry :collection="collection"></bookmark-entry>
   </b-list-group-item>
 </b-list-group>
+<br>
 </div>
 </template>
 

@@ -1,6 +1,6 @@
 <template>
 <div>
- 
+
   <b-btn v-b-toggle="'bookmarks-'+collection._id" size="sm" v-on:click="getBookmarkList(collection._id)" variant="link" class="text-uppercase">
     <span class="when-opened">Hide </span>
     <span class="when-closed">Show </span>data sets</b-btn>
@@ -10,7 +10,7 @@
         These collection is empty
       </div>
       <div v-else>
-        <div class="m-2" v-for="bookmark  in bookmarksForCollection" :key="bookmark._id" v-bind:id="'bookmark-'+bookmark._id">
+        <div class="m-2" v-for="bookmark  in bookmarksForCollection" :key="bookmark.id" v-bind:id="'bookmark-'+bookmark.id">
           <b-card v-if="bookmark._source">
           <b-media right-align vertical-align="top">
             <b-img class="providerLogo" v-if="hasProviderLogo(bookmark._source.webLinks)" slot="aside" alt="Provider Logo" :src="getProviderLogo(bookmark._source.webLinks)"/>
@@ -41,9 +41,9 @@
         </div>
       </div>
     </div>
-    <b-card v-else>
+    <div v-else>
       loading
-    </b-card>
+    </div>
   </b-collapse>
 </div>
 </template>
