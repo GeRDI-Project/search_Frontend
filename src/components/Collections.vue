@@ -1,11 +1,15 @@
 <template>
 <div>
 <br>
-  <b-card class="m-2" v-for="(collection, ckey, cindex) in collections" v-bind:key="collection._id" v-bind:id="'collection-'+collection._id">
-      <h3>{{collection.name}}</h3>
-      <br>
-      <bookmark-list :collection="collection"></bookmark-list>
-  </b-card>
+<b-list-group>
+  <b-list-group-item class="flex-column align-items-start" v-for="(collection) in collections" v-bind:key="collection._id" v-bind:id="'collection-'+collection._id">
+    <div class="d-flex w-100 justify-content-between">
+      <h5 class="mb-1">{{collection.name}}</h5>
+    </div>
+    <br>
+      <bookmark-entry :collection="collection"></bookmark-entry>
+  </b-list-group-item>
+</b-list-group>
 </div>
 </template>
 
@@ -13,7 +17,7 @@
 /* eslint-disable */
 
 import axios from 'axios'
-import BookmarkList from './BookmarkList.vue'
+import BookmarkList from './BookmarkEntry.vue'
 import usercookie from '../util/usercookie.js'
 export default {
   name: 'collections',
@@ -21,7 +25,6 @@ export default {
   data() {
     return {
       collections: [],
-      bookmarksForCollection: []
     }
   },
 
@@ -42,40 +45,9 @@ export default {
           self.errMsg = error.response;
           console.log(error)
         });
-    },
-    getBookmarkList() {
-      const self = this
-      self.collections.forEach(function (elem){
-          axios.get('/api/v1/collections/'.concat(usercookie.getUsername()).concat('/').concat(elem._id))
-          console.log(elem._id)
-            .then(function(response) {
-            self.bookmarks.push(response.data)
-        })
-        .catch(function(error) {
-          self.errMsg = error.response;
-          console.log(error)
-        });
-      });
-    },
-    filterForViewURI(linksArray) {
-      if(linksArray) {
-        return linksArray.filter(elem => elem.webLinkType == 'ViewURL')[0].webLinkURI
-      }
-      return '#'
-    },
-    showDescription(description) {
-      let result = description.replace(/(<([^>]+)>)/ig, '')
-      let limit = 850
-      if (result.length > limit) result = result.substr(0,limit) + ' [...]'
-      return result
-    },
-    filterForexistingBookmarks(bookmarksArray) {
-      if(bookmarksArray) {
-        return bookmarksArray.filter(elem => elem.webLinkType == 'ViewURL')[0].webLinkURI
-      }
-      return 'hallo'
     }
-  }
+  },
+  
 }
 </script>
 
