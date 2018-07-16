@@ -81,10 +81,10 @@ export default {
 
   },
   methods: {
-    showModal () {
+    showModal() {
       this.$refs.myModalRef.show()
     },
-    hideModal () {
+    hideModal() {
       this.$refs.myModalRef.hide()
     },
     countDownChanged(dismissCountDown) {
@@ -93,29 +93,24 @@ export default {
     showBookmarkAlert() {
       this.dismissCountDown = this.dismissSecs
     },
-    setAsBookmarked () {
+    setAsBookmarked() {
       this.bookmarkBtn = 'Bookmarked'
     },
     addBookmark() {
       const self = this
       const docID = this.results._id;
       axios.post('/api/v1/collections/' + usercookie.getUsername(), {
-        name: this.collectionName,
-        docs: [docID]
-      },
-      {
-        headers: {
-        'Content-Type': 'application/json'
-        }
-      })
+          name: this.collectionName,
+          docs: [docID]
+        }, {
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        })
         .then(function (response) {
           self.$store.commit('refreshCollections');
-          console.log("Adding bookmark to new collection named: "+self.collectionName)
-//          console.log(response);
-//          console.log(response.status);
-//          console.log(response.statusText);
-//          console.log(response.headers);
-//          console.log(response.config)
+          console.log("Adding bookmark to new collection named: " + self.collectionName)
+
         })
         .catch(function (error) {
           console.log(error)
@@ -127,52 +122,45 @@ export default {
       const colName = this.$store.state.search.collectionList
       const resColName = colName.find(collection => collection.id === self.collectionID);
       self.dataSetsIDs = []
-    
+
       if (this.collectionID != null) {
         console.log('/api/v1/collections/' + usercookie.getUsername() + '/' + this.collectionID)
-      axios.get('/api/v1/collections/' + usercookie.getUsername() + '/' + this.collectionID)
-        .then(function(response) {
-         response.data
-          .forEach(function(elem) {
-            self.dataSetsIDs.push(elem._id);
-           console.log("Pushing id:"+elem._id);
-          });
-          console.log("DataSetIDs Array " + self.dataSetsIDs)
-          axios.put('/api/v1/collections/' + usercookie.getUsername() + '/' + self.collectionID, {
-          name: resColName.name,
-          docs: [self.dataSetsIDs[0],currentDocID]
-        },
-        {
-          headers: {
-          'Content-Type': 'application/json'
-          }
-        })
+        axios.get('/api/v1/collections/' + usercookie.getUsername() + '/' + this.collectionID)
           .then(function (response) {
-             console.log("Adding bookmark to collection "+resColName.name+" with ID: "+self.collectionID);
-//            console.log(response);
-//            console.log(response.status);
-//            console.log(response.statusText);
-//            console.log(response.headers);
-//            console.log(response.config);
+            response.data
+              .forEach(function (elem) {
+                self.dataSetsIDs.push(elem._id);
+                console.log("Pushing id:" + elem._id);
+              });
+            console.log("DataSetIDs Array " + self.dataSetsIDs)
+            axios.put('/api/v1/collections/' + usercookie.getUsername() + '/' + self.collectionID, {
+                name: resColName.name,
+                docs: [self.dataSetsIDs[0], currentDocID]
+              }, {
+                headers: {
+                  'Content-Type': 'application/json'
+                }
+              })
+              .then(function (response) {
+                console.log("Adding bookmark to collection " + resColName.name + " with ID: " + self.collectionID);
+              })
+              .catch(function (error) {
+                console.log(error);
+              });
           })
           .catch(function (error) {
+            self.errMsg = error.response;
             console.log(error);
           });
-      })
-      .catch(function(error) {
-        self.errMsg = error.response;
-        console.log(error);
-      });
-      var oldDocID = self.dataSetsIDs[0]
-      console.log("oldDocID " + oldDocID)
-        
-        } else {
+        var oldDocID = self.dataSetsIDs[0]
+        console.log("oldDocID " + oldDocID)
+
+      } else {
         console.log("Empty collection ID");
       }
-   }
-   }
+    }
+  }
 }
-
 </script>
 
 
