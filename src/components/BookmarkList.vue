@@ -1,7 +1,7 @@
 <template>
 <div>
    <br>
-<b-card class="mb-3" v-for="bookmark in bookmarks"  :key="bookmark._id">
+<b-card class="mb-3" v-for="bookmark in bookmarks"  :key="bookmark.id">
   {{bookmark}}
 <hr>
    <!-- <h5><a :href='filterForViewURI(bookmark._source.webLinks)'>{{ bookmark._source.titles[0].value }}</a></h5>
@@ -43,7 +43,7 @@ export default {
   methods: {
     getBookmarkList() {
       const self = this
-          axios.get('/api/v1/collections/'.concat(usercookie.getUsername()).concat('/').concat('5b435dc5a47aec0001ee4c8a'))
+          axios.get('/api/v1/collections/'.concat(usercookie.getUsername()).concat('/').concat('5b30ec0465e12d00013d008b'))
             .then(function(response) {
             self.bookmarks = response.data
         })

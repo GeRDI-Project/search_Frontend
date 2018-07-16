@@ -8,7 +8,7 @@
     <b-list-group v-for="collection in collections" :key="collection.id">
   <b-list-group-item >{{collection.name}} <br> {{collection._id}}
   <br>
-  <b-btn class="mt-3" variant="outline-success" block @click="">Show bookmarks</b-btn>
+  
   </b-list-group-item>
   
   

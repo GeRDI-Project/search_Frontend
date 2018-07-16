@@ -19,9 +19,7 @@
 
 <div>
     <b-modal ref="myModalRef" hide-footer title="Saving data set to collection">
-  
-{{this.$store.state.search.collectionList}}
-      <hr>
+
       <div class="d-block text-center">
         <h5>Save to a new collection</h5>
         <br>
@@ -48,7 +46,6 @@
       {{collection._id}}
       </option>
     </b-form-select>
-<div>Selected Collection:  <strong>{{ collectionID }}</strong></div>
 
       </div>
 
@@ -132,10 +129,13 @@ export default {
                 self.dataSetsIDs.push(elem._id);
                 console.log("Pushing id:" + elem._id);
               });
-            console.log("DataSetIDs Array " + self.dataSetsIDs)
-            axios.put('/api/v1/collections/' + usercookie.getUsername() + '/' + self.collectionID, {
+               console.log("DataSetIDs Array " + self.dataSetsIDs)
+            self.dataSetsIDs.push(currentDocID)
+            console.log("Payload " + self.dataSetsIDs)
+
+              axios.put('/api/v1/collections/' + usercookie.getUsername() + '/' + self.collectionID, {
                 name: resColName.name,
-                docs: [self.dataSetsIDs[0], currentDocID]
+                docs: self.dataSetsIDs
               }, {
                 headers: {
                   'Content-Type': 'application/json'
@@ -152,9 +152,6 @@ export default {
             self.errMsg = error.response;
             console.log(error);
           });
-        var oldDocID = self.dataSetsIDs[0]
-        console.log("oldDocID " + oldDocID)
-
       } else {
         console.log("Empty collection ID");
       }
