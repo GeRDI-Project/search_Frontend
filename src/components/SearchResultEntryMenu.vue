@@ -19,7 +19,9 @@
 
 <div>
     <b-modal ref="myModalRef" hide-footer title="Saving data set to collection">
-{{collectionList}}
+
+
+
       <hr>
       <div class="d-block text-center">
         <h5>Save to a new collection</h5>
