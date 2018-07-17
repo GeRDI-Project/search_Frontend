@@ -1,52 +1,45 @@
 <template>
 <div>
-<b-button-group size = "sm">
-    <b-button disabled variant="outline-primary" class = "text-uppercase">More information</b-button>
-    <b-button disabled variant="outline-primary" class = "text-uppercase">Share</b-button>
-    <b-button @click="showModal" variant="outline-primary" class = "text-uppercase">{{bookmarkBtn}}</b-button>
-    <b-button disabled variant="outline-primary" class = "text-uppercase">Preprocess</b-button>
-    <b-button disabled variant="outline-primary" class = "text-uppercase">Store</b-button>
+  <b-button-group size="sm">
+    <b-button disabled variant="outline-primary" class="text-uppercase">More information</b-button>
+    <b-button disabled variant="outline-primary" class="text-uppercase">Share</b-button>
+    <b-button v-b-modal.modal @click="showModal" variant="outline-primary" class="text-uppercase">{{bookmarkBtn}}</b-button>
+    <b-button disabled variant="outline-primary" class="text-uppercase">Preprocess</b-button>
+    <b-button disabled variant="outline-primary" class="text-uppercase">Store</b-button>
   </b-button-group>
   <br>
   <br>
-  <b-alert :show="dismissCountDown"
-             dismissible
-             variant="success"
-             @dismissed="dismissCountDown=0"
-             @dismiss-count-down="countDownChanged">
-             The bookmark is successfully set!
-</b-alert>
-
-<div>
-    <b-modal ref="myModalRef" hide-footer title="Saving data set to collection">
-
-
-
-      <hr>
-      <div class="d-block text-center">
-        <h5>Save to a new collection</h5>
-        <br>
-        <b-form-input  v-model="collectionName" 
-        type="text"
-                      placeholder="Enter the name of your collection">
-                      </b-form-input>
+  <b-alert :show="dismissCountDown" dismissible variant="success" @dismissed="dismissCountDown=0" @dismiss-count-down="countDownChanged">
+    The bookmark is successfully set!
+  </b-alert>
+  <div>
+    <b-modal id="modal-center" centered ref="bookmarkingModal" hide-footer title="Saving data set to collection">
       
-    
-<b-btn class="mt-3" variant="outline-success" block @click="hideModal (); addBookmark(); showBookmarkAlert(); setAsBookmarked ()">Ok</b-btn>
-<br>
-<h5>Select an existing collection</h5>
- <b-form-select v-model="collectionID" :options="collectionList" class="mb-3">
-      <template slot="first">
-        <!-- this slot appears above the options from 'options' prop -->
-        <option :value="null">Please select a collection name </option>
-      </template>
-    </b-form-select>
-
-
-      </div>
-
-
-      <b-btn class="mt-3" variant="outline-success" block @click="hideModal (); addBookmarkToExistingCollection(); showBookmarkAlert(); setAsBookmarked ()">Ok</b-btn>
+        <b-tabs>
+          <b-tab title="Save to a new collection" active>
+            <br>
+            <b-form-input v-model="collectionName" type="text" placeholder="Enter the name of your collection"></b-form-input>
+            <br>
+            <hr>
+            <b-button class="float-right btn btn-space" @click="hideModal ()">Cancel</b-button>
+            <b-button class="float-right btn btn-space" variant="primary" @click="hideModal (); addBookmark(); showBookmarkAlert(); setAsBookmarked ()">Save</b-button>
+            <br>
+          </b-tab>
+          <b-tab title="Save to an existing collection">
+            <br>
+            <b-form-select v-model="collectionID" :options="collectionList" class="mb-3">
+              <template slot="first">
+                <!-- this slot appears above the options from 'options' prop -->
+                <option :value="null">Please select a collection name </option>
+              </template>
+            </b-form-select>
+            <br>
+            <hr>
+            <b-button class="float-right btn btn-space" @click="hideModal ()">Cancel</b-button>
+            <b-button class="float-right btn btn-space" variant="primary" @click="hideModal (); addBookmarkToExistingCollection(); showBookmarkAlert(); setAsBookmarked ()">Save</b-button>
+          </b-tab>
+        </b-tabs>
+      
     </b-modal>
   </div>
 </div>
@@ -74,10 +67,10 @@ export default {
   },
   methods: {
     showModal () {
-      this.$refs.myModalRef.show()
+      this.$refs.bookmarkingModal.show()
     },
     hideModal () {
-      this.$refs.myModalRef.hide()
+      this.$refs.bookmarkingModal.hide()
     },
     countDownChanged(dismissCountDown) {
       this.dismissCountDown = dismissCountDown
@@ -169,5 +162,8 @@ export default {
 
 .uppercased {
   text-transform: uppercase;
+}
+.btn-space {
+    margin-right: 5px;
 }
 </style>

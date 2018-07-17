@@ -1,5 +1,6 @@
 <template>
 <div>
+  
 <b-card>
   <b-media right-align vertical-align="top">
     <b-img class="providerLogo" v-if="hasProviderLogo(result._source.webLinks)" slot="aside" alt="Provider Logo" :src="getProviderLogo(result._source.webLinks)" />
