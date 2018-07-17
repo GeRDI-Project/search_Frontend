@@ -39,7 +39,7 @@
         <!-- this slot appears above the options from 'options' prop -->
         <option :value="null" disabled>Please select a collection name </option>
       </template>
-      <option v-for="collection in this.$store.state.search.collectionList" :key="collection.id" :value="collection.id">
+      <option v-for="collection in this.$store.state.collections.collectionList" :key="collection.id" :value="collection.id">
       {{ collection.name }}
       <br>
       <hr>
@@ -116,7 +116,7 @@ export default {
     addBookmarkToExistingCollection() {
       const self = this;
       const currentDocID = this.results._id;
-      const colName = this.$store.state.search.collectionList
+      const colName = this.$store.state.collections.collectionList
       const resColName = colName.find(collection => collection.id === self.collectionID);
       self.dataSetsIDs = []
 
