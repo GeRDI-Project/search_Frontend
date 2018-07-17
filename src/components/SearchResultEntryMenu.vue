@@ -127,12 +127,10 @@ export default {
             response.data
               .forEach(function (elem) {
                 self.dataSetsIDs.push(elem._id);
-                console.log("Pushing id:" + elem._id);
               });
-               console.log("DataSetIDs Array " + self.dataSetsIDs)
-            self.dataSetsIDs.push(currentDocID)
-            console.log("Payload " + self.dataSetsIDs)
-
+              console.log("DataSetIDs Array " + self.dataSetsIDs)
+              self.dataSetsIDs.push(currentDocID)
+              console.log("Payload " + self.dataSetsIDs)
               axios.put('/api/v1/collections/' + usercookie.getUsername() + '/' + self.collectionID, {
                 name: resColName.name,
                 docs: self.dataSetsIDs

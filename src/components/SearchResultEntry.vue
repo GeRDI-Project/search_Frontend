@@ -12,8 +12,7 @@
     <div class="titels" v-if="result._source.descriptions">
       {{ showDescription(result._source.descriptions[0].value) }}
     </div>
-    <br>
-    {{result._id}}
+    
   </b-media>
  <br><br>
   <search-result-entry-menu :results="this.result"></search-result-entry-menu>
