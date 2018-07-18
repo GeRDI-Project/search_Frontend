@@ -1,7 +1,7 @@
 <template>
 <div>
 
-  <b-btn v-b-toggle="'bookmarks-'+collection._id" size="sm" v-on:click="getBookmarkList(collection._id)" variant="link" class="text-uppercase">
+  <b-btn v-b-toggle="'bookmarks-'+collection._id" size="sm" v-on:click="getBookmarkList(collection._id)" variant="link">
     <span class="when-opened">Hide </span>
     <span class="when-closed">Show </span>data sets</b-btn>
   <b-collapse v-bind:id="'bookmarks-'+collection._id" class="mt-2" accordion="bookmarks">

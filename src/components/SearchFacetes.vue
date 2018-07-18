@@ -17,15 +17,17 @@
 <div role="tablist">
    <b-card no-body class="mb-1">
     <b-card-header header-tag="header" class="p-1" role="tab">
-      <b-btn block href="#" v-b-toggle.accordion1 variant="info">Publisher</b-btn>
+      <b-btn href="#" v-b-toggle.accordion1 variant="accordion-gerdi" > <label style='margin-right: 120px;'>Publisher </label>
+        <span class="when-opened"><i class="material-icons"> keyboard_arrow_up</i> </span>
+    <span class="when-closed"> <i class="material-icons"> keyboard_arrow_down</i> </span> 
+    </b-btn>
     </b-card-header>
     <b-collapse id="accordion1" visible accordion="my-accordion" role="tabpanel">
       <b-card-body>
         <p class="card-text">
           <b-form-group>
             <b-form-checkbox-group stacked v-model="facetsModel.selectedPublishers" name="publisherFacets" :options="limitArray(this.aggs.Publisher.buckets.map(it => it.key))"></b-form-checkbox-group>
-           <!-- <br>
-              <span>Checked: {{ selectedPublishers }}</span>    -->
+          
           </b-form-group>
         </p>
       </b-card-body>
@@ -33,7 +35,10 @@
   </b-card>
   <b-card no-body class="mb-1">
     <b-card-header header-tag="header" class="p-1" role="tab">
-      <b-btn block href="#" v-b-toggle.accordion2 variant="info"> Author </b-btn>
+      <b-btn href="#" v-b-toggle.accordion2 variant="accordion-gerdi" > <label style='margin-right: 140px;'>Author</label>
+        <span class="when-opened"><i class="material-icons"> keyboard_arrow_up</i> </span>
+    <span class="when-closed"> <i class="material-icons"> keyboard_arrow_down</i> </span> 
+    </b-btn>
     </b-card-header>
     <b-collapse id="accordion2" accordion="my-accordion" role="tabpanel">
       <b-card-body>
@@ -47,7 +52,10 @@
   </b-card>
   <b-card no-body class="mb-1">
     <b-card-header header-tag="header" class="p-1" role="tab">
-      <b-btn block href="#" v-b-toggle.accordion3 variant="info">Publication year</b-btn>
+     <b-btn href="#" v-b-toggle.accordion3 variant="accordion-gerdi" > <label style='margin-right: 72px;'>Publication year </label>
+        <span class="when-opened"><i class="material-icons"> keyboard_arrow_up</i> </span>
+    <span class="when-closed"> <i class="material-icons"> keyboard_arrow_down</i> </span> 
+    </b-btn>
     </b-card-header>
     <b-collapse id="accordion3" visisble accordion="my-accordion" role="tabpanel">
       <b-card-body>
@@ -61,7 +69,10 @@
   </b-card>
   <b-card no-body class="mb-1">
     <b-card-header header-tag="header" class="p-1" role="tab">
-      <b-btn block href="#" v-b-toggle.accordion4 variant="info">Language</b-btn>
+      <b-btn href="#" v-b-toggle.accordion4 variant="accordion-gerdi" > <label style='margin-right: 114px;'>Language</label>
+        <span class="when-opened"><i class="material-icons"> keyboard_arrow_up</i> </span>
+    <span class="when-closed"> <i class="material-icons"> keyboard_arrow_down</i> </span> 
+    </b-btn>
     </b-card-header>
     <b-collapse id="accordion4" accordion="my-accordion" role="tabpanel">
       <b-card-body>
@@ -73,7 +84,8 @@
       </b-card-body>
     </b-collapse>
   </b-card>
-  <b-button @click="doFilter">Apply</b-button>
+<br>
+  <b-button  class="float-right" variant="primary" @click="doFilter">Apply</b-button>
   </div>
 </template>
 
@@ -118,12 +130,32 @@ export default {
 </script>
 
 <style scoped>
+.btn-accordion-gerdi:focus, .btn-accordion-gerdi:active:focus, .btn-accordion-gerdi.active:focus {
+  outline: 0 none;
+}
+
+.btn-accordion-gerdi {
+  border: 0 none;
+  font-weight: 700;
+  letter-spacing: 0.1px;
+  outline: 0 none;
+  background: transparent;
+  color: #083f64;
+}
+.btn-accordion-gerdi:hover, .btn-accordion-gerdi:focus, .btn-accordion-gerdi:active, .btn-accordion-gerdi.active, .open > .dropdown-toggle.btn-accordion-gerdi {
+  
+  box-shadow: none;
+}
+.btn-accordion-gerdi:active, .btn-accordion-gerdi.active {
+  
+  box-shadow: none;
+}
 .card {
   margin-top: 1rem;
 }
-
-.providerLogo {
-  max-height: 100px;
-  width: auto;
+.collapsed > .when-opened,
+:not(.collapsed) > .when-closed {
+  display: none;
 }
+
 </style>

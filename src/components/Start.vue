@@ -22,10 +22,10 @@ export default {
 }
 .jumbotron {
   position: absolute;
-  top: 45%;
+  top:45%;
   left:50%;
   transform: translate(-50%,-50%);
   width: 80%;
-  color: #f2f2f2
+  background-color: #f2f2f2;
 }
 </style>

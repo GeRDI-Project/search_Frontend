@@ -16,7 +16,7 @@ export default {
 
 <style lang="scss">
 @import './styles/gerdi.scss';
-@import '../node_modules/bootstrap/scss/bootstrap.scss';>
+@import '../node_modules/bootstrap/scss/bootstrap.scss';
 
 #app {
   

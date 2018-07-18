@@ -1,22 +1,29 @@
 <template>
 <div>
-  
-<b-card>
-  <b-media right-align vertical-align="top">
-    <b-img class="providerLogo" v-if="hasProviderLogo(result._source.webLinks)" slot="aside" alt="Provider Logo" :src="getProviderLogo(result._source.webLinks)" />
-    <h5><a :href='filterForViewURI(result._source.webLinks)'>{{ result._source.titles[0].value }}</a></h5>
+  <b-card>
+    <b-media right-align vertical-align="top">
+      <b-img class="providerLogo" v-if="hasProviderLogo(result._source.webLinks)" slot="aside" alt="Provider Logo" :src="getProviderLogo(result._source.webLinks)"
+      />
+      <h4>
+        <a :href='filterForViewURI(result._source.webLinks)'>{{ result._source.titles[0].value }}</a>
+      </h4>
+      <br>
+      <div class="publisher" v-if="result._source.publisher">
+        <h5>{{ showPublisher(result._source.publisher) }}</h5>
+      </div>
+      <br>
+      <div class="creators" v-if="result._source.creators">
+        <h6> {{ result._source.creators[0].creatorName.value }} </h6>
+      </div>
+      <div class="description" v-if="result._source.descriptions">
+        {{ showDescription(result._source.descriptions[0].value) }}
+      </div>
+    </b-media>
     <br>
-    <div class="publisher" v-if="result._source.publisher">
-      <i>{{ showPublisher(result._source.publisher) }}</i>
+    <div slot="footer">
+      <search-result-entry-menu :results="this.result"></search-result-entry-menu>
     </div>
-    <br>
-    <div class="titels" v-if="result._source.descriptions">
-      {{ showDescription(result._source.descriptions[0].value) }}
-    </div>
-  </b-media>
- <br><br>
-  <search-result-entry-menu :results="this.result"></search-result-entry-menu>
-</b-card>
+  </b-card>
 </div>
 </template>
 
@@ -70,5 +77,8 @@ export default {
 .providerLogo {
   max-height: 100px;
   width: auto;
+}
+a {
+  color: #43a59f;
 }
 </style>
