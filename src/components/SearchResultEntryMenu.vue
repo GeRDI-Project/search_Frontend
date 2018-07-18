@@ -1,11 +1,11 @@
 <template>
 <div>
-<b-button-group size = "sm">
-    <b-button disabled variant="outline-primary" class = "text-uppercase">More information</b-button>
-    <b-button disabled variant="outline-primary" class = "text-uppercase">Share</b-button>
-    <b-button @click="showModal" variant="outline-primary" class = "text-uppercase">{{bookmarkBtn}}</b-button>
-    <b-button disabled variant="outline-primary" class = "text-uppercase">Preprocess</b-button>
-    <b-button disabled variant="outline-primary" class = "text-uppercase">Store</b-button>
+  <b-button-group size="sm">
+    <b-button disabled variant="outline-primary" class="text-uppercase">More information</b-button>
+    <b-button disabled variant="outline-primary" class="text-uppercase">Share</b-button>
+    <b-button v-b-modal.modal @click="showModal" variant="outline-primary" class="text-uppercase">{{bookmarkBtn}}</b-button>
+    <b-button disabled variant="outline-primary" class="text-uppercase">Preprocess</b-button>
+    <b-button disabled variant="outline-primary" class="text-uppercase">Store</b-button>
   </b-button-group>
   <br>
   <br>
@@ -174,5 +174,8 @@ export default {
 
 .uppercased {
   text-transform: uppercase;
+}
+.btn-space {
+    margin-right: 5px;
 }
 </style>
