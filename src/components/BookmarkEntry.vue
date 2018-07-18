@@ -147,7 +147,7 @@ a {
 }
 
 .btn-primary-gerdi {
-padding: 5px 5px;
+padding: 10px 10px;
   border: 0 none;
   font-weight: 700;
   letter-spacing: 0.1px;
