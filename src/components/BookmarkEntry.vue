@@ -27,11 +27,12 @@
             </div>
           </b-media>
           <br>
-          <br>
-          <b-button-group>
-            <b-button disabled variant="link">More information</b-button>
-            <b-button disabled variant="link">Remove</b-button>
+          <div slot="footer">
+          <b-button-group size="sm">
+            <b-button disabled variant="primary-gerdi">More information</b-button>
+            <b-button disabled variant="primary-gerdi">Remove</b-button>
           </b-button-group>
+          </div>
           </b-card>
           <div v-else>
               <h5>
@@ -133,9 +134,45 @@ export default {
   max-height: 100px;
   width: auto;
 }
+a {
+  color: #43a59f;
+}
 .collapsed > .when-opened,
 :not(.collapsed) > .when-closed {
   display: none;
+}
+
+.btn-primary-gerdi:focus, .btn-primary-gerdi:active:focus, .btn-primary-gerdi.active:focus {
+  outline: 0 none;
+}
+
+.btn-primary-gerdi {
+padding: 5px 5px;
+  border: 0 none;
+  font-weight: 700;
+  letter-spacing: 0.1px;
+  text-transform: uppercase;
+  outline: 0 none;
+  background: transparent;
+  color: #083f64;
+}
+.btn-primary-gerdi:hover, .btn-primary-gerdi:focus, .btn-primary-gerdi:active, .btn-primary-gerdi.active, .open > .dropdown-toggle.btn-primary-gerdi {
+  background: #77d7d0;
+  box-shadow: none;
+}
+.btn-primary-gerdi:active, .btn-primary-gerdi.active {
+  background: #007299;
+  box-shadow: none;
+}
+.btn-link {
+  padding: 10px 10px;
+  border: 0 none;
+  font-weight: 700;
+  letter-spacing: 0.1px;
+  text-transform: uppercase;
+  outline: 0 none;
+  background: transparent;
+  color: #083f64;
 }
 
 </style>

@@ -147,9 +147,7 @@ export default {
 
 
 <style scoped>
-.tab{
-  color: #43a59f;
-}
+
 .btn-primary-gerdi:focus, .btn-primary-gerdi:active:focus, .btn-primary-gerdi.active:focus {
   outline: 0 none;
 }

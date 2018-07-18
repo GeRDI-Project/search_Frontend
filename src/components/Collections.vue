@@ -4,7 +4,7 @@
 <b-list-group>
   <b-list-group-item class="flex-column align-items-start" v-for="(collection) in collections" v-bind:key="collection._id" v-bind:id="'collection-'+collection._id">
     <div class="d-flex w-100 justify-content-between">
-      <h5 class="mb-1">{{collection.name}}</h5>
+      <h4 class="mb-1">{{collection.name}}</h4>
     </div>
     <br>
       <bookmark-entry :collection="collection"></bookmark-entry>
@@ -53,5 +53,7 @@ export default {
 </script>
 
 <style scoped>
-
+h4 {
+  color: #43a59f;
+}
 </style>
