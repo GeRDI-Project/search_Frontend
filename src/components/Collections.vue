@@ -2,23 +2,23 @@
 <div>
 <br>
   <b-tabs>
-  <b-tab title="Collections">
 
-    <br>
-    <b-list-group v-for="collection in collections" :key="collection.id">
-  <b-list-group-item >{{collection.name}} <br> {{collection._id}}
-  <br>
+    <b-tab title="Collections">
 
-  </b-list-group-item>
+      <br>
+      <b-list-group v-for="collection in this.$store.state.collections.collectionList" :key="collection.id" :value="collection.id">
+        <b-list-group-item >
+          {{collection.name}} <br> {{collection.id}} <br>
+        </b-list-group-item>
+      </b-list-group>
 
+    </b-tab>
 
-</b-list-group>
-  </b-tab>
-  <b-tab title="Bookmarks" >
-    <br><bookmark-list v-if="collections.length > 0" :collections="collections"></bookmark-list>
-  </b-tab>
-</b-tabs>
-
+    <b-tab title="Bookmarks" >
+      <br>
+      <b-list-group v-if="this.$store.state.collections.collectionList.length > 0" :collections="this.$store.state.collections.collectionList"></b-list-group>
+    </b-tab>
+  </b-tabs>
 </div>
 </template>
 
@@ -28,35 +28,10 @@
 import axios from 'axios'
 import BookmarkList from './BookmarkEntry.vue'
 import usercookie from '../util/usercookie.js'
+
 export default {
   name: 'collections',
   props: ['bookmarks'],
-  data() {
-    return {
-      collections: [],
-    }
-  },
-
-  created() {
-    this.getCollections()
-  },
-
-  methods: {
-    getCollections() {
-      const self = this
-      self.collections = []
-      axios.get('/api/v1/collections/' + usercookie.getUsername())
-        .then(function (response) {
-          self.collections = response.data
-        })
-
-        .catch(function (error) {
-          self.errMsg = error.response;
-          console.log(error)
-        });
-    }
-  },
-
 }
 </script>
 

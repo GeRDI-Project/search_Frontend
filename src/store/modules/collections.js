@@ -25,6 +25,9 @@ const state = {
 const getters = {
   getCollectionList: state => {
     return state.collectionList
+  },
+  getCollectionById: (state) => (collectionId) => {
+    return state.collectionList.find(collection => collection.id === collectionId)
   }
 }
 

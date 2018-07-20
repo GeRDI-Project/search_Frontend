@@ -1,6 +1,6 @@
 <template>
 <div>
-  
+
 <b-card>
   <b-media right-align vertical-align="top">
     <b-img class="providerLogo" v-if="hasProviderLogo(result._source.webLinks)" slot="aside" alt="Provider Logo" :src="getProviderLogo(result._source.webLinks)" />
@@ -13,7 +13,7 @@
     <div class="titels" v-if="result._source.descriptions">
       {{ showDescription(result._source.descriptions[0].value) }}
     </div>
-    
+
   </b-media>
  <br><br>
   <search-result-entry-menu :results="this.result"></search-result-entry-menu>

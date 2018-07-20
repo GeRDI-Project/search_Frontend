@@ -48,8 +48,8 @@ new Vue({
   components: {
     App
   },
-  created() {
-    this.$store.commit('refreshCollections')
-  }
+ created() {
+   this.$store.commit('refreshCollections')
+ }
 
 })

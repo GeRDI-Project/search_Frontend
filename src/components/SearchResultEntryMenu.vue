@@ -74,6 +74,7 @@ export default {
     }
   },
   created() {
+    //this.$store.commit('refreshCollections')
 
   },
   methods: {
@@ -112,37 +113,26 @@ export default {
     },
     addBookmarkToExistingCollection() {
       const self = this;
-      const currentDocID = this.results._id;
-      const colName = this.$store.state.collections.collectionList
-      const resColName = colName.find(collection => collection.id === self.collectionID);
-      self.dataSetsIDs = []
+      const collection = self.$store.getters.getCollectionById(self.collectionID)
+      self.dataSetsIDs = [this.results._id]
 
       if (this.collectionID != null) {
-        axios.get('/api/v1/collections/' + usercookie.getUsername() + '/' + this.collectionID)
-          .then(function (response) {
-            response.data
-              .forEach(function (elem) {
-                self.dataSetsIDs.push(elem._id);
-              });
-              self.dataSetsIDs.push(currentDocID)
-              axios.put('/api/v1/collections/' + usercookie.getUsername() + '/' + self.collectionID, {
-                name: resColName.name,
-                docs: self.dataSetsIDs
-              }, {
-                headers: {
-                  'Content-Type': 'application/json'
-                }
-              })
-          })
-          .catch(function (error) {
-            self.errMsg = error.response;
-            console.log(error);
-          });
+        axios.put('/api/v1/collections/' + usercookie.getUsername() + '/' + self.collectionID, {
+          name: collection.name,
+          docs: self.dataSetsIDs
+        }, {
+          headers: {
+          'Content-Type': 'application/json'
+          }
+        })
       } else {
         console.log("Empty collection ID");
       }
+
     }
+
   }
+
 }
 </script>
 

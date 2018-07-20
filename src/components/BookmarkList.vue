@@ -51,7 +51,7 @@ export default {
           self.errMsg = error.response;
           console.log(error)
         });
-      
+
     },
     filterForViewURI(linksArray) {
       if(linksArray) {
@@ -64,7 +64,7 @@ export default {
       let limit = 850
       if (result.length > limit) result = result.substr(0,limit) + ' [...]'
       return result
-    } 
+    }
   }
 }
 </script>
