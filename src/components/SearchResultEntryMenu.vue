@@ -15,44 +15,43 @@
              @dismissed="dismissCountDown=0"
              @dismiss-count-down="countDownChanged">
              The bookmark is successfully set!
-</b-alert>
+  </b-alert>
 
-<div>
+  <div>
     <b-modal ref="myModalRef" hide-footer title="Saving data set to collection">
 
       <div class="d-block text-center">
         <h5>Save to a new collection</h5>
         <br>
         <b-form-input  v-model="collectionName"
-        type="text"
-                      placeholder="Enter the name of your collection">
-                      </b-form-input>
+          type="text"
+          placeholder="Enter the name of your collection">
+        </b-form-input>
 
-
-<b-btn class="mt-3" variant="outline-success" block @click="hideModal (); addBookmark(); showBookmarkAlert(); setAsBookmarked ()">Ok</b-btn>
-<br>
-
-<h5>Select an existing collection</h5>
- <b-form-select v-model="collectionID" class="mb-3">
-   <!-- <b-form-select v-model="selectedCollectionName" class="mb-3"> -->
-      <template slot="first">
-        <!-- this slot appears above the options from 'options' prop -->
-        <option :value="null" disabled>Please select a collection name </option>
-      </template>
-      <option v-for="collection in this.$store.state.collections.collectionList" :key="collection.id" :value="collection.id">
-      {{ collection.name }}
+      <b-btn class="mt-3" variant="outline-success" block @click="hideModal (); addBookmark(); showBookmarkAlert(); setAsBookmarked ()">Ok</b-btn>
       <br>
-      <hr>
-      {{collection._id}}
-      </option>
-    </b-form-select>
 
-      </div>
+      <h5>Select an existing collection</h5>
+        <b-form-select v-model="collectionID" class="mb-3">
+          <!-- <b-form-select v-model="selectedCollectionName" class="mb-3"> -->
+          <template slot="first">
+            <!-- this slot appears above the options from 'options' prop -->
+            <option :value="null" disabled>Please select a collection name </option>
+          </template>
+          <option v-for="collection in this.$store.state.collections.collectionList" :key="collection.id" :value="collection.id">
+            {{ collection.name }}
+            <br>
+            <hr>
+            {{collection._id}}
+          </option>
+        </b-form-select>
 
+    </div>
 
-      <b-btn class="mt-3" variant="outline-success" block @click="hideModal (); addBookmarkToExistingCollection(); showBookmarkAlert(); setAsBookmarked ()">Ok</b-btn>
+    <b-btn class="mt-3" variant="outline-success" block @click="hideModal (); addBookmarkToExistingCollection(); showBookmarkAlert(); setAsBookmarked ()">Ok</b-btn>
     </b-modal>
-  </div>
+</div>
+
 </div>
 </template>
 
