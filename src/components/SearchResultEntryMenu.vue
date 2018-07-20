@@ -106,8 +106,6 @@ export default {
         })
         .then(function (response) {
           self.$store.commit('refreshCollections');
-          console.log("Adding bookmark to new collection named: " + self.collectionName)
-
         })
         .catch(function (error) {
           console.log(error)
@@ -121,16 +119,13 @@ export default {
       self.dataSetsIDs = []
 
       if (this.collectionID != null) {
-        console.log('/api/v1/collections/' + usercookie.getUsername() + '/' + this.collectionID)
         axios.get('/api/v1/collections/' + usercookie.getUsername() + '/' + this.collectionID)
           .then(function (response) {
             response.data
               .forEach(function (elem) {
                 self.dataSetsIDs.push(elem._id);
               });
-              console.log("DataSetIDs Array " + self.dataSetsIDs)
               self.dataSetsIDs.push(currentDocID)
-              console.log("Payload " + self.dataSetsIDs)
               axios.put('/api/v1/collections/' + usercookie.getUsername() + '/' + self.collectionID, {
                 name: resColName.name,
                 docs: self.dataSetsIDs
@@ -139,12 +134,6 @@ export default {
                   'Content-Type': 'application/json'
                 }
               })
-              .then(function (response) {
-                console.log("Adding bookmark to collection " + resColName.name + " with ID: " + self.collectionID);
-              })
-              .catch(function (error) {
-                console.log(error);
-              });
           })
           .catch(function (error) {
             self.errMsg = error.response;

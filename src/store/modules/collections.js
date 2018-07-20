@@ -33,7 +33,6 @@ const mutations = {
     state.collectionList.push(collection)
   },
   refreshCollections (state) {
-    console.log('Refreshing collections')
     state.collectionList = []
     var self = this
     axios.get('/api/v1/collections/' + usercookie.getUsername())
@@ -41,7 +40,6 @@ const mutations = {
         response.data
         .forEach(function (elem) {
           state.collectionList.push({'id': elem._id, 'name': elem.name})
-          console.log('Pushing id: ' + elem._id + ' name: ' + elem.name + ' for username: ' + usercookie.getUsername())
         })
       })
       .catch(function (error) {
