@@ -1,24 +1,17 @@
 <template>
 <div>
 <br>
-  <b-tabs>
+<b-list-group>
+  <b-list-group-item class="flex-column align-items-start" v-for="collection in this.$store.state.collections.collectionList" :key="collection.id" :value="collection.id">
+    <div class="d-flex w-100 justify-content-between">
+      <h4 class="mb-1">{{collection.name}}</h4>
+    </div>
+    <br>
+      <bookmark-entry :collection="collection"></bookmark-entry>
+  </b-list-group-item>
+</b-list-group>
+<br>
 
-    <b-tab title="Collections">
-
-      <br>
-      <b-list-group v-for="collection in this.$store.state.collections.collectionList" :key="collection.id" :value="collection.id">
-        <b-list-group-item >
-          {{collection.name}} <br> {{collection.id}} <br>
-        </b-list-group-item>
-      </b-list-group>
-
-    </b-tab>
-
-    <b-tab title="Bookmarks" >
-      <br>
-      <b-list-group v-if="this.$store.state.collections.collectionList.length > 0" :collections="this.$store.state.collections.collectionList"></b-list-group>
-    </b-tab>
-  </b-tabs>
 </div>
 </template>
 
@@ -36,5 +29,7 @@ export default {
 </script>
 
 <style scoped>
-
+h4 {
+  color: #43a59f;
+}
 </style>

@@ -1,0 +1,97 @@
+// Import custom font from Google
+@import url('https://fonts.googleapis.com/css?family=Lato|Merriweather|Roboto&amp;subset=cyrillic,cyrillic-ext');
+
+// Override / set color variables
+$white: #fff;
+$black: #000;
+$green: #00e389;
+$blue: #083f64;
+$orange: #f26c22;
+$yellow: #ffd925;
+$red: #e5001e;
+
+// Set brand colors
+$primary: $blue;
+$secondary: #43a59f;
+$success: $green;
+$info: $yellow;
+$warning: $orange;
+$danger: $red;
+
+
+// Override fonts
+$font-family-sans-serif: 'Roboto', sans-serif;
+$font-family-serif: Georgia, 'Times New Roman', Times, serif;
+$font-family-monospace: Menlo, Monaco, Consolas, 'Liberation Mono',
+  'Courier New', monospace;
+$font-family-base: $font-family-sans-serif;
+
+// Set global options
+$enable-shadows: false;
+$enable-gradients: true;
+
+// Buttons
+
+.btn {
+  font-family: "Roboto", sans-serif; 
+  font-size: 14px;
+  font-weight: 300;
+  line-height: 1.1;
+  letter-spacing: 1px;
+  color: #f2f2f2;
+}
+.btn-primary {
+  font-family: "Roboto", sans-serif; 
+  font-size: 14px;
+  font-weight: 300;
+  line-height: 1.1;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: #f2f2f2;
+}
+
+.btn-default, .btn-link {
+  color: #37474f;
+}
+.btn {
+  outline: 0;
+  outline-offset: 0;
+  border: 0;
+  border-radius: 2px;
+
+  transition: all .15s ease-in-out; 
+  -o-transition: all .15s ease-in-out; 
+  -moz-transition: all .15s ease-in-out; 
+  -webkit-transition: all .15s ease-in-out;  
+  
+  &:focus, &:active, &.active, &:active:focus, &.active:focus {
+    outline: 0;
+    outline-offset: 0;  
+    box-shadow: none;
+    -moz-box-shadow: none;
+    -webkit-box-shadow: none;
+  }
+}
+
+.btn-primary-gerdi:focus, .btn-primary-gerdi:active:focus, .btn-primary-gerdi.active:focus {
+  outline: 0 none;
+}
+
+.btn-primary-gerdi {
+padding: 10px 10px;
+  border: 0 none;
+  font-weight: 900;
+  letter-spacing: 0.1px;
+  text-transform: uppercase;
+  outline: 0 none;
+  background: transparent;
+  color: #37474f;
+}
+.btn-primary-gerdi:hover, .btn-primary-gerdi:focus, .btn-primary-gerdi:active, .btn-primary-gerdi.active, .open > .dropdown-toggle.btn-primary-gerdi {
+  background: #77d7d0;
+  box-shadow: none;
+}
+.btn-primary-gerdi:active, .btn-primary-gerdi.active {
+  background: #007299;
+  box-shadow: none;
+}
