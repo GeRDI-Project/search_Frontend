@@ -21,8 +21,10 @@
     </b-media>
 
     <br>
-    <div slot="footer">
-      <search-result-entry-menu :results="this.result"></search-result-entry-menu>
+    <div>
+      <slot name="footer">
+        <search-result-entry-menu :results="this.result"></search-result-entry-menu>
+      </slot>
     </div>
   </b-card>
 </div>

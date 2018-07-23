@@ -1,14 +1,12 @@
 <template>
 <div>
   <b-button-group size="sm">
-   <b-button disabled variant="primary-gerdi" >More information</b-button>
+    <b-button disabled variant="primary-gerdi" >More information</b-button>
     <b-button disabled variant="primary-gerdi" >Share</b-button>
     <b-button v-b-modal.modal @click="showModal" variant="primary-gerdi" class="text-uppercase">{{bookmarkBtn}}</b-button>
     <b-button disabled variant="primary-gerdi">Preprocess</b-button>
     <b-button disabled variant="primary-gerdi" >Store</b-button>
   </b-button-group>
-  <br>
-  <br>
   <b-alert :show="dismissCountDown"
              dismissible
              variant="success"
@@ -81,10 +79,10 @@ export default {
   },
   methods: {
     showModal() {
-      this.$refs.myModalRef.show()
+      this.$refs.bookmarkingModal.show()
     },
     hideModal() {
-      this.$refs.myModalRef.hide()
+      this.$refs.bookmarkingModal.hide()
     },
     countDownChanged(dismissCountDown) {
       this.dismissCountDown = dismissCountDown
