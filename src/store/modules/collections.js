@@ -18,8 +18,7 @@ import axios from 'axios'
 import usercookie from '../../util/usercookie.js'
 
 const state = {
-  collectionList: [],
-  dataSetsIDs: []
+  collectionList: []
 }
 
 const getters = {
@@ -39,16 +38,22 @@ const mutations = {
     state.collectionList = []
     var self = this
     axios.get('/api/v1/collections/' + usercookie.getUsername())
-      .then(function (response) {
-        response.data
-        .forEach(function (elem) {
-          state.collectionList.push({'id': elem._id, 'name': elem.name})
+    .then(function (response) {
+      response.data.forEach(function (elem) {
+        var collectionDocs = []
+        axios.get('/api/v1/collections/' + usercookie.getUsername() + '/' + elem._id)
+          .then(function (subresponse) {
+            subresponse.data.forEach(function (doc) {
+              collectionDocs.push(doc._id)
+            })
+            state.collectionList.push({'id': elem._id, 'name': elem.name, 'docs': collectionDocs})
+          })
+      })
+        .catch(function (error) {
+          self.errMsg = error.response
+          console.log(error)
         })
-      })
-      .catch(function (error) {
-        self.errMsg = error.response
-        console.log(error)
-      })
+    })
   }
 }
 

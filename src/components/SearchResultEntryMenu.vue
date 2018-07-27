@@ -69,8 +69,7 @@ export default {
       dismissCountDown: 0,
       bookmarkBtn: 'Add Bookmark',
       collectionName: '',
-      collectionID: null,
-      dataSetsIDs: []
+      collectionID: null
     }
   },
   created() {
@@ -114,12 +113,11 @@ export default {
     addBookmarkToExistingCollection() {
       const self = this;
       const collection = self.$store.getters.getCollectionById(self.collectionID)
-      self.dataSetsIDs = [this.results._id]
-
+      collection.docs.push(this.results._id)
       if (this.collectionID != null) {
         axios.put('/api/v1/collections/' + usercookie.getUsername() + '/' + self.collectionID, {
           name: collection.name,
-          docs: self.dataSetsIDs
+          docs: collection.docs
         }, {
           headers: {
           'Content-Type': 'application/json'
