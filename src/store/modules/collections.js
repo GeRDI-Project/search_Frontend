@@ -41,39 +41,39 @@ const mutations = {
 
 // actions
 const actions = {
-  createBookmark({ commit, state }, payload) {
-      const data = {
-          name: payload.collectionName,
-          docs: [payload.docID]
-        }
-      axios.post('/api/v1/collections/' + usercookie.getUsername(), data, {
-          headers: {
-            'Content-Type': 'application/json'
-          }
-        })
-        .then(function (response) {
-          data.id = response.data.collectionId
-          commit("addCollection", data)
-        })
-    },
-    updateCollection({ commit, state }, payload) {
-      const collection = this.getters.getCollectionById(payload.collectionID)
-      collection.docs.push(payload.docID)
-      axios.put('/api/v1/collections/' + usercookie.getUsername() + '/' + collection.id, collection, {
-        headers: {
+  createBookmark ({commit, state}, payload) {
+    const data = {
+      name: payload.collectionName,
+      docs: [payload.docID]
+    }
+    axios.post('/api/v1/collections/' + usercookie.getUsername(), data, {
+      headers: {
         'Content-Type': 'application/json'
-        }
-      })
-      .then(function(response) {
-      })
-      .catch(function(error) {
-        console.log(error)
-      })
-    },
-    refreshCollections (state) {
-      state.collectionList = []
-      var self = this
-      axios.get('/api/v1/collections/' + usercookie.getUsername())
+      }
+    })
+    .then(function (response) {
+      data.id = response.data.collectionId
+      commit('addCollection', data)
+    })
+  },
+  updateCollection ({commit, state}, payload) {
+    const collection = this.getters.getCollectionById(payload.collectionID)
+    collection.docs.push(payload.docID)
+    axios.put('/api/v1/collections/' + usercookie.getUsername() + '/' + collection.id, collection, {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+    .then(function (response) {
+    })
+    .catch(function (error) {
+      console.log(error)
+    })
+  },
+  refreshCollections (state) {
+    state.collectionList = []
+    var self = this
+    axios.get('/api/v1/collections/' + usercookie.getUsername())
       .then(function (response) {
         response.data.forEach(function (elem) {
           var collectionDocs = []
@@ -82,13 +82,12 @@ const actions = {
               subresponse.data.forEach(function (doc) {
                 collectionDocs.push(doc._id)
               })
-              self.commit("addCollection",{'id': elem._id, 'name': elem.name, 'docs': collectionDocs})
+              self.commit('addCollection', {'id': elem._id, 'name': elem.name, 'docs': collectionDocs})
             })
         })
       })
-    }
   }
-
+}
 
 export default {
   state,

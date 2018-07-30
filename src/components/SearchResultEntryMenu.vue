@@ -68,9 +68,6 @@
 </template>
 
 <script>
-import axios from 'axios'
-import usercookie from '../util/usercookie.js'
-
 /* eslint-disable */
 export default {
   name: 'search-result-entry-menue',
