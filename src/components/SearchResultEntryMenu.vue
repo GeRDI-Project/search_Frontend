@@ -79,9 +79,17 @@ export default {
     return {
       dismissSecs: 3,
       dismissCountDown: 0,
-      bookmarkBtn: 'Add Bookmark',
       collectionName: '',
       collectionID: null
+    }
+  },
+  computed: {
+    bookmarkBtn: function () {
+      if (this.$store.getters.isBookmarked(this.results._id) === true) {
+        return 'Bookmarked'
+      } else {
+        return 'Add Bookmark'
+      }
     }
   },
   created() {

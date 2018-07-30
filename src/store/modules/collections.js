@@ -27,6 +27,9 @@ const getters = {
   },
   getCollectionById: (state) => (collectionId) => {
     return state.collectionList.find(collection => collection.id === collectionId)
+  },
+  isBookmarked: (state) => (docId) => {
+    return state.collectionList.filter(it => it.docs.includes(docId)).length > 0
   }
 }
 
@@ -52,9 +55,6 @@ const actions = {
           data.id = response.data.collectionId
           commit("addCollection", data)
         })
-        .catch(function (error) {
-          console.log(error)
-        });
     },
     updateCollection({ commit, state }, payload) {
       const collection = this.getters.getCollectionById(payload.collectionID)
@@ -71,7 +71,6 @@ const actions = {
       })
     },
     refreshCollections (state) {
-      console.log("FRESH PRINCE OF BEL AIR")
       state.collectionList = []
       var self = this
       axios.get('/api/v1/collections/' + usercookie.getUsername())
@@ -86,10 +85,6 @@ const actions = {
               self.commit("addCollection",{'id': elem._id, 'name': elem.name, 'docs': collectionDocs})
             })
         })
-          .catch(function (error) {
-            self.errMsg = error.response
-            console.log(error)
-          })
       })
     }
   }
