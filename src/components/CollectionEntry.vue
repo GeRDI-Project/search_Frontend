@@ -1,51 +1,54 @@
 <template>
 <div>
-
-  <b-btn v-b-toggle="'bookmarks-'+collection._id" size="sm" v-on:click="getBookmarkList(collection._id)" variant="link">
-    <span class="when-opened">Hide </span>
-    <span class="when-closed">Show </span>data sets</b-btn>
-  <b-collapse v-bind:id="'bookmarks-'+collection._id" class="mt-2" accordion="bookmarks">
-    <div v-if="bookmarksForCollection !=='processing'">
-      <div v-if="bookmarksForCollection.length === 0">
-        These collection is empty
-      </div>
-      <div v-else>
-        <div class="m-2" v-for="bookmark  in bookmarksForCollection" :key="bookmark.id" v-bind:id="'bookmark-'+bookmark.id">
-          <b-card v-if="bookmark._source">
+<b-btn v-b-toggle="'datasets-'+collection._id" size="sm" v-on:click="getDatasetsList(collection._id)" variant="link">
+  <span class="when-opened">Hide </span>
+  <span class="when-closed">Show </span>data sets</b-btn>
+<b-collapse v-bind:id="'datasets-'+collection._id" class="mt-2" accordion="datasets">
+  <div v-if="datasetsForCollection !=='processing'">
+    <div v-if="datasetsForCollection.length === 0">
+      This collection is empty!
+    </div>
+    <div v-else>
+      <div class="m-2" v-for="dataset  in datasetsForCollection" :key="dataset.id" v-bind:id="'datasets-'+dataset.id">
+        <b-card v-if="dataset._source">
           <b-media right-align vertical-align="top">
-            <b-img class="providerLogo" v-if="hasProviderLogo(bookmark._source.webLinks)" slot="aside" alt="Provider Logo" :src="getProviderLogo(bookmark._source.webLinks)"/>
+            <b-img class="providerLogo" v-if="hasProviderLogo(dataset._source.webLinks)" slot="aside" alt="Provider Logo" :src="getProviderLogo(dataset._source.webLinks)"
+            />
             <h5>
-              <a :href='filterForViewURI(bookmark._source.webLinks)'>{{ bookmark._source.titles[0].value }}</a>
+              <a :href='filterForViewURI(dataset._source.webLinks)'>{{ dataset._source.titles[0].value }}</a>
             </h5>
-            <br>
-            <div class="publisher" v-if="bookmark._source.publisher">
-              <i>{{ showPublisher(bookmark._source.publisher) }}</i>
+            <div class="publisher" v-if="dataset._source.publisher">
+              <h5>{{ showPublisher(dataset._source.publisher) }}</h5>
             </div>
-            <br>
-            <div class="titels" v-if="bookmark._source.descriptions">
-              {{ showDescription(bookmark._source.descriptions[0].value) }}
+            <div class="year" v-if="dataset._source.publicationYear">
+              <h6> {{ dataset._source.publicationYear }} </h6>
+            </div>
+            <div class="creators" v-if="dataset._source.creators">
+              <h6> {{ dataset._source.creators[0].creatorName.value }} </h6>
+            </div>
+            <div class="descriptions" v-if="dataset._source.descriptions">
+              {{ showDescription(dataset._source.descriptions[0].value) }}
             </div>
           </b-media>
-          <br>
           <div slot="footer">
-          <b-button-group size="sm">
-            <b-button disabled variant="primary-gerdi">More information</b-button>
-            <b-button disabled variant="primary-gerdi">Remove</b-button>
-          </b-button-group>
+            <b-button-group size="sm">
+              <b-button disabled variant="primary-gerdi">More information</b-button>
+              <b-button disabled variant="primary-gerdi">Remove</b-button>
+            </b-button-group>
           </div>
-          </b-card>
-          <div v-else>
-              <h5>
-<b-alert show variant="warning">We are sorry, but this data set is no more available.</b-alert> 
-              </h5>
-          </div>
+        </b-card>
+        <div v-else>
+          <h5>
+            <b-alert show variant="info">We are sorry, but this data set is no more available.</b-alert>
+          </h5>
         </div>
       </div>
     </div>
-    <div v-else>
-      loading
-    </div>
-  </b-collapse>
+  </div>
+  <div v-else>
+    Loading
+  </div>
+</b-collapse>
 </div>
 </template>
 
@@ -55,12 +58,12 @@
 import usercookie from '../util/usercookie.js'
 import axios from 'axios'
 export default {
-  name: 'bookmark-list',
+  name: 'collection-entry',
   props: ['collections','collection'],
   data() {
     return {
-      bookmarks: [],
-      bookmarksForCollection: []
+      datasets: [],
+      datasetsForCollection: []
     }
   },
   created() {
@@ -68,25 +71,24 @@ export default {
 
   },
   methods: {
-    getBookmarkList: function(collectionID) {
+    getDatasetsList: function(collectionID) {
       const self = this
       if (self.lastcollectionID && self.lastcollectionID === collectionID) {
-        // this block is to ignore the api call when the bookmark option is click 2nd time
+        // this block is to ignore the api call when the datasets option is click 2nd time
         self.lastcollectionID = null
       } else {
         self.lastcollectionID = collectionID
-        self.bookmarksForCollection = "processing"
-        console.log('/api/v1/collections/' + usercookie.getUsername() + '/' + collectionID)
+        self.datasetsForCollection = "processing"
         axios.get('/api/v1/collections/' + usercookie.getUsername() + '/' + collectionID)
           .then(function (response) {
-            self.bookmarksForCollection = []
-            self.bookmarksForCollection = response.data
-            console.log(response)
+            self.datasetsForCollection = []
+            self.datasetsForCollection = response.data
+            //console.log(response)
           })
           .catch(function (error) {
-            self.bookmarksForCollection = []
+            self.datasetsForCollection = []
             self.errMsg = error.response;
-            console.log(error)
+            //console.log(error)
           });
       }
     },
@@ -174,5 +176,28 @@ padding: 10px 10px;
   background: transparent;
   color: #083f64;
 }
+.year {
+  margin-top: 20px;
+}
+.creators {
+  margin-top: 20px;
+}
+.publisher {
+  margin-top: 20px;
+}
+.descriptions {
+  margin-top: 25px;
+}
+.loader {
+    border: 16px solid #f3f3f3; /* Light grey */
+    border-radius: 50%;
+    width: 120px;
+    height: 120px;
+    animation: spin 2s linear infinite;
+}
 
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
 </style>
