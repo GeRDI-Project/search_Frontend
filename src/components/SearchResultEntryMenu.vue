@@ -34,18 +34,13 @@
     <b-modal id="modal-center" centered ref="bookmarkingModal" hide-footer title="Saving data set to collection">
         <b-tabs>
           <b-tab title="Save to a new collection" active>
-            <br>
-            <b-form-input v-model="collectionName" type="text" placeholder="Enter the name of your collection"></b-form-input>
-            <br>
+            <b-form-input  class="mt-3" v-model="collectionName" type="text" placeholder="Enter the name of your collection"></b-form-input>
             <hr>
             <b-button class="float-right btn btn-space" variant="primary-gerdi" @click="hideModal ()">Cancel</b-button>
             <b-button class="float-right btn btn-space" variant="primary-gerdi" @click="hideModal (); addBookmark(); showBookmarkAlert(); setAsBookmarked ()">Save</b-button>
-            <br>
           </b-tab>
           <b-tab title="Save to an existing collection">
-            <br>
-            <b-form-select v-model="collectionID" class="mb-3">
-              <!-- <b-form-select v-model="selectedCollectionName" class="mb-3"> -->
+            <b-form-select v-model="collectionID" class="mt-3">
               <template slot="first">
                 <!-- this slot appears above the options from 'options' prop -->
                 <option :value="null" disabled>Please select a collection name </option>
@@ -54,7 +49,6 @@
                 {{ collection.name }}
               </option>
             </b-form-select>
-            <br>
             <hr>
             <b-button class="float-right  btn-space" variant="primary-gerdi" @click="hideModal ()" >Cancel</b-button>
             <b-button class="float-right  btn-space" variant="primary-gerdi" @click="hideModal (); addBookmarkToExistingCollection(); showBookmarkAlert(); setAsBookmarked ()">Save</b-button>
@@ -161,6 +155,5 @@ padding: 10px 10px;
 .btn-space {
     margin-right: 5px;
 }
-
 
 </style>

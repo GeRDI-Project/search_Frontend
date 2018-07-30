@@ -7,11 +7,9 @@
       <h4>
         <a :href='filterForViewURI(result._source.webLinks)'><span v-if="result._source.titles">{{ result._source.titles[0].value }}</span></a>
       </h4>
-      <br>
       <div class="publisher" v-if="result._source.publisher">
         <h5>{{ showPublisher(result._source.publisher) }}</h5>
       </div>
-      <br>
       <div class="creators" v-if="result._source.creators">
         <h6> {{ result._source.creators[0].creatorName.value }} </h6>
       </div>
@@ -19,8 +17,6 @@
         {{ showDescription(result._source.descriptions[0].value) }}
       </div>
     </b-media>
-
-    <br>
     <div>
       <slot name="footer">
         <search-result-entry-menu :results="this.result"></search-result-entry-menu>
@@ -83,5 +79,14 @@ export default {
 }
 a {
   color: #43a59f;
+}
+.creators {
+  margin-top: 20px;
+}
+.publisher {
+  margin-top: 20px;
+}
+.descriptions {
+  margin-top: 25px;
 }
 </style>
