@@ -5,7 +5,7 @@
       <b-img class="providerLogo" v-if="hasProviderLogo(result._source.webLinks)" slot="aside" alt="Provider Logo" :src="getProviderLogo(result._source.webLinks)"
       />
       <h4>
-        <a :href='filterForViewURI(result._source.webLinks)'>{{ result._source.titles[0].value }}</a>
+        <a :href='filterForViewURI(result._source.webLinks)'><span v-if="result._source.titles">{{ result._source.titles[0].value }}</span></a>
       </h4>
       <br>
       <div class="publisher" v-if="result._source.publisher">
@@ -19,9 +19,12 @@
         {{ showDescription(result._source.descriptions[0].value) }}
       </div>
     </b-media>
+
     <br>
-    <div slot="footer">
-      <search-result-entry-menu :results="this.result"></search-result-entry-menu>
+    <div>
+      <slot name="footer">
+        <search-result-entry-menu :results="this.result"></search-result-entry-menu>
+      </slot>
     </div>
   </b-card>
 </div>

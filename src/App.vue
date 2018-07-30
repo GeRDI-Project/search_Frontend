@@ -14,12 +14,10 @@ export default {
 }
 </script>
 
-<style lang="scss">
-@import './styles/gerdi.scss';
-@import '../node_modules/bootstrap/scss/bootstrap.scss';
+<style scoped>
 
 #app {
-  
+  font-family: 'Roboto', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   display: flex;
@@ -30,4 +28,5 @@ export default {
 .content {
   flex: 1;
 }
+
 </style>
