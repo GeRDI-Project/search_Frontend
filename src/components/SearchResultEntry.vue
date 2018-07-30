@@ -17,10 +17,8 @@
         {{ showDescription(result._source.descriptions[0].value) }}
       </div>
     </b-media>
-    <div>
-      <slot name="footer">
+    <div slot="footer">
         <search-result-entry-menu :results="this.result"></search-result-entry-menu>
-      </slot>
     </div>
   </b-card>
 </div>

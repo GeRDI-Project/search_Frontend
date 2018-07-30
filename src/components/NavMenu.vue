@@ -2,7 +2,7 @@
   <b-navbar toggleable="md" variant="faded" type="light">
   <b-navbar-toggle target="nav_collapse"></b-navbar-toggle>
   <b-navbar-brand href="#">
-    <img src="../assets/GeRDI-Logo.svg" id="logo" width="150px" class="d-inline-block align-top" alt="BV">
+    <img src="../assets/logo.svg" id="logo" width="200px" class="d-inline-block align-top" alt="BV">
   </b-navbar-brand>
   <b-collapse is-nav id="nav_collapse">
     <b-navbar-nav>
@@ -67,14 +67,13 @@ export default {
 
 .navbar-nav > .nav-item {
   font-family: "Roboto", sans-serif;
-  font-size: 16px;
+  font-size: 18px;
   font-weight: 700;
   line-height: 1.1;
   letter-spacing: 0.1px;
   padding: 0;
-  margin-top: 52px;
-  vertical-align: bottom;
-  text-transform: uppercase;
+  margin-top: 40px;
+  color: #083f64;
   
 }
 
