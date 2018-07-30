@@ -49,7 +49,6 @@ new Vue({
     App
   },
   created() {
-    this.$store.commit('refreshCollections')
+    this.$store.dispatch('refreshCollections')
   }
-
 })

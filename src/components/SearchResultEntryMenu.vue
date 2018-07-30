@@ -1,4 +1,19 @@
-<template>
+/**
+ * Copyright 2018 Alvaro Aguilera, Nelson Tavares de Sousa
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+ <template>
 <div>
   <b-button-group size="sm">
     <b-button disabled variant="primary-gerdi" >More information</b-button>
@@ -37,9 +52,6 @@
               </template>
               <option v-for="collection in this.$store.state.collections.collectionList" :key="collection.id" :value="collection.id">
                 {{ collection.name }}
-                <br>
-                <hr>
-                {{collection._id}}
               </option>
             </b-form-select>
             <br>
@@ -74,7 +86,6 @@ export default {
   },
   created() {
     //this.$store.commit('refreshCollections')
-
   },
   methods: {
     showModal() {
@@ -93,44 +104,23 @@ export default {
       this.bookmarkBtn = 'Bookmarked'
     },
     addBookmark() {
-      const self = this
-      const docID = this.results._id;
-      axios.post('/api/v1/collections/' + usercookie.getUsername(), {
-          name: this.collectionName,
-          docs: [docID]
-        }, {
-          headers: {
-            'Content-Type': 'application/json'
-          }
-        })
-        .then(function (response) {
-          self.$store.commit('refreshCollections');
-        })
-        .catch(function (error) {
-          console.log(error)
-        });
+      this.$store.dispatch('createBookmark', {
+        collectionName: this.collectionName,
+        docID: this.results._id
+      })
     },
     addBookmarkToExistingCollection() {
-      const self = this;
-      const collection = self.$store.getters.getCollectionById(self.collectionID)
-      collection.docs.push(this.results._id)
-      if (this.collectionID != null) {
-        axios.put('/api/v1/collections/' + usercookie.getUsername() + '/' + self.collectionID, {
-          name: collection.name,
-          docs: collection.docs
-        }, {
-          headers: {
-          'Content-Type': 'application/json'
-          }
+      const self = this
+      if (self.collectionID != null) {
+        self.$store.dispatch('updateCollection', {
+          collectionID: self.collectionID,
+          docID: self.results._id
         })
       } else {
-        console.log("Empty collection ID");
+         console.log("Empty collection ID");
       }
-
     }
-
   }
-
 }
 </script>
 
