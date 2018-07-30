@@ -26,6 +26,6 @@ export default {
   left:50%;
   transform: translate(-50%,-50%);
   width: 80%;
-  background-color: #f2f2f2;
+  background-color: transparent
 }
 </style>
