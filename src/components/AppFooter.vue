@@ -3,7 +3,6 @@
   <p>GeRDI &copy; 2016-2018</p>
   <div class="footer-links">
     <a href="http://www.gerdi-project.de/contact/">Contact Us</a>
-    <!--  <a href="">Terms and Conditions</a> -->
     <a href="https://www.lrz.de/datenschutzerklaerungen/datenschutzerklaerung_cloud/">Privacy Policy</a>
     <a href="http://www.gerdi-project.de/imprint/">Impressum</a>
   </div>
@@ -29,12 +28,8 @@ export default {
   border-left-style: solid;
   border-width: 1px;
   padding-left: 4px;
-  padding-right: 2px;
   color: #fafafa;
 font-size: 90%
-}
-
-.footer-links a {
 }
 
 .footer-links a:first-child {
