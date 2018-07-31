@@ -51,26 +51,9 @@ $enable-gradients: true;
 
 .btn-default, .btn-link {
   color: #37474f;
+  letter-spacing: 0.3px;
 }
-.btn {
-  outline: 0;
-  outline-offset: 0;
-  border: 0;
-  border-radius: 2px;
 
-  transition: all .15s ease-in-out; 
-  -o-transition: all .15s ease-in-out; 
-  -moz-transition: all .15s ease-in-out; 
-  -webkit-transition: all .15s ease-in-out;  
-  
-  &:focus, &:active, &.active, &:active:focus, &.active:focus {
-    outline: 0;
-    outline-offset: 0;  
-    box-shadow: none;
-    -moz-box-shadow: none;
-    -webkit-box-shadow: none;
-  }
-}
 
 .btn-primary-gerdi:focus, .btn-primary-gerdi:active:focus, .btn-primary-gerdi.active:focus {
   outline: 0 none;

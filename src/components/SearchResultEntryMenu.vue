@@ -16,48 +16,39 @@
  <template>
 <div>
   <b-button-group size="sm">
-    <b-button disabled variant="primary-gerdi" >More information</b-button>
-    <b-button disabled variant="primary-gerdi" >Share</b-button>
+    <b-button disabled variant="primary-gerdi">More information</b-button>
+    <b-button disabled variant="primary-gerdi">Share</b-button>
     <b-button v-b-modal.modal @click="showModal" variant="primary-gerdi" class="text-uppercase">{{bookmarkBtn}}</b-button>
     <b-button disabled variant="primary-gerdi">Preprocess</b-button>
-    <b-button disabled variant="primary-gerdi" >Store</b-button>
+    <b-button disabled variant="primary-gerdi">Store</b-button>
   </b-button-group>
-  <b-alert :show="dismissCountDown"
-             dismissible
-             variant="success"
-             @dismissed="dismissCountDown=0"
-             @dismiss-count-down="countDownChanged">
-             The bookmark is successfully set!
+  <b-alert :show="dismissCountDown" dismissible variant="success" @dismissed="dismissCountDown=0" @dismiss-count-down="countDownChanged">
+    The bookmark is successfully set!
   </b-alert>
-
   <div>
-    <b-modal id="modal-center" centered ref="bookmarkingModal" hide-footer title="Saving data set to collection">
-        <b-tabs>
-          <b-tab title="Save to a new collection" active>
-            <b-form-input  class="mt-3" v-model="collectionName" type="text" placeholder="Enter the name of your collection"></b-form-input>
-            <hr>
-            <b-button class="float-right btn btn-space" variant="primary-gerdi" @click="hideModal ()">Cancel</b-button>
-            <b-button class="float-right btn btn-space" variant="primary-gerdi" @click="hideModal (); addBookmark(); showBookmarkAlert(); setAsBookmarked ()">Save</b-button>
-          </b-tab>
-          <b-tab title="Save to an existing collection">
-            <b-form-select v-model="collectionID" class="mt-3">
-              <template slot="first">
-                <!-- this slot appears above the options from 'options' prop -->
-                <option :value="null" disabled>Please select a collection name </option>
-              </template>
-              <option v-for="collection in this.$store.state.collections.collectionList" :key="collection.id" :value="collection.id">
-                {{ collection.name }}
-              </option>
-            </b-form-select>
-            <hr>
-            <b-button class="float-right  btn-space" variant="primary-gerdi" @click="hideModal ()" >Cancel</b-button>
-            <b-button class="float-right  btn-space" variant="primary-gerdi" @click="hideModal (); addBookmarkToExistingCollection(); showBookmarkAlert(); setAsBookmarked ()">Save</b-button>
-          </b-tab>
-        </b-tabs>
-
+    <b-modal centered ref="bookmarkingModal" hide-footer title="Saving data set to collection">
+      <div v-show="seen" class="newCollection">
+        <b-form-input class="mt-3 mb-2" v-model="collectionName" type="text" placeholder="Enter the name of your collection"></b-form-input>
+        <b-button v-on:click="seen = !seen" variant="link">or add to an existing collection</b-button>
+        <hr>
+        <b-button class="float-right btn btn-space" variant="primary-gerdi" @click="hideModal ()">Cancel</b-button>
+        <b-button class="float-right btn btn-space" variant="primary-gerdi" @click="hideModal (); addBookmark(); showBookmarkAlert(); setAsBookmarked ()">Save</b-button>
+      </div>
+      <div v-show="!seen" class="existingCollection">
+        <b-form-select v-model="collectionID" class="mt-3 mb-3">
+          <template slot="first">
+            <option :value="null" disabled>Please select a collection name </option>
+          </template>
+          <option v-for="collection in this.$store.state.collections.collectionList" :key="collection.id" :value="collection.id">
+            {{ collection.name }}
+          </option>
+        </b-form-select>
+        <hr>
+        <b-button class="float-right  btn-space" variant="primary-gerdi" @click="hideModal ()">Cancel</b-button>
+        <b-button class="float-right  btn-space" variant="primary-gerdi" @click="hideModal (); addBookmarkToExistingCollection(); showBookmarkAlert(); setAsBookmarked ()">Save</b-button>
+      </div>
     </b-modal>
-</div>
-
+  </div>
 </div>
 </template>
 
@@ -68,6 +59,7 @@ export default {
   props: ['results'],
   data() {
     return {
+      seen:true,
       dismissSecs: 3,
       dismissCountDown: 0,
       collectionName: '',
