@@ -16,9 +16,9 @@
  <template>
 <div>
   <b-button-group size="sm">
-    <b-button disabled variant="primary-gerdi">More information</b-button>
-    <b-button disabled variant="primary-gerdi">Share</b-button>
-    <b-button v-b-modal.modal @click="showModal" variant="primary-gerdi" class="text-uppercase">{{bookmarkBtn}}</b-button>
+    <b-button disabled variant="primary-gerdi" >More information</b-button>
+    <b-button disabled variant="primary-gerdi" >Share</b-button>
+    <b-button v-b-modal.modal @click="showModal" variant="primary-gerdi">{{bookmarkBtn}}</b-button>
     <b-button disabled variant="primary-gerdi">Preprocess</b-button>
     <b-button disabled variant="primary-gerdi">Store</b-button>
   </b-button-group>
@@ -130,7 +130,6 @@ padding: 10px 10px;
   border: 0 none;
   font-weight: 700;
   letter-spacing: 0.1px;
-  text-transform: uppercase;
   outline: 0 none;
   background: transparent;
   color: #083f64;
