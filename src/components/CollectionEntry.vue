@@ -1,6 +1,6 @@
 <template>
 <div>
-<b-btn v-b-toggle="'datasets-'+collection._id" size="sm" v-on:click="getDatasetsList(collection._id)" variant="link">
+<b-btn v-b-toggle="'datasets-'+collection._id" v-on:click="getDatasetsList(collection._id)" variant="link">
   <span class="when-opened">Hide </span>
   <span class="when-closed">Show </span>data sets</b-btn>
 <b-collapse v-bind:id="'datasets-'+collection._id" class="mt-2" accordion="datasets">
@@ -31,9 +31,9 @@
             </div>
           </b-media>
           <div slot="footer">
-            <b-button-group size="sm">
-              <b-button disabled variant="primary-gerdi">More information</b-button>
-              <b-button disabled variant="primary-gerdi">Remove</b-button>
+            <b-button-group>
+              <b-button disabled variant="link">More information</b-button>
+              <b-button disabled variant="link">Remove</b-button>
             </b-button-group>
           </div>
         </b-card>
