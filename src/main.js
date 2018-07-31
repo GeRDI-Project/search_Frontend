@@ -14,6 +14,8 @@ import NavMenu from '@/components/NavMenu'
 import SearchMask from '@/components/SearchMask'
 import AppFooter from '@/components/AppFooter'
 import PaginationBar from '@/components/PaginationBar'
+import CollectionEntry from '@/components/CollectionEntry'
+import DocumentMedia from '@/components/DocumentMedia'
 
 import { store } from './store/store'
 
@@ -30,6 +32,8 @@ Vue.component('search-mask', SearchMask)
 Vue.component('app-footer', AppFooter)
 Vue.component('pagination-bar', PaginationBar)
 Vue.component('results', Results)
+Vue.component('collection-entry', CollectionEntry)
+Vue.component('document-media', DocumentMedia)
 
 Vue.config.productionTip = false
 axios.defaults.timeout = 10000;

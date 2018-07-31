@@ -55,7 +55,6 @@ export default {
   props: ['results'],
   data() {
     return {
-      seen:true,
       dismissSecs: 3,
       dismissCountDown: 0,
       collectionName: '',
@@ -63,18 +62,26 @@ export default {
     }
   },
   computed: {
-    bookmarkBtn: function () {
-      if (this.$store.getters.isBookmarked(this.results._id) === true) {
-        return 'Bookmarked'
-      } else {
-        return 'Add Bookmark'
+    bookmarkBtn: {
+      get: function () {
+        if (this.$store.getters.isBookmarked(this.results._id) === true) {
+          return 'Bookmarked'
+        } else {
+          return 'Add Bookmark'
+        }
+      },
+      set: function(){
       }
     },
-    okBtn: function () {
-      if (this.collectionID != 0) {
-        return 'Save'
-      } else {
-        return 'Create'
+    okBtn: {
+      get: function () {
+        if (this.collectionID != 0) {
+          return 'Save'
+        } else {
+          return 'Create'
+        }
+      },
+      set: function () {
       }
     }
   },
@@ -88,7 +95,6 @@ export default {
         this.showBookmarkAlert();
         this.setAsBookmarked ()
       } else {
-        console.log("yes")
         this.$refs.createCollection.show()
       }
     },
@@ -132,13 +138,3 @@ export default {
   }
 }
 </script>
-
-
-
-
-
-<style scoped>
-
-
-
-</style>

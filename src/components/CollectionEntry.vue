@@ -11,31 +11,14 @@
     <div v-else>
       <div class="m-2" v-for="dataset  in datasetsForCollection" :key="dataset.id" v-bind:id="'datasets-'+dataset.id">
         <b-card v-if="dataset._source">
-          <b-media right-align vertical-align="top">
-            <b-img class="providerLogo" v-if="hasProviderLogo(dataset._source.webLinks)" slot="aside" alt="Provider Logo" :src="getProviderLogo(dataset._source.webLinks)"
-            />
-            <h5>
-              <a :href='filterForViewURI(dataset._source.webLinks)'>{{ dataset._source.titles[0].value }}</a>
-            </h5>
-            <div class="publisher" v-if="dataset._source.publisher">
-              <h5>{{ showPublisher(dataset._source.publisher) }}</h5>
-            </div>
-            <div class="year" v-if="dataset._source.publicationYear">
-              <h6> {{ dataset._source.publicationYear }} </h6>
-            </div>
-            <div class="creators" v-if="dataset._source.creators">
-              <h6> {{ dataset._source.creators[0].creatorName.value }} </h6>
-            </div>
-            <div class="descriptions" v-if="dataset._source.descriptions">
-              {{ showDescription(dataset._source.descriptions[0].value) }}
-            </div>
-          </b-media>
-          <div slot="footer">
+          <document-media :doc="dataset"></document-media>
+          <!-- Just show this to the user once there is any functionality -->
+          <!-- <div slot="footer">
             <b-button-group>
               <b-button disabled variant="link">More information</b-button>
               <b-button disabled variant="link">Remove</b-button>
             </b-button-group>
-          </div>
+          </div> -->
         </b-card>
         <div v-else>
           <h5>
@@ -59,7 +42,7 @@ import usercookie from '../util/usercookie.js'
 import axios from 'axios'
 export default {
   name: 'collection-entry',
-  props: ['collections','collection'],
+  props: ['collection'],
   data() {
     return {
       datasets: [],
@@ -71,6 +54,13 @@ export default {
 
   },
   methods: {
+    getTitle: function(dataset) {
+      if (dataset._source.titles.length > 0) {
+        return dataset._source.titles[0].value
+      } else {
+        return "This Document is missing"
+      }
+    },
     getDatasetsList: function(collectionID) {
       const self = this
       if (self.lastcollectionID && self.lastcollectionID === collectionID) {

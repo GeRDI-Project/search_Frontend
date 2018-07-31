@@ -23,7 +23,7 @@ export default {
                           must: [
                             {
                               query_string: {
-                                query: "*"
+                                query: qs
                               }
                             }
                           ]
