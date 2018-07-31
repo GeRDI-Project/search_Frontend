@@ -15,38 +15,34 @@
  */
  <template>
 <div>
-  <b-button-group size="sm">
-    <b-button disabled variant="primary-gerdi" >More information</b-button>
-    <b-button disabled variant="primary-gerdi" >Share</b-button>
-    <b-button v-b-modal.modal @click="showModal" variant="primary-gerdi">{{bookmarkBtn}}</b-button>
-    <b-button disabled variant="primary-gerdi">Preprocess</b-button>
-    <b-button disabled variant="primary-gerdi">Store</b-button>
+  <b-button-group>
+    <b-button disabled variant="link" >More information</b-button>
+    <b-button disabled variant="link" >Share</b-button>
+    <b-button v-b-modal.modal @click="showModal" variant="link">{{bookmarkBtn}}</b-button>
+    <b-button disabled variant="link">Preprocess</b-button>
+    <b-button disabled variant="link" >Store</b-button>
   </b-button-group>
   <b-alert :show="dismissCountDown" dismissible variant="success" @dismissed="dismissCountDown=0" @dismiss-count-down="countDownChanged">
     The bookmark is successfully set!
   </b-alert>
   <div>
-    <b-modal centered ref="bookmarkingModal" hide-footer title="Saving data set to collection">
-      <div v-show="seen" class="newCollection">
-        <b-form-input class="mt-3 mb-2" v-model="collectionName" type="text" placeholder="Enter the name of your collection"></b-form-input>
-        <b-button v-on:click="seen = !seen" variant="link">or add to an existing collection</b-button>
-        <hr>
-        <b-button class="float-right btn btn-space" variant="primary-gerdi" @click="hideModal ()">Cancel</b-button>
-        <b-button class="float-right btn btn-space" variant="primary-gerdi" @click="hideModal (); addBookmark(); showBookmarkAlert(); setAsBookmarked ()">Save</b-button>
-      </div>
-      <div v-show="!seen" class="existingCollection">
-        <b-form-select v-model="collectionID" class="mt-3 mb-3">
-          <template slot="first">
-            <option :value="null" disabled>Please select a collection name </option>
-          </template>
+    <b-modal id="modal-center" centered ref="bookmarkingModal" title="Save Document to a Collection" @ok="okClicked" :ok-disabled="collectionID === null" :ok-title="okBtn">
+      Please select whether you want to store the selected document in a new or existing collection.
+      <b-form-select v-model="collectionID" class="mt-3">
+        <option :value="null" disabled>Please select an option</option>
+        <option value="0">Create a new Collection</option>
+        <optgroup label="Add to an existing Collection">
           <option v-for="collection in this.$store.state.collections.collectionList" :key="collection.id" :value="collection.id">
             {{ collection.name }}
           </option>
-        </b-form-select>
-        <hr>
-        <b-button class="float-right  btn-space" variant="primary-gerdi" @click="hideModal ()">Cancel</b-button>
-        <b-button class="float-right  btn-space" variant="primary-gerdi" @click="hideModal (); addBookmarkToExistingCollection(); showBookmarkAlert(); setAsBookmarked ()">Save</b-button>
-      </div>
+        </optgroup>
+      </b-form-select>
+    </b-modal>
+  </div>
+
+  <div>
+    <b-modal id="modal-center" centered ref="createCollection" title="Create a new Collection" @ok="createNewCollection">
+      <b-form-input v-model="collectionName" type="text" placeholder="Please enter a name for the new Collection"></b-form-input>
     </b-modal>
   </div>
 </div>
@@ -73,12 +69,34 @@ export default {
       } else {
         return 'Add Bookmark'
       }
+    },
+    okBtn: function () {
+      if (this.collectionID != 0) {
+        return 'Save'
+      } else {
+        return 'Create'
+      }
     }
   },
   created() {
     //this.$store.commit('refreshCollections')
   },
   methods: {
+    okClicked() {
+      if (this.collectionID != 0) {
+        this.addBookmarkToExistingCollection();
+        this.showBookmarkAlert();
+        this.setAsBookmarked ()
+      } else {
+        console.log("yes")
+        this.$refs.createCollection.show()
+      }
+    },
+    createNewCollection() {
+      this.addBookmark();
+      this.showBookmarkAlert();
+      this.setAsBookmarked ()
+    },
     showModal() {
       this.$refs.bookmarkingModal.show()
     },
@@ -121,30 +139,6 @@ export default {
 
 <style scoped>
 
-.btn-primary-gerdi:focus, .btn-primary-gerdi:active:focus, .btn-primary-gerdi.active:focus {
-  outline: 0 none;
-}
 
-.btn-primary-gerdi {
-padding: 10px 10px;
-  border: 0 none;
-  font-weight: 700;
-  letter-spacing: 0.1px;
-  outline: 0 none;
-  background: transparent;
-  color: #083f64;
-}
-.btn-primary-gerdi:hover, .btn-primary-gerdi:focus, .btn-primary-gerdi:active, .btn-primary-gerdi.active, .open > .dropdown-toggle.btn-primary-gerdi {
-  background: #77d7d0;
-  box-shadow: none;
-}
-.btn-primary-gerdi:active, .btn-primary-gerdi.active {
-  background: #007299;
-  box-shadow: none;
-}
-
-.btn-space {
-    margin-right: 5px;
-}
 
 </style>
