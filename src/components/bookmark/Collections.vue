@@ -16,8 +16,7 @@
 /* eslint-disable */
 
 import axios from 'axios'
-import CollectionEntry from './CollectionEntry.vue'
-import usercookie from '../util/usercookie.js'
+import usercookie from '../../util/usercookie.js'
 export default {
   name: 'collections',
   props: ['datasets'],
@@ -46,7 +45,7 @@ export default {
         });
     }
   },
-  
+
 }
 </script>
 

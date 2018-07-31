@@ -3,7 +3,7 @@
     <b-img class="providerLogo" v-if="hasProviderLogo(doc._source.webLinks)" slot="aside" alt="Provider Logo" :src="getProviderLogo(doc._source.webLinks)"/>
     <h4>
       <a v-if="doc._source.webLinks && doc._source.webLinks.length > 0" :href='filterForViewURI(doc._source.webLinks)'><span>{{ getTitle() }}</span></a>
-      <span v-else>{{ getTitle() }}</span>
+      <span v-else v-bind:class="{ deleted: !(this.doc._source.titles && this.doc._source.titles.length > 0)}">{{ getTitle() }}</span>
     </h4>
     <div class="publisher" v-if="doc._source.publisher">
       <h5>{{ showPublisher(doc._source.publisher) }}</h5>
@@ -83,5 +83,9 @@ a {
 }
 .descriptions {
   margin-top: 25px;
+}
+
+.deleted {
+  color: #BBB;
 }
 </style>

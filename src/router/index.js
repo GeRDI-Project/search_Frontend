@@ -3,10 +3,10 @@ import Vue from 'vue'
 import Router from 'vue-router'
 
 // Search Components
-import Results from '@/components/Results'
+import Results from '@/components/search/Results'
 
 // Bookmark Components
-import Collections from '@/components/Collections'
+import Collections from '@/components/bookmark/Collections'
 
 // Statical UI Elements Components
 import Start from '@/components/Start'

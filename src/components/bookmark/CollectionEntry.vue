@@ -38,7 +38,7 @@
 <script>
 
 /* eslint-disable */
-import usercookie from '../util/usercookie.js'
+import usercookie from '../../util/usercookie.js'
 import axios from 'axios'
 export default {
   name: 'collection-entry',
