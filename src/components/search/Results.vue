@@ -14,14 +14,13 @@
  * limitations under the License.
  */
 <template>
+
 <div class="results">
+  
   <search-mask :query-value="$route.query.q"></search-mask>
-  <br>
   <h6 v-if="numResults > 0" class="results-annotation"><b>{{ numResults }}</b> results found for <b> {{$route.query.q}} </b></h6>
   <b-alert class="nothing-found-alert" :show="numResults == 0">Nothing to see here</b-alert>
-  <!-- <br>
-  <h6 v-if="totalFoundDocs > 0" class="results-annotation">Showing <b>{{num in numDocsPerPage}} </b>of <b> {{ totalFoundDocs }} </b> results for <b> {{$route.query.q}} </b></h6> -->
-  <br>
+  
   <b-container>
     <b-row>
       <b-col cols="3"><search-facetes v-if="numResults > 0"></search-facetes>
@@ -110,4 +109,5 @@ export default {
 .results-annotation {
   margin-top: 1rem;
 }
+
 </style>

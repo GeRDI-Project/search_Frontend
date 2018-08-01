@@ -15,17 +15,24 @@
  */
 <template>
 <div role="tablist">
-   <b-card no-body class="mb-1">
+  <b-card no-body class="mb-1">
     <b-card-header header-tag="header" class="p-1" role="tab">
-      <b-btn block href="#" v-b-toggle.accordion1 variant="info">Publisher</b-btn>
+      <b-btn href="#" v-b-toggle.accordion1 variant="accordion-gerdi">
+        <span class="when-opened">
+          <label style='margin-right: 120px;'>Publisher </label>
+          <i class="material-icons float-right"> keyboard_arrow_up</i>
+        </span>
+        <span class="when-closed">
+          <label style='margin-right: 120px;'>Publisher </label>
+          <i class="material-icons float-right"> keyboard_arrow_down</i>
+        </span>
+      </b-btn>
     </b-card-header>
     <b-collapse id="accordion1" visible accordion="my-accordion" role="tabpanel">
       <b-card-body>
         <p class="card-text">
           <b-form-group>
             <b-form-checkbox-group stacked v-model="facetsModel.selectedPublishers" name="publisherFacets" :options="limitArray(this.aggs.Publisher.buckets.map(it => it.key))"></b-form-checkbox-group>
-           <!-- <br>
-              <span>Checked: {{ selectedPublishers }}</span>    -->
           </b-form-group>
         </p>
       </b-card-body>
@@ -33,12 +40,21 @@
   </b-card>
   <b-card no-body class="mb-1">
     <b-card-header header-tag="header" class="p-1" role="tab">
-      <b-btn block href="#" v-b-toggle.accordion2 variant="info"> Author </b-btn>
+      <b-btn href="#" v-b-toggle.accordion2 variant="accordion-gerdi">
+        <span class="when-opened">
+          <label style='margin-right: 140px;'>Author </label>
+          <i class="material-icons float-right"> keyboard_arrow_up</i>
+        </span>
+        <span class="when-closed">
+          <label style='margin-right: 140px;'>Author  </label>
+          <i class="material-icons float-right"> keyboard_arrow_down</i>
+        </span>
+      </b-btn>
     </b-card-header>
     <b-collapse id="accordion2" accordion="my-accordion" role="tabpanel">
       <b-card-body>
         <p class="card-text">
-<b-form-group>
+          <b-form-group>
             <b-form-checkbox-group stacked v-model="facetsModel.selectedAuthors" name="authorFacets" :options="limitArray(this.aggs.Creator.buckets.map(it => it.key))"></b-form-checkbox-group>
           </b-form-group>
         </p>
@@ -47,7 +63,16 @@
   </b-card>
   <b-card no-body class="mb-1">
     <b-card-header header-tag="header" class="p-1" role="tab">
-      <b-btn block href="#" v-b-toggle.accordion3 variant="info">Publication year</b-btn>
+      <b-btn href="#" v-b-toggle.accordion3 variant="accordion-gerdi">
+        <span class="when-opened">
+          <label style='margin-right: 72px;'>Publication year </label>
+          <i class="material-icons float-right"> keyboard_arrow_up</i>
+        </span>
+        <span class="when-closed">
+          <label style='margin-right: 72px;'>Publication year </label>
+          <i class="material-icons float-right"> keyboard_arrow_down</i>
+        </span>
+      </b-btn>
     </b-card-header>
     <b-collapse id="accordion3" visisble accordion="my-accordion" role="tabpanel">
       <b-card-body>
@@ -61,7 +86,16 @@
   </b-card>
   <b-card no-body class="mb-1">
     <b-card-header header-tag="header" class="p-1" role="tab">
-      <b-btn block href="#" v-b-toggle.accordion4 variant="info">Language</b-btn>
+      <b-btn href="#" v-b-toggle.accordion4 variant="accordion-gerdi">
+        <span class="when-opened">
+          <label style='margin-right: 118px;'>Language</label>
+          <i class="material-icons float-right">keyboard_arrow_up</i>
+        </span>
+        <span class="when-closed">
+          <label style='margin-right: 118px;'>Language</label>
+          <i class="material-icons float-right">keyboard_arrow_down</i>
+        </span>
+      </b-btn>
     </b-card-header>
     <b-collapse id="accordion4" accordion="my-accordion" role="tabpanel">
       <b-card-body>
@@ -73,8 +107,8 @@
       </b-card-body>
     </b-collapse>
   </b-card>
-  <b-button @click="doFilter">Apply</b-button>
-  </div>
+  <b-button class="apply float-right" variant="primary" @click="doFilter">Apply</b-button>
+</div>
 </template>
 
 <script>
@@ -118,12 +152,44 @@ export default {
 </script>
 
 <style scoped>
+.btn-accordion-gerdi:focus, .btn-accordion-gerdi:active:focus, .btn-accordion-gerdi.active:focus {
+  outline: 0 none;
+}
+
+.btn-accordion-gerdi {
+  border: 0 none;
+  font-weight: 700;
+  letter-spacing: 0.1px;
+  outline: 0 none;
+  background: transparent;
+  color: #083f64;
+  text-align: middle;
+
+}
+.btn-accordion-gerdi:hover, .btn-accordion-gerdi:focus, .btn-accordion-gerdi:active, .btn-accordion-gerdi.active, .open > .dropdown-toggle.btn-accordion-gerdi {
+  
+  box-shadow: none;
+}
+.btn-accordion-gerdi:active, .btn-accordion-gerdi.active {
+  
+  box-shadow: none;
+}
 .card {
   margin-top: 1rem;
 }
-
-.providerLogo {
-  max-height: 100px;
-  width: auto;
+.collapsed > .when-opened,
+:not(.collapsed) > .when-closed {
+  display: none;
 }
+
+label{
+  margin-top: 6px;
+}
+i{
+  margin-top: 6px;
+}
+.apply {
+  margin-top: 10px;
+}
+
 </style>

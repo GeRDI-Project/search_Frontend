@@ -68,7 +68,7 @@ const actions = {
     }
     url = url.concat('&size=').concat(state.numDocsPerPage)
     axios.post(url,
-      querybuilder.buildQuery(querystring, {}))//{selectedPublishers:['European Nucleotide Archive (ENA)', 'Esri'], selectedAuthors: ['Esri Inc.']})) // TODO: REMOVE
+      querybuilder.buildQuery(querystring, {}))
     .then(function(response) {
       commit('setResults', response.data)
     })
@@ -86,7 +86,7 @@ const actions = {
     }
     url = url.concat('&size=').concat(state.numDocsPerPage)
     axios.post(url,
-      querybuilder.buildQuery(state.queryPayload.query, facetsModel))//{selectedPublishers:['European Nucleotide Archive (ENA)', 'Esri'], selectedAuthors: ['Esri Inc.']})) // TODO: REMOVE
+      querybuilder.buildQuery(state.queryPayload.query, facetsModel))
     .then(function(response) {
       commit('setResults', response.data)
     })
@@ -113,5 +113,5 @@ export default {
   state,
   getters,
   actions,
-  mutations
+  mutations,
 }

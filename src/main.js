@@ -5,16 +5,17 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 import BootstrapVue from 'bootstrap-vue'
-//import axios from 'axios'
-import Results from '@/components/Results'
-import SearchResultEntry from '@/components/SearchResultEntry'
-import SearchResultEntryMenu from '@/components/SearchResultEntryMenu'
-import SearchResultList from '@/components/SearchResultList'
-import SearchFacetes from '@/components/SearchFacetes'
-import NavMenu from '@/components/NavMenu'
-import SearchMask from '@/components/SearchMask'
-import AppFooter from '@/components/AppFooter'
-import PaginationBar from '@/components/PaginationBar'
+import axios from 'axios'
+import Results from '@/components/search/Results'
+import SearchResultEntry from '@/components/search/SearchResultEntry'
+import SearchResultEntryMenu from '@/components/search/SearchResultEntryMenu'
+import SearchFacetes from '@/components/search/SearchFacetes'
+import SearchMask from '@/components/search/SearchMask'
+import NavMenu from '@/components/common/NavMenu'
+import AppFooter from '@/components/common/AppFooter'
+import PaginationBar from '@/components/common/PaginationBar'
+import CollectionEntry from '@/components/bookmark/CollectionEntry'
+import DocumentMedia from '@/components/common/DocumentMedia'
 
 import { store } from './store/store'
 
@@ -25,15 +26,17 @@ Vue.use(BootstrapVue)
 // register components globally
 Vue.component('search-result-entry', SearchResultEntry)
 Vue.component('search-result-entry-menu', SearchResultEntryMenu)
-Vue.component('search-result-list', SearchResultList)
 Vue.component('search-facetes', SearchFacetes)
 Vue.component('nav-menu', NavMenu)
 Vue.component('search-mask', SearchMask)
 Vue.component('app-footer', AppFooter)
 Vue.component('pagination-bar', PaginationBar)
 Vue.component('results', Results)
+Vue.component('collection-entry', CollectionEntry)
+Vue.component('document-media', DocumentMedia)
 
 Vue.config.productionTip = false
+axios.defaults.timeout = 10000;
 
 /* eslint-disable no-new */
 new Vue({
@@ -48,5 +51,8 @@ new Vue({
   template: '<App/>',
   components: {
     App
+  },
+  created() {
+    this.$store.dispatch('refreshCollections')
   }
 })

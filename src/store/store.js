@@ -1,5 +1,5 @@
 /**
- * Copyright 2018 Nelson Tavares de Sousa
+ * Copyright 2018 Nelson Tavares de Sousa, Alvaro Aguilera
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,11 +19,13 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 
 import searchModule from './modules/search'
+import collectionModule from './modules/collections'
 
 Vue.use(Vuex)
 
 export const store = new Vuex.Store({
   modules: {
-    search: searchModule
+    search: searchModule,
+    collections: collectionModule
   }
 })
