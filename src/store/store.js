@@ -19,11 +19,13 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 
 import searchModule from './modules/search'
+import collectionsModule from './modules/collections'
 
 Vue.use(Vuex)
 
 export const store = new Vuex.Store({
   modules: {
-    search: searchModule
+    search: searchModule, 
+    collections: collectionsModule
   }
 })
