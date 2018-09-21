@@ -46,28 +46,41 @@ const actions = {
       name: payload.collectionName,
       docs: [payload.docID]
     }
-    axios.post('/api/v1/collections/' + usercookie.getUsername(), data, {
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    })
-    .then(function (response) {
-      data.id = response.data.collectionId
-      commit('addCollection', data)
+    return new Promise((resolve, reject) => {
+      // Do something here... lets say, a http call using vue-resource
+      axios.post('/api/v1/collections/' + usercookie.getUsername(), data, {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      }).then(function (response) {
+        // http success, call the mutator and change something in state
+        data.id = response.data.collectionId
+        commit('addCollection', data)
+        resolve(response)  // Let the calling function know that http is done. You may send some data back
+      }, error => {
+        // http failed, let the calling function know that action did not work out
+        console.log(error)
+        reject(error)
+      })
     })
   },
   updateCollection ({commit, state}, payload) {
     const collection = this.getters.getCollectionById(payload.collectionID)
     collection.docs.push(payload.docID)
-    axios.put('/api/v1/collections/' + usercookie.getUsername() + '/' + collection.id, collection, {
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    })
-    .then(function (response) {
-    })
-    .catch(function (error) {
-      console.log(error)
+    return new Promise((resolve, reject) => {
+      // Do something here... lets say, a http call using vue-resource
+      axios.put('/api/v1/collections/' + usercookie.getUsername() + '/' + collection.id, collection, {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      }).then(function (response) {
+        // http success, call the mutator and change something in state
+        resolve(response)  // Let the calling function know that http is done. You may send some data back
+      }, error => {
+        // http failed, let the calling function know that action did not work out
+        console.log(error)
+        reject(error)
+      })
     })
   },
   refreshCollections (state) {
