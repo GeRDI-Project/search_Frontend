@@ -20,7 +20,7 @@ import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 
 Vue.use(BootstrapVue)
-// register static-ui component
+// register shared-ui components
 Vue.use(sharedUI)
 // register components globally
 Vue.component('search-result-entry', SearchResultEntry)
@@ -49,5 +49,6 @@ new Vue({
     App
   },
   created() {
+    this.$store.dispatch('refreshCollections')
   }
 })
