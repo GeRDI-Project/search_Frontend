@@ -1,13 +1,13 @@
 <template>
   <b-navbar toggleable="md" variant="faded" type="light">
   <b-navbar-toggle target="nav_collapse"></b-navbar-toggle>
-  <b-navbar-brand href="#">
+  <b-navbar-brand href="/">
     <img src="../../assets/logo.svg" id="logo" height="70px" class="d-inline-block align-top" alt="BV">
   </b-navbar-brand>
     <b-collapse is-nav id="nav_collapse">
       <b-navbar-nav>
-        <b-nav-item :to ="'/'">Search</b-nav-item>
-        <b-nav-item :to="'/bookmark'">Bookmark</b-nav-item>
+        <b-nav-item to ="/">Search</b-nav-item>
+        <b-nav-item to="/bookmark">Bookmark</b-nav-item>
         <b-nav-item href="#" disabled>Store</b-nav-item>
         <b-nav-item href="#" disabled>Preprocess</b-nav-item>
         <b-nav-item href="#" disabled>Analyze</b-nav-item>
