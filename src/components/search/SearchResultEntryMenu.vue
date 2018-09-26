@@ -92,16 +92,12 @@ export default {
     okClicked() {
       if (this.collectionID != 0) {
         this.addBookmarkToExistingCollection();
-        this.showBookmarkAlert();
-        this.setAsBookmarked ()
       } else {
         this.$refs.createCollection.show()
       }
     },
     createNewCollection() {
       this.addBookmark();
-      this.showBookmarkAlert();
-      this.setAsBookmarked ()
     },
     showModal() {
       this.$refs.bookmarkingModal.show()
@@ -122,7 +118,16 @@ export default {
       this.$store.dispatch('createBookmark', {
         collectionName: this.collectionName,
         docID: this.results._id
-      })
+      }).then(response => {
+        console.log(response)
+        if(response.data.acknowledged !== undefined && response.data.acknowledged === true){
+          this.showBookmarkAlert();
+          this.setAsBookmarked ()
+        }
+      }, error => {
+        console.error("Got nothing from server. Prompt user to check internet connection and try again")
+        console.log(error)
+      });
     },
     addBookmarkToExistingCollection() {
       const self = this
@@ -130,7 +135,15 @@ export default {
         self.$store.dispatch('updateCollection', {
           collectionID: self.collectionID,
           docID: self.results._id
-        })
+        }).then(response => {
+          console.log(response)
+          if(response.data.acknowledged !== undefined  && response.data.acknowledged === true){
+            this.showBookmarkAlert();
+            this.setAsBookmarked ()
+          }
+        }, error => {
+          console.error("Got nothing from server. Prompt user to check internet connection and try again")
+        });
       } else {
          console.log("Empty collection ID");
       }
