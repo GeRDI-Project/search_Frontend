@@ -25,7 +25,7 @@ Vue.use(Vuex)
 
 export const store = new Vuex.Store({
   modules: {
-    search: searchModule,
+    search: searchModule, 
     collections: collectionsModule
   }
 })
