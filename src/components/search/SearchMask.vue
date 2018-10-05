@@ -3,9 +3,9 @@
   <b-form @submit="search">
     <b-input-group>
       <b-input id="inlineFormInputGroupUsername2" v-model="inputvalue" :placeholder="placeholder" autofocus/>
-      <b-input-group-button slot="right">
+      <b-input-group-append>
         <b-btn @click="search" variant="primary">Search</b-btn>
-      </b-input-group-button>
+      </b-input-group-append>
     </b-input-group>
   </b-form>
 </div>
