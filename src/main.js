@@ -7,12 +7,11 @@ import router from './router'
 import BootstrapVue from 'bootstrap-vue'
 import sharedUI from 'shared-ui'
 import axios from 'axios'
-import Results from '@/components/search/Results'
-import SearchResultEntry from '@/components/search/SearchResultEntry'
-import SearchResultEntryMenu from '@/components/search/SearchResultEntryMenu'
-import SearchFacetes from '@/components/search/SearchFacetes'
-import SearchMask from '@/components/search/SearchMask'
-import NavMenu from '@/components/common/NavMenu'
+import Results from '@/components/Results'
+import SearchResultEntry from '@/components/SearchResultEntry'
+import SearchResultEntryMenu from '@/components/SearchResultEntryMenu'
+import SearchFacetes from '@/components/SearchFacetes'
+import SearchMask from '@/components/SearchMask'
 
 import { store } from './store/store'
 
@@ -26,7 +25,6 @@ Vue.use(sharedUI)
 Vue.component('search-result-entry', SearchResultEntry)
 Vue.component('search-result-entry-menu', SearchResultEntryMenu)
 Vue.component('search-facetes', SearchFacetes)
-Vue.component('nav-menu', NavMenu)
 Vue.component('search-mask', SearchMask)
 Vue.component('results', Results)
 
