@@ -3,7 +3,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 
 // Search Components
-import Results from '@/components/search/Results'
+import Results from '@/components/Results'
 
 // Statical UI Elements Components
 import Start from '@/components/Start'
