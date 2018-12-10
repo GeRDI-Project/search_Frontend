@@ -1,5 +1,11 @@
-FROM nginx:1.13.0
+FROM nginx:1.15.5-alpine
+WORKDIR /home/app
+RUN apk add nodejs npm git
 COPY build/docker/default.conf /etc/nginx/conf.d/default.conf
-COPY dist/index.html /usr/share/nginx/html/index.html
-COPY build/docker/robots.txt /etc/share/nginx/html/robots.txt
-COPY dist/static /usr/share/nginx/html/static
+RUN mkdir /usr/share/nginx/html/static
+COPY . /home/app
+RUN npm install
+RUN npm run build
+RUN cp dist/index.html /usr/share/nginx/html/index.html
+RUN cp -r dist/static/* /usr/share/nginx/html/static
+CMD nginx -g "daemon off;"
