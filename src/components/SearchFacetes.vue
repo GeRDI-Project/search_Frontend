@@ -17,13 +17,13 @@
 <div role="tablist">
   <b-card no-body class="mb-1">
     <b-card-header header-tag="header" class="p-1" role="tab">
-      <b-btn href="#" v-b-toggle.accordion1 variant="accordion-gerdi">
-        Publisher
+      <b-btn block href="#" v-b-toggle.accordion1 variant="accordion-gerdi" >
+     Publisher
         <span class="when-opened">
-         <font-awesome-icon icon="chevron-up" />
+         <div class="float-right"><font-awesome-icon icon="chevron-up" /></div> 
      </span>
      <span class="when-closed">
-         <font-awesome-icon icon="chevron-down"/>
+        <div class="float-right"> <font-awesome-icon icon="chevron-down"/></div>
      </span>
       </b-btn>
     </b-card-header>
@@ -39,13 +39,13 @@
   </b-card>
   <b-card no-body class="mb-1">
     <b-card-header header-tag="header" class="p-1" role="tab">
-      <b-btn href="#" v-b-toggle.accordion2 variant="accordion-gerdi">
+      <b-btn block href="#" v-b-toggle.accordion2 variant="accordion-gerdi">
         Author
         <span class="when-opened">
-         <font-awesome-icon icon="chevron-up" />
+         <div class="float-right"><font-awesome-icon icon="chevron-up" /></div> 
      </span>
      <span class="when-closed">
-         <font-awesome-icon icon="chevron-down"/>
+        <div class="float-right"> <font-awesome-icon icon="chevron-down"/></div>
      </span>
       </b-btn>
     </b-card-header>
@@ -61,13 +61,13 @@
   </b-card>
   <b-card no-body class="mb-1">
     <b-card-header header-tag="header" class="p-1" role="tab">
-      <b-btn href="#" v-b-toggle.accordion3 variant="accordion-gerdi">
+      <b-btn block href="#" v-b-toggle.accordion3 variant="accordion-gerdi">
          Publication year
         <span class="when-opened">
-         <font-awesome-icon icon="chevron-up" />
+         <div class="float-right"><font-awesome-icon icon="chevron-up" /></div> 
      </span>
      <span class="when-closed">
-         <font-awesome-icon icon="chevron-down"/>
+        <div class="float-right"> <font-awesome-icon icon="chevron-down"/></div>
      </span>
       </b-btn>
     </b-card-header>
@@ -83,13 +83,13 @@
   </b-card>
   <b-card no-body class="mb-1">
     <b-card-header header-tag="header" class="p-1" role="tab">
-      <b-btn href="#" v-b-toggle.accordion4 variant="accordion-gerdi">
+      <b-btn block href="#" v-b-toggle.accordion4 variant="accordion-gerdi">
          Language
         <span class="when-opened">
-         <font-awesome-icon icon="chevron-up" />
+         <div class="float-right"><font-awesome-icon icon="chevron-up" /></div> 
      </span>
      <span class="when-closed">
-         <font-awesome-icon icon="chevron-down"/>
+        <div class="float-right"> <font-awesome-icon icon="chevron-down"/></div>
      </span>
       </b-btn>
     </b-card-header>
@@ -159,7 +159,7 @@ export default {
   outline: 0 none;
   background: transparent;
   color: #083f64;
-  text-align: middle;
+  text-align: left;
 
 }
 .btn-accordion-gerdi:hover, .btn-accordion-gerdi:focus, .btn-accordion-gerdi:active, .btn-accordion-gerdi.active, .open > .dropdown-toggle.btn-accordion-gerdi {
@@ -187,5 +187,6 @@ i{
 .apply {
   margin-top: 10px;
 }
+
 
 </style>
