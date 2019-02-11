@@ -17,7 +17,7 @@
 <div role="tablist">
   <b-card no-body class="mb-1">
     <b-card-header header-tag="header" class="p-1" role="tab">
-      <b-btn block href="#" v-b-toggle.accordion1 variant="accordion-gerdi">
+      <b-btn href="#" v-b-toggle.accordion1 variant="accordion-gerdi">
         Publisher
         <span class="when-opened">
          <font-awesome-icon icon="chevron-up" />
@@ -40,14 +40,13 @@
   <b-card no-body class="mb-1">
     <b-card-header header-tag="header" class="p-1" role="tab">
       <b-btn href="#" v-b-toggle.accordion2 variant="accordion-gerdi">
+        Author
         <span class="when-opened">
-          <label style='margin-right: 140px;'>Author </label>
-          <i class="material-icons float-right"> keyboard_arrow_up</i>
-        </span>
-        <span class="when-closed">
-          <label style='margin-right: 140px;'>Author  </label>
-          <i class="material-icons float-right"> keyboard_arrow_down</i>
-        </span>
+         <font-awesome-icon icon="chevron-up" />
+     </span>
+     <span class="when-closed">
+         <font-awesome-icon icon="chevron-down"/>
+     </span>
       </b-btn>
     </b-card-header>
     <b-collapse id="accordion2" accordion="my-accordion" role="tabpanel">
@@ -63,14 +62,13 @@
   <b-card no-body class="mb-1">
     <b-card-header header-tag="header" class="p-1" role="tab">
       <b-btn href="#" v-b-toggle.accordion3 variant="accordion-gerdi">
+         Publication year
         <span class="when-opened">
-          <label style='margin-right: 72px;'>Publication year </label>
-          <i class="material-icons float-right"> keyboard_arrow_up</i>
-        </span>
-        <span class="when-closed">
-          <label style='margin-right: 72px;'>Publication year </label>
-          <i class="material-icons float-right"> keyboard_arrow_down</i>
-        </span>
+         <font-awesome-icon icon="chevron-up" />
+     </span>
+     <span class="when-closed">
+         <font-awesome-icon icon="chevron-down"/>
+     </span>
       </b-btn>
     </b-card-header>
     <b-collapse id="accordion3" visisble accordion="my-accordion" role="tabpanel">
@@ -86,14 +84,13 @@
   <b-card no-body class="mb-1">
     <b-card-header header-tag="header" class="p-1" role="tab">
       <b-btn href="#" v-b-toggle.accordion4 variant="accordion-gerdi">
+         Language
         <span class="when-opened">
-          <label style='margin-right: 118px;'>Language</label>
-          <i class="material-icons float-right">keyboard_arrow_up</i>
-        </span>
-        <span class="when-closed">
-          <label style='margin-right: 118px;'>Language</label>
-          <i class="material-icons float-right">keyboard_arrow_down</i>
-        </span>
+         <font-awesome-icon icon="chevron-up" />
+     </span>
+     <span class="when-closed">
+         <font-awesome-icon icon="chevron-down"/>
+     </span>
       </b-btn>
     </b-card-header>
     <b-collapse id="accordion4" accordion="my-accordion" role="tabpanel">
