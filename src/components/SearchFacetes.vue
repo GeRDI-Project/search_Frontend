@@ -1,5 +1,5 @@
 /**
- * Copyright 2018 Nelson Tavares de Sousa
+ * Copyright 2018 Nelson Tavares de Sousa, Anastasia Kazakova
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,15 +17,14 @@
 <div role="tablist">
   <b-card no-body class="mb-1">
     <b-card-header header-tag="header" class="p-1" role="tab">
-      <b-btn href="#" v-b-toggle.accordion1 variant="accordion-gerdi">
+      <b-btn block href="#" v-b-toggle.accordion1 variant="accordion-gerdi">
+        Publisher
         <span class="when-opened">
-          <label style='margin-right: 120px;'>Publisher </label>
-          <i class="material-icons float-right"> keyboard_arrow_up</i>
-        </span>
-        <span class="when-closed">
-          <label style='margin-right: 120px;'>Publisher </label>
-          <i class="material-icons float-right"> keyboard_arrow_down</i>
-        </span>
+         <font-awesome-icon icon="chevron-up" />
+     </span>
+     <span class="when-closed">
+         <font-awesome-icon icon="chevron-down"/>
+     </span>
       </b-btn>
     </b-card-header>
     <b-collapse id="accordion1" visible accordion="my-accordion" role="tabpanel">
