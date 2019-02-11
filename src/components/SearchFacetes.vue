@@ -166,7 +166,7 @@ export default {
 
 .btn-accordion-gerdi {
   border: 0 none;
-  font-weight: 700;
+  font-weight: normal;
   letter-spacing: 0.1px;
   outline: 0 none;
   background: transparent;
