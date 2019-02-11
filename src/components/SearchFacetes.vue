@@ -17,14 +17,12 @@
 <div role="tablist">
   <b-card no-body class="mb-1">
     <b-card-header header-tag="header" class="p-1" role="tab">
-      <b-btn block href="#" v-b-toggle.accordion1 variant="accordion-gerdi" >
-     Publisher
+      <b-btn block href="#" v-b-toggle.accordion1 variant="accordion-gerdi">Publisher
         <span class="when-opened">
-         <div class="float-right"><font-awesome-icon icon="chevron-up" /></div> 
-     </span>
-     <span class="when-closed">
-        <div class="float-right"> <font-awesome-icon icon="chevron-down"/></div>
-     </span>
+          <font-awesome-icon icon="chevron-up" /></span>
+        <span class="when-closed">
+          <font-awesome-icon icon="chevron-down" />
+        </span>
       </b-btn>
     </b-card-header>
     <b-collapse id="accordion1" visible accordion="my-accordion" role="tabpanel">
@@ -39,14 +37,12 @@
   </b-card>
   <b-card no-body class="mb-1">
     <b-card-header header-tag="header" class="p-1" role="tab">
-      <b-btn block href="#" v-b-toggle.accordion2 variant="accordion-gerdi">
-        Author
+      <b-btn block href="#" v-b-toggle.accordion2 variant="accordion-gerdi">Author
         <span class="when-opened">
-         <div class="float-right"><font-awesome-icon icon="chevron-up" /></div> 
-     </span>
-     <span class="when-closed">
-        <div class="float-right"> <font-awesome-icon icon="chevron-down"/></div>
-     </span>
+          <font-awesome-icon icon="chevron-up" /></span>
+        <span class="when-closed">
+          <font-awesome-icon icon="chevron-down" />
+        </span>
       </b-btn>
     </b-card-header>
     <b-collapse id="accordion2" accordion="my-accordion" role="tabpanel">
@@ -61,14 +57,12 @@
   </b-card>
   <b-card no-body class="mb-1">
     <b-card-header header-tag="header" class="p-1" role="tab">
-      <b-btn block href="#" v-b-toggle.accordion3 variant="accordion-gerdi">
-         Publication year
+      <b-btn block href="#" v-b-toggle.accordion3 variant="accordion-gerdi">Publication year
         <span class="when-opened">
-         <div class="float-right"><font-awesome-icon icon="chevron-up" /></div> 
-     </span>
-     <span class="when-closed">
-        <div class="float-right"> <font-awesome-icon icon="chevron-down"/></div>
-     </span>
+          <font-awesome-icon icon="chevron-up" /></span>
+        <span class="when-closed">
+          <font-awesome-icon icon="chevron-down" />
+        </span>
       </b-btn>
     </b-card-header>
     <b-collapse id="accordion3" visisble accordion="my-accordion" role="tabpanel">
@@ -83,14 +77,12 @@
   </b-card>
   <b-card no-body class="mb-1">
     <b-card-header header-tag="header" class="p-1" role="tab">
-      <b-btn block href="#" v-b-toggle.accordion4 variant="accordion-gerdi">
-         Language
+      <b-btn block href="#" v-b-toggle.accordion4 variant="accordion-gerdi">Language
         <span class="when-opened">
-         <div class="float-right"><font-awesome-icon icon="chevron-up" /></div> 
-     </span>
-     <span class="when-closed">
-        <div class="float-right"> <font-awesome-icon icon="chevron-down"/></div>
-     </span>
+          <font-awesome-icon icon="chevron-up" /></span>
+        <span class="when-closed">
+          <font-awesome-icon icon="chevron-down" />
+        </span>
       </b-btn>
     </b-card-header>
     <b-collapse id="accordion4" accordion="my-accordion" role="tabpanel">
@@ -108,37 +100,54 @@
 </template>
 
 <script>
+
 /* eslint-disable */
 export default {
+
   name: 'search-facetes',
   data() {
     return {}
-  },
+  }
+
+  ,
 
   computed: {
     aggs: function() {
       return this.$store.getters.getAggregations
-    },
+    }
+
+    ,
     facetsModel: {
       get: function() {
         return this.$store.getters.getFacetsModel
-      },
+      }
+
+      ,
       set: function(val) {
         this.$store.commit('updateFacetsModel', val)
       }
-    },
-  },
+    }
+
+    ,
+  }
+
+  ,
 
   methods: {
-    transformToYear(num){
-      return new Date(num).getYear() + 1900
-    },
-    limitArray(arr){
-      if (arr.length >= 10) {
-        arr.length = 10;
+    transformToYear(num) {
+      return new Date(num).getYear()+1900
+    }
+
+    ,
+    limitArray(arr) {
+      if (arr.length >=10) {
+        arr.length=10;
       }
+
       return arr
-    },
+    }
+
+    ,
     doFilter() {
       this.$store.dispatch('filter', this.facetsModel)
     }
@@ -148,7 +157,10 @@ export default {
 </script>
 
 <style scoped>
-.btn-accordion-gerdi:focus, .btn-accordion-gerdi:active:focus, .btn-accordion-gerdi.active:focus {
+
+.btn-accordion-gerdi:focus,
+.btn-accordion-gerdi:active:focus,
+.btn-accordion-gerdi.active:focus {
   outline: 0 none;
 }
 
@@ -160,33 +172,47 @@ export default {
   background: transparent;
   color: #083f64;
   text-align: left;
+}
 
-}
-.btn-accordion-gerdi:hover, .btn-accordion-gerdi:focus, .btn-accordion-gerdi:active, .btn-accordion-gerdi.active, .open > .dropdown-toggle.btn-accordion-gerdi {
-  
+.btn-accordion-gerdi:hover,
+.btn-accordion-gerdi:focus,
+.btn-accordion-gerdi:active,
+.btn-accordion-gerdi.active,
+.open>.dropdown-toggle.btn-accordion-gerdi {
   box-shadow: none;
 }
-.btn-accordion-gerdi:active, .btn-accordion-gerdi.active {
-  
+
+.btn-accordion-gerdi:active,
+.btn-accordion-gerdi.active {
   box-shadow: none;
 }
+
 .card {
   margin-top: 1rem;
 }
-.collapsed > .when-opened,
-:not(.collapsed) > .when-closed {
+
+.collapsed>.when-opened,
+:not(.collapsed)>.when-closed {
   display: none;
 }
 
-label{
+/* should be done in this way, cause of firefox*/
+.when-closed,
+.when-opened {
+  float: none;
+  position: absolute;
+  right: 16px;
+}
+
+label {
   margin-top: 6px;
 }
-i{
+
+i {
   margin-top: 6px;
 }
+
 .apply {
   margin-top: 10px;
 }
-
-
 </style>
