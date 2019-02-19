@@ -12,8 +12,14 @@ import SearchResultEntry from '@/components/SearchResultEntry'
 import SearchResultEntryMenu from '@/components/SearchResultEntryMenu'
 import SearchFacetes from '@/components/SearchFacetes'
 import SearchMask from '@/components/SearchMask'
+import { library } from '@fortawesome/fontawesome-svg-core'
+import { faChevronUp, faChevronDown } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
 import { store } from './store/store'
+
+library.add(faChevronUp, faChevronDown)
+Vue.component('font-awesome-icon', FontAwesomeIcon)
 
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
