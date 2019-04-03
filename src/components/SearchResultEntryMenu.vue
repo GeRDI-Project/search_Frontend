@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
- <template>
+<template>
 <div>
   <b-button-group>
     <b-button disabled variant="link" >More information</b-button>
@@ -25,26 +25,24 @@
   <b-alert :show="dismissCountDown" dismissible variant="success" @dismissed="dismissCountDown=0" @dismiss-count-down="countDownChanged">
     The bookmark is successfully set!
   </b-alert>
-  <div>
-    <b-modal id="modal-center" centered ref="bookmarkingModal" title="Save Document to a Collection" @ok="okClicked" :ok-disabled="collectionID === null" :ok-title="okBtn">
-      Please select whether you want to store the selected document in a new or existing collection.
-      <b-form-select v-model="collectionID" class="mt-3">
-        <option :value="null" disabled>Please select an option</option>
-        <option value="0">Create a new Collection</option>
-        <optgroup label="Add to an existing Collection">
-          <option v-for="collection in this.$store.state.collections.collectionList" :key="collection.id" :value="collection.id">
-            {{ collection.name }}
-          </option>
-        </optgroup>
-      </b-form-select>
-    </b-modal>
-  </div>
-
-  <div>
-    <b-modal id="modal-center" centered ref="createCollection" title="Create a new Collection" @ok="createNewCollection">
-      <b-form-input v-model="collectionName" type="text" placeholder="Please enter a name for the new Collection"></b-form-input>
-    </b-modal>
-  </div>
+  <b-modal id="modal-center" centered ref="bookmarkingModal" title="Save Document to a Collection" @ok="okClicked" :ok-disabled="collectionID === null" :ok-title="okBtn">
+    Please select whether you want to store the selected document in a new or existing collection.
+    <b-form-select v-model="collectionID" class="mt-3">
+      <option :value="null" disabled>Please select an option</option>
+      <option value="0">Create a new Collection</option>
+      <optgroup label="Add to an existing Collection">
+        <option v-for="collection in this.$store.state.collections.collectionList" :key="collection.id" :value="collection.id">
+          {{ collection.name }}
+        </option>
+      </optgroup>
+    </b-form-select>
+  </b-modal>
+  <b-modal id="modal-center" centered ref="createCollection" title="Create a new Collection" @ok="createNewCollection">
+    <b-form-input v-model="collectionName" type="text" placeholder="Please enter a name for the new Collection"></b-form-input>
+  </b-modal>
+  <b-modal id="modal-center" centered ref="logIn" title="Log in to bookmark this entry" @ok="memoAndSignIn()" ok-title="Log in">
+    Please log in if you want to bookmark entries.
+  </b-modal>
 </div>
 </template>
 
@@ -64,7 +62,7 @@ export default {
   computed: {
     bookmarkBtn: {
       get: function () {
-        if (this.$store.getters.isBookmarked(this.results._id) === true) {
+        if (this.$gerdi.aai.getUser() !== null && this.$store.getters.isBookmarked(this.results._id) === true) {
           return 'Bookmarked'
         } else {
           return 'Add Bookmark'
@@ -83,9 +81,16 @@ export default {
       },
       set: function () {
       }
+    },
+    user () {
+      return this.$gerdi.aai.getUser()
     }
   },
-  created() {
+  mounted() {
+    if (this.results._id === window.sessionStorage.getItem("item_to_be_bookmarked")) {
+      window.sessionStorage.removeItem("item_to_be_bookmarked")
+      this.$refs.bookmarkingModal.show()
+    }
     //this.$store.commit('refreshCollections')
   },
   methods: {
@@ -104,7 +109,11 @@ export default {
       this.setAsBookmarked ()
     },
     showModal() {
-      this.$refs.bookmarkingModal.show()
+      if (this.$gerdi.aai.getUser() !== null) {
+        this.$refs.bookmarkingModal.show()
+      } else {
+        this.$refs.logIn.show()
+      }
     },
     hideModal() {
       this.$refs.bookmarkingModal.hide()
@@ -123,6 +132,10 @@ export default {
         collectionName: this.collectionName,
         docID: this.results._id
       })
+    },
+    memoAndSignIn() {
+      window.sessionStorage.setItem("item_to_be_bookmarked", this.results._id)
+      this.$gerdi.aai.signInUser()
     },
     addBookmarkToExistingCollection() {
       const self = this

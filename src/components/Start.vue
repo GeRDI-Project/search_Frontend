@@ -1,15 +1,28 @@
 <template>
 <div class="">
-  <b-jumbotron> 
+  <b-jumbotron>
   <!-- <img src="../assets/GeRDI-Logo.svg" id="logo" /> -->
   <search-mask/>
-  </b-jumbotron> 
+  </b-jumbotron>
+  <b-btn @click="test()">TEST ME</b-btn>
 </div>
 </template>
 
 <script>
 export default {
-  name: 'start'
+  name: 'start',
+  methods: {
+    test () {
+      console.log('hello')
+      console.log(this.$route.hash)
+      console.log(this.$store)
+      console.log('Is ' + this.$gerdi.aai.enabled)
+    },
+    test2 () {
+      this.$route.hash = ''
+      console.log(this.$route.hash)
+    }
+  }
 }
 </script>
 

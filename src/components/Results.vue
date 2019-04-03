@@ -16,11 +16,11 @@
 <template>
 
 <div class="results">
-  
+
   <search-mask :query-value="$route.query.q"></search-mask>
   <h6 v-if="numResults > 0" class="results-annotation"><b>{{ numResults }}</b> results found for <b> {{$route.query.q}} </b></h6>
   <b-alert class="nothing-found-alert" :show="numResults == 0">Nothing to see here</b-alert>
-  
+
   <b-container>
     <b-row>
       <b-col cols="3"><search-facetes v-if="numResults > 0"></search-facetes>
@@ -37,9 +37,6 @@
 
 <script>
 /* eslint-disable */
-
-import SearchResultEntry from './SearchResultEntry.vue'
-import SearchFacetes from './SearchFacetes.vue'
 export default {
   name: 'results',
   data() {
@@ -66,6 +63,9 @@ export default {
   },
   created() {
     this.search()
+    if (window.sessionStorage.getItem('bookmarkAfterLogin') !== null) {
+
+    }
   },
   watch: {
     '$route.query': 'search'

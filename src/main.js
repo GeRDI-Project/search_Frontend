@@ -5,7 +5,7 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 import BootstrapVue from 'bootstrap-vue'
-import sharedUI from 'shared-ui'
+import { sharedUI } from 'shared-ui'
 import axios from 'axios'
 import Results from '@/components/Results'
 import SearchResultEntry from '@/components/SearchResultEntry'
@@ -26,7 +26,7 @@ import 'bootstrap-vue/dist/bootstrap-vue.css'
 
 Vue.use(BootstrapVue)
 // register shared-ui components
-Vue.use(sharedUI)
+Vue.use(sharedUI, { store: store })
 // register components globally
 Vue.component('search-result-entry', SearchResultEntry)
 Vue.component('search-result-entry-menu', SearchResultEntryMenu)
@@ -53,6 +53,6 @@ new Vue({
     App
   },
   created() {
-    this.$store.dispatch('refreshCollections')
+    this.$store.dispatch('refreshCollections', {vm:this})
   }
 })

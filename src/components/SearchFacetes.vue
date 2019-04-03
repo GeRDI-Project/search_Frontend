@@ -95,7 +95,7 @@
       </b-card-body>
     </b-collapse>
   </b-card>
-  <b-button class="apply float-right" variant="primary" @click="doFilter">Apply</b-button>
+  <b-button block class="apply float-right" variant="primary" @click="doFilter">Apply</b-button>
 </div>
 </template>
 
