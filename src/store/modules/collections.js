@@ -46,16 +46,12 @@ const mutations = {
   addCollection (state, collection) {
     if (state.collectionList === null) {
       state.collectionList = [collection]
-      console.log(state.collectionList)
       return
     }
     state.collectionList.push(collection)
-    console.log(state.collectionList)
   },
   setCollection (state, collection) {
-    console.log(collection)
     state.collectionList = collection
-    console.log(state.collectionList)
   },
   setLoading (state, isLoading) {
     state.isLoading = isLoading

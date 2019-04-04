@@ -51,8 +51,5 @@ new Vue({
   template: '<App/>',
   components: {
     App
-  },
-  created() {
-    this.$store.dispatch('refreshCollections', {vm:this})
   }
 })

@@ -4,23 +4,27 @@
   <!-- <img src="../assets/GeRDI-Logo.svg" id="logo" /> -->
   <search-mask/>
   </b-jumbotron>
-  <b-btn @click="test()">TEST ME</b-btn>
 </div>
 </template>
 
 <script>
 export default {
   name: 'start',
-  methods: {
-    test () {
-      console.log('hello')
-      console.log(this.$route.hash)
-      console.log(this.$store)
-      console.log('Is ' + this.$gerdi.aai.enabled)
-    },
-    test2 () {
-      this.$route.hash = ''
-      console.log(this.$route.hash)
+  data() {
+    return {
+      loadedBookmarks: false
+    }
+  },
+  computed: {
+    isChecked: function () {
+      return this.$gerdi.aai.isChecked()
+    }
+  },
+  watch: {
+    isChecked: function () {
+      if (this.loadedBookmarks === true || this.$gerdi.aai.getUser() === null) return
+      var self = this
+      this.$store.dispatch('refreshCollections', { vm: this }).then(function () {self.loadedBookmarks = true })
     }
   }
 }

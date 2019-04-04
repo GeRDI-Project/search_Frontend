@@ -25,9 +25,9 @@
   <b-alert :show="dismissCountDown" dismissible variant="success" @dismissed="dismissCountDown=0" @dismiss-count-down="countDownChanged">
     The bookmark is successfully set!
   </b-alert>
-  <b-modal id="modal-center" centered ref="bookmarkingModal" title="Save Document to a Collection" @ok="okClicked" :ok-disabled="collectionID === null" :ok-title="okBtn">
-    Please select whether you want to store the selected document in a new or existing collection.
-    <b-form-select v-model="collectionID" class="mt-3">
+  <b-modal id="modal-center" centered ref="bookmarkingModal" title="Save Document to a Collection" @ok="okClicked" :ok-disabled="collectionID === null && collections === null" :ok-title="okBtn">
+    <div>Please select whether you want to store the selected document in a new or existing collection.</div>
+    <b-form-select v-if="collections !== null" v-model="collectionID" class="mt-3">
       <option :value="null" disabled>Please select an option</option>
       <option value="0">Create a new Collection</option>
       <optgroup label="Add to an existing Collection">
@@ -36,12 +36,13 @@
         </option>
       </optgroup>
     </b-form-select>
+    <b-spinner v-else label="Logging you in..."></b-spinner>
   </b-modal>
   <b-modal id="modal-center" centered ref="createCollection" title="Create a new Collection" @ok="createNewCollection">
     <b-form-input v-model="collectionName" type="text" placeholder="Please enter a name for the new Collection"></b-form-input>
   </b-modal>
-  <b-modal id="modal-center" centered ref="logIn" title="Log in to bookmark this entry" @ok="memoAndSignIn()" ok-title="Log in">
-    Please log in if you want to bookmark entries.
+  <b-modal id="modal-center" centered ref="logIn" title="Save Document to a Collection" @ok="memoAndSignIn()" ok-title="Log me in">
+    You need to be logged in in order to save a Document to a Collection.
   </b-modal>
 </div>
 </template>
@@ -60,30 +61,25 @@ export default {
     }
   },
   computed: {
-    bookmarkBtn: {
-      get: function () {
-        if (this.$gerdi.aai.getUser() !== null && this.$store.getters.isBookmarked(this.results._id) === true) {
-          return 'Bookmarked'
-        } else {
-          return 'Add Bookmark'
-        }
-      },
-      set: function(){
+    bookmarkBtn() {
+      if (this.$gerdi.aai.getUser() !== null && this.collections !== null && this.$store.getters.isBookmarked(this.results._id) === true) {
+        return 'Bookmarked'
+      } else {
+        return 'Add Bookmark'
       }
     },
-    okBtn: {
-      get: function () {
-        if (this.collectionID != 0) {
-          return 'Save'
-        } else {
-          return 'Create'
-        }
-      },
-      set: function () {
+    okBtn() {
+      if (this.collectionID != 0) {
+        return 'Save Document'
+      } else {
+        return 'Create new Collection'
       }
     },
     user () {
       return this.$gerdi.aai.getUser()
+    },
+    collections() {
+      return this.$store.getters.getCollectionList
     }
   },
   mounted() {
@@ -91,7 +87,6 @@ export default {
       window.sessionStorage.removeItem("item_to_be_bookmarked")
       this.$refs.bookmarkingModal.show()
     }
-    //this.$store.commit('refreshCollections')
   },
   methods: {
     okClicked() {
@@ -109,7 +104,7 @@ export default {
       this.setAsBookmarked ()
     },
     showModal() {
-      if (this.$gerdi.aai.getUser() !== null) {
+      if (this.$gerdi.aai.getUser() !== null || !this.$gerdi.aai.isChecked()) {
         this.$refs.bookmarkingModal.show()
       } else {
         this.$refs.logIn.show()
@@ -129,6 +124,7 @@ export default {
     },
     addBookmark() {
       this.$store.dispatch('createBookmark', {
+        vm: this,
         collectionName: this.collectionName,
         docID: this.results._id
       })
@@ -141,11 +137,12 @@ export default {
       const self = this
       if (self.collectionID != null) {
         self.$store.dispatch('updateCollection', {
+          vm: this,
           collectionID: self.collectionID,
           docID: self.results._id
         })
       } else {
-         console.log("Empty collection ID");
+         console.error("Empty collection ID");
       }
     }
   }

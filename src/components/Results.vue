@@ -14,20 +14,17 @@
  * limitations under the License.
  */
 <template>
-
 <div class="results">
-
   <search-mask :query-value="$route.query.q"></search-mask>
   <h6 v-if="numResults > 0" class="results-annotation"><b>{{ numResults }}</b> results found for <b> {{$route.query.q}} </b></h6>
   <b-alert class="nothing-found-alert" :show="numResults == 0">Nothing to see here</b-alert>
-
   <b-container>
     <b-row>
-      <b-col cols="3"><search-facetes v-if="numResults > 0"></search-facetes>
+      <b-col cols="3">
+        <search-facetes v-if="numResults > 0"></search-facetes>
       </b-col>
       <b-col cols="9">
-        <search-result-entry v-for="result in results" :result="result" :key="result._id"></search-result-entry>
-
+        <search-result-entry id="result-list" v-for="result in results" :result="result" :key="result._id"></search-result-entry>
       </b-col>
     </b-row>
   </b-container>
@@ -41,18 +38,19 @@ export default {
   name: 'results',
   data() {
     return {
-      numDocsPerPage: 10
+      numDocsPerPage: 10,
+      loadedBookmarks: false
     }
   },
   computed: {
-    currentPage: {
-      get: function() {
-        if (isNaN(parseInt(this.$route.query.p))) {
-          return 1
-        }
-        return parseInt(this.$route.query.p)
-      },
-      set: function(val) {}
+    isChecked: function () {
+      return this.$gerdi.aai.isChecked()
+    },
+    currentPage() {
+      if (isNaN(parseInt(this.$route.query.p))) {
+        return 1
+      }
+      return parseInt(this.$route.query.p)
     },
     results: function() {
       return this.$store.getters.getResults
@@ -63,12 +61,14 @@ export default {
   },
   created() {
     this.search()
-    if (window.sessionStorage.getItem('bookmarkAfterLogin') !== null) {
-
-    }
   },
   watch: {
-    '$route.query': 'search'
+    '$route.query': 'search',
+    isChecked: function () {
+      if (this.loadedBookmarks === true || this.$gerdi.aai.getUser() === null) return
+      var self = this
+      this.$store.dispatch('refreshCollections', { vm: this }).then(function () {self.loadedBookmarks = true })
+    }
   },
   methods: {
     search() {
