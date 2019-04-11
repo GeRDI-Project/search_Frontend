@@ -1,15 +1,32 @@
 <template>
 <div class="">
-  <b-jumbotron> 
+  <b-jumbotron>
   <!-- <img src="../assets/GeRDI-Logo.svg" id="logo" /> -->
   <search-mask/>
-  </b-jumbotron> 
+  </b-jumbotron>
 </div>
 </template>
 
 <script>
 export default {
-  name: 'start'
+  name: 'start',
+  data() {
+    return {
+      loadedBookmarks: false
+    }
+  },
+  computed: {
+    isChecked: function () {
+      return this.$gerdi.aai.isChecked()
+    }
+  },
+  watch: {
+    isChecked: function () {
+      if (this.loadedBookmarks === true || this.$gerdi.aai.getUser() === null) return
+      var self = this
+      this.$store.dispatch('refreshCollections', { vm: this }).then(function () {self.loadedBookmarks = true })
+    }
+  }
 }
 </script>
 
