@@ -18,8 +18,14 @@ import axios from 'axios'
 
 const getUser = function (vm = null) {
   if (vm === null) return null
-  if (vm.$gerdi.aai.getUser() !== null) return vm.$gerdi.aai.getUser().sub
+  if (vm.$gerdi.aai.getUser() !== null) {return vm.$gerdi.aai.getUser().sub}
   return null
+}
+
+const getPath = function (vm = null) {
+  if (getUser(vm) === null) return null
+  axios.defaults.headers.common = {'Authorization': 'Bearer ' + vm.$gerdi.aai.getIdToken()}
+  return '/api/v1/collections'
 }
 
 const state = {
@@ -71,7 +77,7 @@ const actions = {
       name: payload.collectionName,
       docs: [payload.docID]
     }
-    axios.post('/api/v1/collections/' + getUser(payload.vm), data, {
+    axios.post(getPath(payload.vm), data, {
       headers: {
         'Content-Type': 'application/json'
       }
@@ -83,7 +89,7 @@ const actions = {
   },
   deleteCollection ({commit, state}, payload) {
     const collection = this.getters.getCollectionById(payload.collectionID)
-    axios.delete('/api/v1/collections/' + getUser(payload.vm) + '/' + collection.id)
+    axios.delete(getPath(payload.vm) + '/' + collection.id)
     .then(function (response) {
       commit('deleteCollection', collection)
     })
@@ -94,7 +100,7 @@ const actions = {
   updateCollection ({commit, state}, payload) {
     const collection = this.getters.getCollectionById(payload.collectionID)
     collection.docs.push(payload.docID)
-    axios.put('/api/v1/collections/' + getUser(payload.vm) + '/' + collection.id, collection, {
+    axios.put(getPath(payload.vm) + '/' + collection.id, collection, {
       headers: {
         'Content-Type': 'application/json'
       }
@@ -109,12 +115,12 @@ const actions = {
     var self = this
     if (getUser(vm) === null) return
     self.commit('setLoading', true)
-    axios.get('/api/v1/collections/' + getUser(vm))
+    axios.get(getPath(vm))
     .then(function (response) {
       if (response.data.length === 0) self.commit('setCollection', [])
       response.data.forEach(async function (elem) {
         var collectionDocs = []
-        const subresponse = await axios('/api/v1/collections/' + getUser(vm) + '/' + elem._id)
+        const subresponse = await axios(getPath(vm) + '/' + elem._id)
         subresponse.data.forEach(function (doc) {
           collectionDocs.push(doc._id)
         })
