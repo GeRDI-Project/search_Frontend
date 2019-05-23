@@ -29,7 +29,7 @@
       <b-card-body>
         <p class="card-text">
           <b-form-group>
-            <b-form-checkbox-group stacked v-model="facetsModel.selectedPublishers" name="publisherFacets" :options="limitArray(this.aggs.Publisher.buckets.map(it => it.key))"></b-form-checkbox-group>
+            <b-form-checkbox-group stacked v-model="facetsModel.selectedPublishers" name="publisherFacets" :options="this.aggs.Publisher.buckets.map(it => it.key + ' (' + it.doc_count + ')' )"></b-form-checkbox-group>
           </b-form-group>
         </p>
       </b-card-body>
