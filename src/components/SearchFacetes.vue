@@ -29,7 +29,16 @@
       <b-card-body>
         <p class="card-text">
           <b-form-group>
-            <b-form-checkbox-group stacked v-model="facetsModel.selectedPublishers" name="publisherFacets" :options="limitArray(this.aggs.Publisher.buckets.map(it => it.key))"></b-form-checkbox-group>
+            <b-form-checkbox-group stacked v-model="facetsModel.selectedPublishers" name="publisherFacets"
+              :options="lessData(this.aggs.Publisher.buckets.map(it => it.key ))"></b-form-checkbox-group>
+             <b-collapse id="my-collapse">
+                    <b-form-checkbox-group stacked v-model="facetsModel.selectedPublishers" name="publisherFacets"
+              :options="moreData(this.aggs.Publisher.buckets.map(it => it.key))"></b-form-checkbox-group>
+                  </b-collapse>
+            
+            <b-button v-b-toggle.my-collapse variant="link">
+              <span class="when-opened2">Less</span> <span class="when-closed2">More</span> ...
+            </b-button>
           </b-form-group>
         </p>
       </b-card-body>
@@ -49,7 +58,8 @@
       <b-card-body>
         <p class="card-text">
           <b-form-group>
-            <b-form-checkbox-group stacked v-model="facetsModel.selectedAuthors" name="authorFacets" :options="limitArray(this.aggs.Creator.buckets.map(it => it.key))"></b-form-checkbox-group>
+            <b-form-checkbox-group stacked v-model="facetsModel.selectedAuthors" name="authorFacets"
+              :options="limitArray(this.aggs.Creator.buckets.map(it => it.key))"></b-form-checkbox-group>
           </b-form-group>
         </p>
       </b-card-body>
@@ -69,7 +79,9 @@
       <b-card-body>
         <p class="card-text">
           <b-form-group>
-            <b-form-checkbox-group stacked v-model="facetsModel.selectedYears" name="pubYearFacets" :options="limitArray(this.aggs.PublicationYear.buckets.map(it => transformToYear(it.key)))"></b-form-checkbox-group>
+            <b-form-checkbox-group stacked v-model="facetsModel.selectedYears" name="pubYearFacets"
+              :options="limitArray(this.aggs.PublicationYear.buckets.map(it => transformToYear(it.key)))">
+            </b-form-checkbox-group>
           </b-form-group>
         </p>
       </b-card-body>
@@ -89,7 +101,8 @@
       <b-card-body>
         <p class="card-text">
           <b-form-group>
-            <b-form-checkbox-group stacked v-model="facetsModel.selectedLanguages" name="LanguageFacets" :options="limitArray(this.aggs.Language.buckets.map(it => it.key))"></b-form-checkbox-group>
+            <b-form-checkbox-group stacked v-model="facetsModel.selectedLanguages" name="LanguageFacets"
+              :options="limitArray(this.aggs.Language.buckets.map(it => it.key))"></b-form-checkbox-group>
           </b-form-group>
         </p>
       </b-card-body>
@@ -106,7 +119,7 @@ export default {
 
   name: 'search-facetes',
   data() {
-    return {}
+    return { }
   }
 
   ,
@@ -143,8 +156,15 @@ export default {
       if (arr.length >=10) {
         arr.length=10;
       }
-
       return arr
+    },
+
+    lessData(arr){
+      return arr.slice(0, 5)
+    },
+
+    moreData(arr) {
+      return arr.slice(5)
     }
 
     ,
@@ -193,6 +213,11 @@ export default {
 
 .collapsed>.when-opened,
 :not(.collapsed)>.when-closed {
+  display: none;
+}
+
+.collapsed>.when-opened2,
+:not(.collapsed)>.when-closed2 {
   display: none;
 }
 
