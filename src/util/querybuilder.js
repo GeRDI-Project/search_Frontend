@@ -34,28 +34,31 @@ export default {
                           terms: {
                             field: 'publicationYear',
                             order : { '_count' : 'desc' },
-                            size: 50
+                            size: 500
                           }
                         },
                         Publisher: {
                           terms: {
                             field: 'publisher.raw',
                             order : { '_count' : 'desc' },
-                            size: 50
+                            min_doc_count: 5000,
+                            size: 500
                           }
                         },
                         Creator: {
                           terms: {
                             field: 'creators.creatorName.value.raw',
                             order : { '_count' : 'desc' },
-                            size: 50
+                            min_doc_count: 200,
+                            size: 500
                           }
                         },
                         Language: {
                           terms: {
                             field: 'language',
                             order : { '_count' : 'desc' },
-                            size: 50
+                            min_doc_count: 10,
+                            size: 500
                           }
                         }
                       }
