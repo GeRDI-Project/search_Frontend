@@ -29,7 +29,7 @@
       <b-card-body>
         <p class="card-text">
           <b-form-group>
-            <b-form-checkbox-group stacked v-model="facetsModel.selectedPublishers" name="publisherFacets" :options="this.aggs.Publisher.buckets.map(it => it.key + ' (' + it.doc_count + ')' )"></b-form-checkbox-group>
+            <b-form-checkbox-group stacked v-model="facetsModel.selectedPublishers" name="publisherFacets" :options="this.aggs.Publisher.buckets.map(it => it.key)"></b-form-checkbox-group>
           </b-form-group>
         </p>
       </b-card-body>
@@ -69,7 +69,7 @@
       <b-card-body>
         <p class="card-text">
           <b-form-group>
-            <b-form-checkbox-group stacked v-model="facetsModel.selectedYears" name="pubYearFacets" :options="this.aggs.PublicationYear.buckets.map(it => transformToYear(it.key)+ ' (' + it.doc_count + ')')"></b-form-checkbox-group>
+            <b-form-checkbox-group stacked v-model="facetsModel.selectedYears" name="pubYearFacets" :options="this.aggs.PublicationYear.buckets.map(it => transformToYear(it.key))"></b-form-checkbox-group>
           </b-form-group>
         </p>
       </b-card-body>
