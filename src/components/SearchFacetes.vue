@@ -135,10 +135,6 @@ export default {
       }))
     },
 
-    transformToYear(num) {
-      return new Date(num).getYear()+1900
-    },
-
     limitArray(arr) {
       if (arr.length >=10) {
         arr.length=10;
