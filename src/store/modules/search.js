@@ -1,5 +1,5 @@
 /**
- * Copyright 2018 Nelson Tavares de Sousa
+ * Copyright 2018 Nelson Tavares de Sousa, Ingo Thomsen
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,7 +26,15 @@ const state = {
     selectedPublishers: [],
     selectedYears: [],
     selectedAuthors: [],
-    selectedLanguages: []
+    selectedLanguages: [],
+    selectedPublishersForLastFiltering: [],
+    selectedYearsForLastFiltering: [],
+    selectedAuthorsForLastFiltering: [],
+    selectedLanguagesForLastFiltering: [],
+    countsOfAllPublishers: {},
+    countsOfAllYears: {},
+    countsOfAllAuthors: {},
+    countsOfAllLanguages: {}
   }
 }
 
@@ -70,11 +78,11 @@ const actions = {
     axios.post(url,
       querybuilder.buildQuery(querystring, {}))
     .then(function(response) {
-      commit('setResults', response.data)
+      commit('setResults', response.data);
+      commit('initFacetsModel');
     })
     .catch(function(error) {
-      //self.errMsg = error.response;
-      console.log(error)
+        console.log(error)
     });
   },
   filter({ commit, state }, facetsModel) {
@@ -88,7 +96,8 @@ const actions = {
     axios.post(url,
       querybuilder.buildQuery(state.queryPayload.query, facetsModel))
     .then(function(response) {
-      commit('setResults', response.data)
+      commit('setResults', response.data);
+      commit('updateFacetsModel');
     })
     .catch(function(error) {
       console.log(error)
@@ -104,9 +113,49 @@ const mutations = {
   setQueryPayload (state, payload) {
     state.queryPayload = payload
   },
-  updateFacetsModel (state, newModel) {
+  setFacetsModel (state, newModel) {
     state.facetsModel = newModel
-  }
+  },
+  initFacetsModel (state) {
+    function fromBuckets (buckets) {
+      var res = {};
+      buckets.forEach( x => res[x.key] = x.doc_count);
+      return res;
+    }
+    state.facetsModel = {
+      countsOfAllPublishers: fromBuckets(state.results.aggregations.Publisher.buckets),
+      countsOfAllAuthors: fromBuckets(state.results.aggregations.Creator.buckets),
+      countsOfAllYears: fromBuckets(state.results.aggregations.PublicationYear.buckets),
+      countsOfAllLanguages:  fromBuckets(state.results.aggregations.Language.buckets),
+      selectedPublishers: [],
+      selectedYears: [],
+      selectedAuthors: [],
+      selectedLanguages: [],
+      selectedPublishersForLastFiltering: [],
+      selectedYearsForLastFiltering: [],
+      selectedAuthorsForLastFiltering: [],
+      selectedLanguagesForLastFiltering: []
+    }
+  },
+  updateFacetsModel (state) {
+    function setCountsToNullAndUpdate (currentSelection, lastSelection, counts, buckets) {
+      if (lastSelection.length == currentSelection.length && lastSelection.every(e => currentSelection.includes(e))) {
+        console.log(currentSelection);
+        Object.keys(counts).forEach(k => counts[k] = 0);
+        buckets.forEach(x => {counts[x.key] = x.doc_count})
+      }
+    }
+    var fm = state.facetsModel;
+    setCountsToNullAndUpdate(fm.selectedPublishers, fm.selectedPublishersForLastFiltering, fm.countsOfAllPublishers, state.results.aggregations.Publisher.buckets);
+    setCountsToNullAndUpdate(fm.selectedYears,      fm.selectedYearsForLastFiltering,      fm.countsOfAllYears,      state.results.aggregations.PublicationYear.buckets);
+    setCountsToNullAndUpdate(fm.selectedAuthors,    fm.selectedAuthorsForLastFiltering,    fm.countsOfAllAuthors,    state.results.aggregations.Creator.buckets);
+    setCountsToNullAndUpdate(fm.selectedLanguages,  fm.selectedLanguagesForLastFiltering,  fm.countsOfAllLanguages,  state.results.aggregations.Language.buckets);
+    // save current facets
+    fm.selectedPublishersForLastFiltering = fm.selectedPublishers.slice(0);
+    fm.selectedYearsForLastFiltering = fm.selectedYears.slice(0);
+    fm.selectedAuthorsForLastFiltering = fm.selectedAuthors.slice(0);
+    fm.selectedLanguagesForLastFiltering = fm.selectedLanguages.slice(0);
+  },
 }
 
 export default {
