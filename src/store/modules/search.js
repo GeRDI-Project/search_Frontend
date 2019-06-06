@@ -117,7 +117,7 @@ const mutations = {
     state.facetsModel = newModel
   },
   initFacetsModel (state) {
-    function fromBuckets (buckets, converter= x => x) {
+    function fromBuckets (buckets, converter = x=>x) {
       var res = {};
       buckets.forEach( x => res[converter(x.key)] = x.doc_count);
       return res;
@@ -138,7 +138,7 @@ const mutations = {
     }
   },
   updateFacetsModel (state) {
-    function setCountsToNullAndUpdate (currentSelection, lastSelection, counts, buckets, converter) {
+    function setCountsToNullAndUpdate (currentSelection, lastSelection, counts, buckets, converter = x=>x) {
       if (lastSelection.length == currentSelection.length && lastSelection.every(e => currentSelection.includes(e))) {
         console.log(currentSelection);
         Object.keys(counts).forEach(k => counts[k] = 0);
