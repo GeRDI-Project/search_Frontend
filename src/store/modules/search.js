@@ -140,7 +140,6 @@ const mutations = {
   updateFacetsModel (state) {
     function setCountsToNullAndUpdate (currentSelection, lastSelection, counts, buckets, converter = x=>x) {
       if (lastSelection.length == currentSelection.length && lastSelection.every(e => currentSelection.includes(e))) {
-        console.log(currentSelection);
         Object.keys(counts).forEach(k => counts[k] = 0);
         buckets.forEach(x => {counts[converter(x.key)] = x.doc_count})
       }
