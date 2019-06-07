@@ -21,7 +21,7 @@
   <b-container>
     <b-row>
       <b-col cols="3">
-        <search-facetes v-if="numResults > 0"></search-facetes>
+        <search-facets v-if="numResults > 0"></search-facets>
       </b-col>
       <b-col cols="9">
         <search-result-entry id="result-list" v-for="result in results" :result="result" :key="result._id"></search-result-entry>

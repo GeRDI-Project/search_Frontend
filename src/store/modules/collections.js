@@ -18,7 +18,7 @@ import axios from 'axios'
 
 const getUser = function (vm = null) {
   if (vm === null) return null
-  if (vm.$gerdi.aai.getUser() !== null) {return vm.$gerdi.aai.getUser().sub}
+  if (vm.$gerdi.aai.getUser() !== null) { return vm.$gerdi.aai.getUser().sub }
   return null
 }
 

@@ -1,5 +1,5 @@
 /**
- * Copyright 2018 Nelson Tavares de Sousa, Anastasia Kazakova
+ * Copyright 2018 Nelson Tavares de Sousa, Anastasia Kazakova, Ingo Thomsen
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,7 +29,7 @@
       <b-card-body>
         <p class="card-text">
           <b-form-group>
-            <b-form-checkbox-group stacked v-model="facetsModel.selectedPublishers" name="publisherFacets" :options="limitArray(this.aggs.Publisher.buckets.map(it => it.key))"></b-form-checkbox-group>
+            <b-form-checkbox-group stacked v-model="facetsModel.selectedPublishers" name="publisherFacets" :options="facetOptions(facetsModel.countsOfAllPublishers)"></b-form-checkbox-group>
           </b-form-group>
         </p>
       </b-card-body>
@@ -49,7 +49,7 @@
       <b-card-body>
         <p class="card-text">
           <b-form-group>
-            <b-form-checkbox-group stacked v-model="facetsModel.selectedAuthors" name="authorFacets" :options="limitArray(this.aggs.Creator.buckets.map(it => it.key))"></b-form-checkbox-group>
+            <b-form-checkbox-group stacked v-model="facetsModel.selectedAuthors" name="authorFacets" :options="facetOptions(facetsModel.countsOfAllAuthors)"></b-form-checkbox-group>
           </b-form-group>
         </p>
       </b-card-body>
@@ -69,7 +69,7 @@
       <b-card-body>
         <p class="card-text">
           <b-form-group>
-            <b-form-checkbox-group stacked v-model="facetsModel.selectedYears" name="pubYearFacets" :options="limitArray(this.aggs.PublicationYear.buckets.map(it => transformToYear(it.key)))"></b-form-checkbox-group>
+            <b-form-checkbox-group stacked v-model="facetsModel.selectedYears" name="pubYearFacets" :options="facetOptions(facetsModel.countsOfAllYears)"></b-form-checkbox-group>
           </b-form-group>
         </p>
       </b-card-body>
@@ -89,7 +89,7 @@
       <b-card-body>
         <p class="card-text">
           <b-form-group>
-            <b-form-checkbox-group stacked v-model="facetsModel.selectedLanguages" name="LanguageFacets" :options="limitArray(this.aggs.Language.buckets.map(it => it.key))"></b-form-checkbox-group>
+            <b-form-checkbox-group stacked v-model="facetsModel.selectedLanguages" name="LanguageFacets" :options="facetOptions(facetsModel.countsOfAllLanguages)"></b-form-checkbox-group>
           </b-form-group>
         </p>
       </b-card-body>
@@ -107,47 +107,41 @@ export default {
   name: 'search-facetes',
   data() {
     return {}
-  }
-
-  ,
+  },
 
   computed: {
+
     aggs: function() {
       return this.$store.getters.getAggregations
-    }
+    },
 
-    ,
     facetsModel: {
       get: function() {
         return this.$store.getters.getFacetsModel
-      }
-
-      ,
+      },
       set: function(val) {
         this.$store.commit('updateFacetsModel', val)
       }
     }
-
-    ,
-  }
-
-  ,
+  },
 
   methods: {
-    transformToYear(num) {
-      return new Date(num).getYear()+1900
-    }
 
-    ,
+    facetOptions(allCounts) {
+      return Object.entries(allCounts).map( x => ({
+        text: x[0] + " - (" + x[1] + ")",
+        value: x[0],
+        disabled: x[1] == 0
+      }))
+    },
+
     limitArray(arr) {
       if (arr.length >=10) {
         arr.length=10;
       }
-
       return arr
-    }
+    },
 
-    ,
     doFilter() {
       this.$store.dispatch('filter', this.facetsModel)
     }
