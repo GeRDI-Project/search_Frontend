@@ -95,7 +95,10 @@
       </b-card-body>
     </b-collapse>
   </b-card>
-  <b-button block class="apply float-right" variant="primary" @click="doFilter">Apply</b-button>
+  <div class="all-facets-buttons" >
+    <b-button block class="facets-button" variant="primary"   @click="doFilter">Apply</b-button>
+    <b-button block class="facets-button" variant="secondary" @click="clearAllFacets" :disabled="! anyFacetValueSelected">Clear All</b-button>
+  </div>
 </div>
 </template>
 
@@ -110,6 +113,11 @@ export default {
   },
 
   computed: {
+
+    anyFacetValueSelected: function() {
+      return this.facetsModel.selectedPublishers.length || this.facetsModel.selectedAuthors.length || this.facetsModel.selectedYears.length || this.facetsModel.selectedLanguages.length
+    },
+
 
     aggs: function() {
       return this.$store.getters.getAggregations
@@ -127,19 +135,19 @@ export default {
 
   methods: {
 
+    clearAllFacets() {
+      this.facetsModel.selectedPublishers = [];
+      this.facetsModel.selectedAuthors = [];
+      this.facetsModel.selectedYears= [];
+      this.facetsModel.selectedLanguages= [];
+    },
+
     facetOptions(allCounts) {
       return Object.entries(allCounts).map( x => ({
         text: x[0] + " - (" + x[1] + ")",
         value: x[0],
         disabled: x[1] == 0
       }))
-    },
-
-    limitArray(arr) {
-      if (arr.length >=10) {
-        arr.length=10;
-      }
-      return arr
     },
 
     doFilter() {
@@ -151,6 +159,15 @@ export default {
 </script>
 
 <style scoped>
+
+.all-facets-buttons {
+  display:flex;
+  justify-content:space-around;
+}
+
+.facets-button {
+  margin: 6px;
+}
 
 .btn-accordion-gerdi:focus,
 .btn-accordion-gerdi:active:focus,
@@ -206,7 +223,4 @@ i {
   margin-top: 6px;
 }
 
-.apply {
-  margin-top: 10px;
-}
 </style>
