@@ -1,5 +1,5 @@
 /**
- * Copyright 2018 Nelson Tavares de Sousa, Anastasia Kazakova
+ * Copyright 2018 Nelson Tavares de Sousa, Anastasia Kazakova, Ingo Thomsen
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
  */
 <template>
 <div role="tablist">
+  <!-- Publisher Facets -->
   <b-card no-body class="mb-1">
     <b-card-header header-tag="header" class="p-1" role="tab">
       <b-btn block href="#" v-b-toggle.accordion1 variant="accordion-gerdi">Publisher
@@ -29,13 +30,11 @@
       <b-card-body>
         <p class="card-text">
           <b-form-group>
-            <b-form-checkbox-group stacked v-model="facetsModel.selectedPublishers" name="publisherFacets"
-              :options="lessData(this.aggs.Publisher.buckets.map(it => it.key ))"></b-form-checkbox-group>
+            <b-form-checkbox-group stacked v-model="facetsModel.selectedPublishers" name="publisherFacets" :options="lessData(facetOptions(facetsModel.countsOfAllPublishers))"></b-form-checkbox-group>
              <b-collapse id="my-collapse">
-                    <b-form-checkbox-group stacked v-model="facetsModel.selectedPublishers" name="publisherFacets"
-              :options="moreData(this.aggs.Publisher.buckets.map(it => it.key))"></b-form-checkbox-group>
+                    <b-form-checkbox-group stacked v-model="facetsModel.selectedPublishers" name="publishersFacets"
+              :options="moreData(facetOptions(facetsModel.countsOfAllPublishers))"></b-form-checkbox-group>
                   </b-collapse>
-            
             <b-button v-b-toggle.my-collapse variant="link">
               <span class="when-opened2">Less</span> <span class="when-closed2">More</span> ...
             </b-button>
@@ -44,6 +43,7 @@
       </b-card-body>
     </b-collapse>
   </b-card>
+  <!-- Author Facets -->
   <b-card no-body class="mb-1">
     <b-card-header header-tag="header" class="p-1" role="tab">
       <b-btn block href="#" v-b-toggle.accordion2 variant="accordion-gerdi">Author
@@ -58,13 +58,20 @@
       <b-card-body>
         <p class="card-text">
           <b-form-group>
-            <b-form-checkbox-group stacked v-model="facetsModel.selectedAuthors" name="authorFacets"
-              :options="limitArray(this.aggs.Creator.buckets.map(it => it.key))"></b-form-checkbox-group>
+            <b-form-checkbox-group stacked v-model="facetsModel.selectedAuthors" name="authorFacets" :options="lessData(facetOptions(facetsModel.countsOfAllAuthors))"></b-form-checkbox-group>
+             <b-collapse id="my-collapse">
+                    <b-form-checkbox-group stacked v-model="facetsModel.selectedAuthors" name="authorsFacets"
+              :options="moreData(facetOptions(facetsModel.countsOfAllAuthors))"></b-form-checkbox-group>
+                  </b-collapse>
+            <b-button v-b-toggle.my-collapse variant="link">
+              <span class="when-opened2">Less</span> <span class="when-closed2">More</span> ...
+            </b-button>
           </b-form-group>
         </p>
       </b-card-body>
     </b-collapse>
   </b-card>
+  <!-- Year Facets -->
   <b-card no-body class="mb-1">
     <b-card-header header-tag="header" class="p-1" role="tab">
       <b-btn block href="#" v-b-toggle.accordion3 variant="accordion-gerdi">Publication year
@@ -79,14 +86,20 @@
       <b-card-body>
         <p class="card-text">
           <b-form-group>
-            <b-form-checkbox-group stacked v-model="facetsModel.selectedYears" name="pubYearFacets"
-              :options="limitArray(this.aggs.PublicationYear.buckets.map(it => transformToYear(it.key)))">
-            </b-form-checkbox-group>
+            <b-form-checkbox-group stacked v-model="facetsModel.selectedYears" name="pubYearFacets" :options="lessData(facetOptions(facetsModel.countsOfAllYears))"></b-form-checkbox-group>
+             <b-collapse id="my-collapse">
+                    <b-form-checkbox-group stacked v-model="facetsModel.selectedYears" name="yearsFacets"
+              :options="moreData(facetOptions(facetsModel.countsOfAllYears))"></b-form-checkbox-group>
+                  </b-collapse>
+            <b-button v-b-toggle.my-collapse variant="link">
+              <span class="when-opened2">Less</span> <span class="when-closed2">More</span> ...
+            </b-button>
           </b-form-group>
         </p>
       </b-card-body>
     </b-collapse>
   </b-card>
+  <!-- Language Facets -->
   <b-card no-body class="mb-1">
     <b-card-header header-tag="header" class="p-1" role="tab">
       <b-btn block href="#" v-b-toggle.accordion4 variant="accordion-gerdi">Language
@@ -101,14 +114,23 @@
       <b-card-body>
         <p class="card-text">
           <b-form-group>
-            <b-form-checkbox-group stacked v-model="facetsModel.selectedLanguages" name="LanguageFacets"
-              :options="limitArray(this.aggs.Language.buckets.map(it => it.key))"></b-form-checkbox-group>
+            <b-form-checkbox-group stacked v-model="facetsModel.selectedLanguages" name="LanguageFacets" :options="lessData(facetOptions(facetsModel.countsOfAllLanguages))"></b-form-checkbox-group>
+             <b-collapse id="my-collapse">
+                    <b-form-checkbox-group stacked v-model="facetsModel.selectedLanguages" name="languagesFacets"
+              :options="moreData(facetOptions(facetsModel.countsOfAllLanguages))"></b-form-checkbox-group>
+                  </b-collapse>
+            <b-button v-b-toggle.my-collapse variant="link">
+              <span class="when-opened2">Less</span> <span class="when-closed2">More</span> ...
+            </b-button>
           </b-form-group>
         </p>
       </b-card-body>
     </b-collapse>
   </b-card>
-  <b-button block class="apply float-right" variant="primary" @click="doFilter">Apply</b-button>
+  <div class="all-facets-buttons" >
+    <b-button block class="facets-button" variant="primary"   @click="doFilter">Apply</b-button>
+    <b-button block class="facets-button" variant="secondary" @click="clearAllFacets" :disabled="! anyFacetValueSelected">Clear All</b-button>
+  </div>
 </div>
 </template>
 
@@ -117,46 +139,47 @@
 /* eslint-disable */
 export default {
 
-  name: 'search-facetes',
+  name: 'search-facets',
   data() {
-    return { }
-  }
-
-  ,
+    return {}
+  },
 
   computed: {
+
+    anyFacetValueSelected: function() {
+      return this.facetsModel.selectedPublishers.length || this.facetsModel.selectedAuthors.length || this.facetsModel.selectedYears.length || this.facetsModel.selectedLanguages.length
+    },
+
+
     aggs: function() {
       return this.$store.getters.getAggregations
-    }
+    },
 
-    ,
     facetsModel: {
       get: function() {
         return this.$store.getters.getFacetsModel
-      }
-
-      ,
+      },
       set: function(val) {
         this.$store.commit('updateFacetsModel', val)
       }
     }
-
-    ,
-  }
-
-  ,
+  },
 
   methods: {
-    transformToYear(num) {
-      return new Date(num).getYear()+1900
-    }
 
-    ,
-    limitArray(arr) {
-      if (arr.length >=10) {
-        arr.length=10;
-      }
-      return arr
+    clearAllFacets() {
+      this.facetsModel.selectedPublishers = [];
+      this.facetsModel.selectedAuthors = [];
+      this.facetsModel.selectedYears= [];
+      this.facetsModel.selectedLanguages= [];
+    },
+
+    facetOptions(allCounts) {
+      return Object.entries(allCounts).map( x => ({
+        text: x[0] + " - (" + x[1] + ")",
+        value: x[0],
+        disabled: x[1] == 0
+      }))
     },
 
     lessData(arr){
@@ -177,6 +200,19 @@ export default {
 </script>
 
 <style scoped>
+
+.all-facets-buttons {
+  display:flex;
+  justify-content:space-around;
+}
+
+.facets-button {
+  margin: 6px;
+}
+
+.clear-all {
+  text-align: right ;
+}
 
 .btn-accordion-gerdi:focus,
 .btn-accordion-gerdi:active:focus,
@@ -237,7 +273,4 @@ i {
   margin-top: 6px;
 }
 
-.apply {
-  margin-top: 10px;
-}
 </style>
