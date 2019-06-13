@@ -1,5 +1,5 @@
 /**
- * Copyright 2018 Nelson Tavares de Sousa, Anastasia Kazakova
+ * Copyright 2018 Nelson Tavares de Sousa, Anastasia Kazakova, Ingo Thomsen
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,11 +25,11 @@
         </span>
       </b-btn>
     </b-card-header>
-    <b-collapse id="accordion1" visible accordion="facets-accordion" role="tabpanel">
+    <b-collapse id="accordion1" visible accordion="my-accordion" role="tabpanel">
       <b-card-body>
         <p class="card-text">
           <b-form-group>
-            <b-form-checkbox-group stacked v-model="facetsModel.selectedPublishers" name="publisherFacets" :options="this.aggs.Publisher.buckets.map(it => it.key)"></b-form-checkbox-group>
+            <b-form-checkbox-group stacked v-model="facetsModel.selectedPublishers" name="publisherFacets" :options="facetOptions(facetsModel.countsOfAllPublishers)"></b-form-checkbox-group>
           </b-form-group>
         </p>
       </b-card-body>
@@ -45,11 +45,11 @@
         </span>
       </b-btn>
     </b-card-header>
-    <b-collapse id="accordion2" accordion="facets-accordion" role="tabpanel">
+    <b-collapse id="accordion2" accordion="my-accordion" role="tabpanel">
       <b-card-body>
         <p class="card-text">
           <b-form-group>
-            <b-form-checkbox-group stacked v-model="facetsModel.selectedAuthors" name="authorFacets" :options="this.aggs.Creator.buckets.map(it => it.key)"></b-form-checkbox-group>
+            <b-form-checkbox-group stacked v-model="facetsModel.selectedAuthors" name="authorFacets" :options="facetOptions(facetsModel.countsOfAllAuthors)"></b-form-checkbox-group>
           </b-form-group>
         </p>
       </b-card-body>
@@ -65,11 +65,11 @@
         </span>
       </b-btn>
     </b-card-header>
-    <b-collapse id="accordion3" accordion="facets-accordion" role="tabpanel">
+    <b-collapse id="accordion3" accordion="my-accordion" role="tabpanel">
       <b-card-body>
         <p class="card-text">
           <b-form-group>
-            <b-form-checkbox-group stacked v-model="facetsModel.selectedYears" name="pubYearFacets" :options="this.aggs.PublicationYear.buckets.map(it => transformToYear(it.key))"></b-form-checkbox-group>
+            <b-form-checkbox-group stacked v-model="facetsModel.selectedYears" name="pubYearFacets" :options="facetOptions(facetsModel.countsOfAllYears)"></b-form-checkbox-group>
           </b-form-group>
         </p>
       </b-card-body>
@@ -85,17 +85,20 @@
         </span>
       </b-btn>
     </b-card-header>
-    <b-collapse id="accordion4" accordion="facets-accordion" role="tabpanel">
+    <b-collapse id="accordion4" accordion="my-accordion" role="tabpanel">
       <b-card-body>
         <p class="card-text">
           <b-form-group>
-            <b-form-checkbox-group stacked v-model="facetsModel.selectedLanguages" name="LanguageFacets" :options="this.aggs.Language.buckets.map(it => it.key)"></b-form-checkbox-group>
+            <b-form-checkbox-group stacked v-model="facetsModel.selectedLanguages" name="LanguageFacets" :options="facetOptions(facetsModel.countsOfAllLanguages)"></b-form-checkbox-group>
           </b-form-group>
         </p>
       </b-card-body>
     </b-collapse>
   </b-card>
-  <b-button block class="apply float-right" variant="primary" @click="doFilter">Apply</b-button>
+  <div class="all-facets-buttons" >
+    <b-button block class="facets-button" variant="primary"   @click="doFilter">Apply</b-button>
+    <b-button block class="facets-button" variant="secondary" @click="clearAllFacets" :disabled="! anyFacetValueSelected">Clear All</b-button>
+  </div>
 </div>
 </template>
 
@@ -107,47 +110,46 @@ export default {
   name: 'search-facetes',
   data() {
     return {}
-  }
-
-  ,
+  },
 
   computed: {
+
+    anyFacetValueSelected: function() {
+      return this.facetsModel.selectedPublishers.length || this.facetsModel.selectedAuthors.length || this.facetsModel.selectedYears.length || this.facetsModel.selectedLanguages.length
+    },
+
+
     aggs: function() {
       return this.$store.getters.getAggregations
-    }
+    },
 
-    ,
     facetsModel: {
       get: function() {
         return this.$store.getters.getFacetsModel
-      }
-
-      ,
+      },
       set: function(val) {
         this.$store.commit('updateFacetsModel', val)
       }
     }
-
-    ,
-  }
-
-  ,
+  },
 
   methods: {
-    transformToYear(num) {
-      return new Date(num).getYear()+1900
-    }
 
-    ,
-    limitArray(arr) {
-      if (arr.length >=10) {
-        arr.length=10;
-      }
+    clearAllFacets() {
+      this.facetsModel.selectedPublishers = [];
+      this.facetsModel.selectedAuthors = [];
+      this.facetsModel.selectedYears= [];
+      this.facetsModel.selectedLanguages= [];
+    },
 
-      return arr
-    }
+    facetOptions(allCounts) {
+      return Object.entries(allCounts).map( x => ({
+        text: x[0] + " - (" + x[1] + ")",
+        value: x[0],
+        disabled: x[1] == 0
+      }))
+    },
 
-    ,
     doFilter() {
       this.$store.dispatch('filter', this.facetsModel)
     }
@@ -157,6 +159,15 @@ export default {
 </script>
 
 <style scoped>
+
+.all-facets-buttons {
+  display:flex;
+  justify-content:space-around;
+}
+
+.facets-button {
+  margin: 6px;
+}
 
 .btn-accordion-gerdi:focus,
 .btn-accordion-gerdi:active:focus,
@@ -212,7 +223,4 @@ i {
   margin-top: 6px;
 }
 
-.apply {
-  margin-top: 10px;
-}
 </style>

@@ -10,7 +10,7 @@ import axios from 'axios'
 import Results from '@/components/Results'
 import SearchResultEntry from '@/components/SearchResultEntry'
 import SearchResultEntryMenu from '@/components/SearchResultEntryMenu'
-import SearchFacetes from '@/components/SearchFacetes'
+import SearchFacets from '@/components/SearchFacets'
 import SearchMask from '@/components/SearchMask'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { faChevronUp, faChevronDown } from '@fortawesome/free-solid-svg-icons'
@@ -30,7 +30,7 @@ Vue.use(sharedUI, { store: store })
 // register components globally
 Vue.component('search-result-entry', SearchResultEntry)
 Vue.component('search-result-entry-menu', SearchResultEntryMenu)
-Vue.component('search-facetes', SearchFacetes)
+Vue.component('search-facets', SearchFacets)
 Vue.component('search-mask', SearchMask)
 Vue.component('results', Results)
 
