@@ -60,7 +60,13 @@ const getters = {
   },
   getFacetsModel: state => {
     return state.facetsModel
-  }
+  },
+  areAnyFacetValueSelected: state => {
+      return state.facetsModel.selectedPublishers.length || state.facetsModel.selectedAuthors.length || state.facetsModel.selectedYears.length || state.facetsModel.selectedLanguages.length
+  },
+ areAnyFacetFilteringApplied: state => {
+      return state.facetsModel.selectedPublishersForLastFiltering.length || state.facetsModel.selectedAuthorsForLastFiltering.length || state.facetsModel.selectedYearsForLastFiltering.length || state.facetsModel.selectedLanguagesForLastFiltering.length
+ }
 }
 
 // actions

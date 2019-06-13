@@ -97,7 +97,7 @@
   </b-card>
   <div class="all-facets-buttons" >
     <b-button block class="facets-button" variant="primary"   @click="doFilter">Apply</b-button>
-    <b-button block class="facets-button" variant="secondary" @click="clearAllFacets" :disabled="! anyFacetValueSelected">Clear All</b-button>
+    <b-button block class="facets-button" variant="secondary" @click="clearAllFacets" :disabled="! $store.getters.areAnyFacetValueSelected">Clear All</b-button>
   </div>
 </div>
 </template>
@@ -113,11 +113,6 @@ export default {
   },
 
   computed: {
-
-    anyFacetValueSelected: function() {
-      return this.facetsModel.selectedPublishers.length || this.facetsModel.selectedAuthors.length || this.facetsModel.selectedYears.length || this.facetsModel.selectedLanguages.length
-    },
-
 
     aggs: function() {
       return this.$store.getters.getAggregations
