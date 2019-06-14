@@ -22,7 +22,8 @@
         <h6 class="results-annotation"><b>{{ numResults }}</b> results found for <b> {{$route.query.q}} </b></h6>
       </b-col>
       <b-col v-else>
-        <b-alert class="nothing-found-alert" show>No results</b-alert>
+        <b-alert v-if="isSearching" class="nothing-found-alert" show>Searching...</b-alert>
+        <b-alert v-else             class="now-searching-alert" show>No results</b-alert>
       </b-col>
     </b-row>
     <b-row v-if="anyResults || anyFacetFilteringApplied">
@@ -53,6 +54,9 @@ export default {
     }
   },
   computed: {
+    isSearching: function() {
+      return this.$store.getters.isSearching
+    },
     anyFacetFilteringApplied: function() {
       return this.$store.getters.areAnyFacetFilteringApplied
     },
@@ -116,7 +120,7 @@ export default {
 .results {
   margin-top: 1rem;
 }
-.nothing-found-alert {
+.nothing-found-alert, .now-searching-alert {
   margin-top: 1rem;
 }
 .pagination {
