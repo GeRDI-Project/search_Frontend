@@ -25,7 +25,7 @@
         </span>
       </b-btn>
     </b-card-header>
-    <b-collapse id="accordion1" visible accordion="my-accordion" role="tabpanel">
+    <b-collapse id="accordion1" visible accordion="accordion1" role="tabpanel">
       <b-card-body>
         <p class="card-text">
           <b-form-group>
@@ -45,7 +45,7 @@
         </span>
       </b-btn>
     </b-card-header>
-    <b-collapse id="accordion2" accordion="my-accordion" role="tabpanel">
+    <b-collapse id="accordion2" visible accordion="accordion2" role="tabpanel">
       <b-card-body>
         <p class="card-text">
           <b-form-group>
@@ -65,7 +65,7 @@
         </span>
       </b-btn>
     </b-card-header>
-    <b-collapse id="accordion3" visisble accordion="my-accordion" role="tabpanel">
+    <b-collapse id="accordion3" visible accordion="accordion3" role="tabpanel">
       <b-card-body>
         <p class="card-text">
           <b-form-group>
@@ -85,7 +85,7 @@
         </span>
       </b-btn>
     </b-card-header>
-    <b-collapse id="accordion4" accordion="my-accordion" role="tabpanel">
+    <b-collapse id="accordion4" visible accordion="accordion4" role="tabpanel">
       <b-card-body>
         <p class="card-text">
           <b-form-group>
