@@ -27,6 +27,11 @@
     </b-card-header>
     <b-collapse id="accordion1" visible accordion="accordion1" role="tabpanel">
       <b-card-body>
+          <div class="clear-all">
+            <b-button variant="link" :disabled="facetsModel.selectedPublishers.length == 0"  @click="facetsModel.selectedPublishers = []">
+              Clear all
+            </b-button>
+          </div>
         <p class="card-text">
           <b-form-group>
             <b-form-checkbox-group stacked v-model="facetsModel.selectedPublishers" name="publisherFacets" :options="facetOptions(facetsModel.countsOfAllPublishers)"></b-form-checkbox-group>
@@ -47,6 +52,11 @@
     </b-card-header>
     <b-collapse id="accordion2" visible accordion="accordion2" role="tabpanel">
       <b-card-body>
+          <div class="clear-all">
+            <b-button variant="link" :disabled="facetsModel.selectedAuthors.length == 0"  @click="facetsModel.selectedAuthors = []">
+              Clear all
+            </b-button>
+          </div>
         <p class="card-text">
           <b-form-group>
             <b-form-checkbox-group stacked v-model="facetsModel.selectedAuthors" name="authorFacets" :options="facetOptions(facetsModel.countsOfAllAuthors)"></b-form-checkbox-group>
@@ -67,6 +77,11 @@
     </b-card-header>
     <b-collapse id="accordion3" visible accordion="accordion3" role="tabpanel">
       <b-card-body>
+          <div class="clear-all">
+            <b-button variant="link" :disabled="facetsModel.selectedYears.length == 0"  @click="facetsModel.selectedYears = []">
+              Clear all
+            </b-button>
+          </div>
         <p class="card-text">
           <b-form-group>
             <b-form-checkbox-group stacked v-model="facetsModel.selectedYears" name="pubYearFacets" :options="facetOptions(facetsModel.countsOfAllYears)"></b-form-checkbox-group>
@@ -87,6 +102,11 @@
     </b-card-header>
     <b-collapse id="accordion4" visible accordion="accordion4" role="tabpanel">
       <b-card-body>
+          <div class="clear-all">
+            <b-button variant="link" :disabled="facetsModel.selectedLanguages.length == 0"  @click="facetsModel.selectedLanguages = []">
+              Clear all
+            </b-button>
+          </div>
         <p class="card-text">
           <b-form-group>
             <b-form-checkbox-group stacked v-model="facetsModel.selectedLanguages" name="LanguageFacets" :options="facetOptions(facetsModel.countsOfAllLanguages)"></b-form-checkbox-group>
@@ -107,7 +127,7 @@
 /* eslint-disable */
 export default {
 
-  name: 'search-facetes',
+  name: 'search-facets',
   data() {
     return {}
   },
@@ -167,6 +187,10 @@ export default {
 
 .facets-button {
   margin: 6px;
+}
+
+.clear-all {
+  text-align: right ;
 }
 
 .btn-accordion-gerdi:focus,
