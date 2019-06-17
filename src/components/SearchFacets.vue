@@ -1,125 +1,125 @@
 /**
-* Copyright 2018 Nelson Tavares de Sousa, Anastasia Kazakova, Ingo Thomsen
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*     http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*/
+ * Copyright 2018 Nelson Tavares de Sousa, Anastasia Kazakova, Ingo Thomsen
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 <template>
-  <div role="tablist">
-    <b-card no-body class="mb-1">
-      <b-card-header header-tag="header" class="p-1" role="tab">
-        <b-btn block href="#" v-b-toggle.accordion1 variant="accordion-gerdi">Publisher
-          <span class="when-opened">
-            <font-awesome-icon icon="chevron-up" /></span>
-          <span class="when-closed">
-            <font-awesome-icon icon="chevron-down" />
-          </span>
-        </b-btn>
-      </b-card-header>
-      <b-collapse id="accordion1" visible accordion="my-accordion" role="tabpanel">
-        <b-card-body>
+<div role="tablist">
+  <b-card no-body class="mb-1">
+    <b-card-header header-tag="header" class="p-1" role="tab">
+      <b-btn block href="#" v-b-toggle.accordion1 variant="accordion-gerdi">Publisher
+        <span class="when-opened">
+          <font-awesome-icon icon="chevron-up" /></span>
+        <span class="when-closed">
+          <font-awesome-icon icon="chevron-down" />
+        </span>
+      </b-btn>
+    </b-card-header>
+    <b-collapse id="accordion1" visible accordion="accordion1" role="tabpanel">
+      <b-card-body>
           <div class="clear-all">
             <b-button variant="link" :disabled="facetsModel.selectedPublishers.length == 0"  @click="facetsModel.selectedPublishers = []">
               Clear all
             </b-button>
           </div>
-          <p class="card-text">
+        <p class="card-text">
           <b-form-group>
             <b-form-checkbox-group stacked v-model="facetsModel.selectedPublishers" name="publisherFacets" :options="facetOptions(facetsModel.countsOfAllPublishers)"></b-form-checkbox-group>
           </b-form-group>
-          </p>
-        </b-card-body>
-      </b-collapse>
-    </b-card>
-    <b-card no-body class="mb-1">
-      <b-card-header header-tag="header" class="p-1" role="tab">
-        <b-btn block href="#" v-b-toggle.accordion2 variant="accordion-gerdi">Author
-          <span class="when-opened">
-            <font-awesome-icon icon="chevron-up" /></span>
-          <span class="when-closed">
-            <font-awesome-icon icon="chevron-down" />
-          </span>
-        </b-btn>
-      </b-card-header>
-      <b-collapse id="accordion2" accordion="my-accordion" role="tabpanel">
-        <b-card-body>
+        </p>
+      </b-card-body>
+    </b-collapse>
+  </b-card>
+  <b-card no-body class="mb-1">
+    <b-card-header header-tag="header" class="p-1" role="tab">
+      <b-btn block href="#" v-b-toggle.accordion2 variant="accordion-gerdi">Author
+        <span class="when-opened">
+          <font-awesome-icon icon="chevron-up" /></span>
+        <span class="when-closed">
+          <font-awesome-icon icon="chevron-down" />
+        </span>
+      </b-btn>
+    </b-card-header>
+    <b-collapse id="accordion2" visible accordion="accordion2" role="tabpanel">
+      <b-card-body>
           <div class="clear-all">
             <b-button variant="link" :disabled="facetsModel.selectedAuthors.length == 0"  @click="facetsModel.selectedAuthors = []">
               Clear all
             </b-button>
           </div>
-          <p class="card-text">
+        <p class="card-text">
           <b-form-group>
             <b-form-checkbox-group stacked v-model="facetsModel.selectedAuthors" name="authorFacets" :options="facetOptions(facetsModel.countsOfAllAuthors)"></b-form-checkbox-group>
           </b-form-group>
-          </p>
-        </b-card-body>
-      </b-collapse>
-    </b-card>
-    <b-card no-body class="mb-1">
-      <b-card-header header-tag="header" class="p-1" role="tab">
-        <b-btn block href="#" v-b-toggle.accordion3 variant="accordion-gerdi">Publication year
-          <span class="when-opened">
-            <font-awesome-icon icon="chevron-up" /></span>
-          <span class="when-closed">
-            <font-awesome-icon icon="chevron-down" />
-          </span>
-        </b-btn>
-      </b-card-header>
-      <b-collapse id="accordion3" visisble accordion="my-accordion" role="tabpanel">
-        <b-card-body>
+        </p>
+      </b-card-body>
+    </b-collapse>
+  </b-card>
+  <b-card no-body class="mb-1">
+    <b-card-header header-tag="header" class="p-1" role="tab">
+      <b-btn block href="#" v-b-toggle.accordion3 variant="accordion-gerdi">Publication year
+        <span class="when-opened">
+          <font-awesome-icon icon="chevron-up" /></span>
+        <span class="when-closed">
+          <font-awesome-icon icon="chevron-down" />
+        </span>
+      </b-btn>
+    </b-card-header>
+    <b-collapse id="accordion3" visible accordion="accordion3" role="tabpanel">
+      <b-card-body>
           <div class="clear-all">
             <b-button variant="link" :disabled="facetsModel.selectedYears.length == 0"  @click="facetsModel.selectedYears = []">
               Clear all
             </b-button>
           </div>
-          <p class="card-text">
+        <p class="card-text">
           <b-form-group>
             <b-form-checkbox-group stacked v-model="facetsModel.selectedYears" name="pubYearFacets" :options="facetOptions(facetsModel.countsOfAllYears)"></b-form-checkbox-group>
           </b-form-group>
-          </p>
-        </b-card-body>
-      </b-collapse>
-    </b-card>
-    <b-card no-body class="mb-1">
-      <b-card-header header-tag="header" class="p-1" role="tab">
-        <b-btn block href="#" v-b-toggle.accordion4 variant="accordion-gerdi">Language
-          <span class="when-opened">
-            <font-awesome-icon icon="chevron-up" /></span>
-          <span class="when-closed">
-            <font-awesome-icon icon="chevron-down" />
-          </span>
-        </b-btn>
-      </b-card-header>
-      <b-collapse id="accordion4" accordion="my-accordion" role="tabpanel">
-        <b-card-body>
+        </p>
+      </b-card-body>
+    </b-collapse>
+  </b-card>
+  <b-card no-body class="mb-1">
+    <b-card-header header-tag="header" class="p-1" role="tab">
+      <b-btn block href="#" v-b-toggle.accordion4 variant="accordion-gerdi">Language
+        <span class="when-opened">
+          <font-awesome-icon icon="chevron-up" /></span>
+        <span class="when-closed">
+          <font-awesome-icon icon="chevron-down" />
+        </span>
+      </b-btn>
+    </b-card-header>
+    <b-collapse id="accordion4" visible accordion="accordion4" role="tabpanel">
+      <b-card-body>
           <div class="clear-all">
             <b-button variant="link" :disabled="facetsModel.selectedLanguages.length == 0"  @click="facetsModel.selectedLanguages = []">
               Clear all
             </b-button>
           </div>
-          <p class="card-text">
+        <p class="card-text">
           <b-form-group>
             <b-form-checkbox-group stacked v-model="facetsModel.selectedLanguages" name="LanguageFacets" :options="facetOptions(facetsModel.countsOfAllLanguages)"></b-form-checkbox-group>
           </b-form-group>
-          </p>
-        </b-card-body>
-      </b-collapse>
-    </b-card>
-    <div class="all-facets-buttons" >
-      <b-button block class="facets-button" variant="primary"   @click="doFilter">Apply</b-button>
-      <b-button block class="facets-button" variant="secondary" @click="clearAllFacets" :disabled="! anyFacetValueSelected">Clear All</b-button>
-    </div>
+        </p>
+      </b-card-body>
+    </b-collapse>
+  </b-card>
+  <div class="all-facets-buttons" >
+    <b-button block class="facets-button" variant="primary"   @click="doFilter">Apply</b-button>
+    <b-button block class="facets-button" variant="secondary" @click="clearAllFacets" :disabled="! anyFacetValueSelected">Clear All</b-button>
   </div>
+</div>
 </template>
 
 <script>

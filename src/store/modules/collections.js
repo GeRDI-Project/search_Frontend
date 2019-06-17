@@ -24,7 +24,7 @@ const getUser = function (vm = null) {
 
 const getPath = function (vm = null) {
   if (getUser(vm) === null) return null
-  axios.defaults.headers.common = {'Authorization': 'Bearer ' + vm.$gerdi.aai.getIdToken()}
+  axios.defaults.headers.common = { 'Authorization': 'Bearer ' + vm.$gerdi.aai.getIdToken() }
   return '/api/v1/collections'
 }
 
