@@ -19,6 +19,7 @@ import querybuilder from '../../util/querybuilder.js'
 /* eslint-disable */
 // initial state
 const state = {
+  isSearching: true,
   results: {},
   queryPayload: {},
   numDocsPerPage: 10,
@@ -40,6 +41,9 @@ const state = {
 
 // getters
 const getters = {
+  isSearching: state => {
+    return state.isSearching
+  },
   getResults: state => {
     if (state.results.hits) {
       return state.results.hits.hits
@@ -60,12 +64,19 @@ const getters = {
   },
   getFacetsModel: state => {
     return state.facetsModel
-  }
+  },
+  areAnyFacetValueSelected: state => {
+      return state.facetsModel.selectedPublishers.length || state.facetsModel.selectedAuthors.length || state.facetsModel.selectedYears.length || state.facetsModel.selectedLanguages.length
+  },
+ areAnyFacetFilteringApplied: state => {
+      return state.facetsModel.selectedPublishersForLastFiltering.length || state.facetsModel.selectedAuthorsForLastFiltering.length || state.facetsModel.selectedYearsForLastFiltering.length || state.facetsModel.selectedLanguagesForLastFiltering.length
+ }
 }
 
 // actions
 const actions = {
   search({ commit, state }, payload) {
+    commit("setSearchingStatus", true)
     let querystring = payload.query
     let currentPage = payload.currentPage
     commit('setQueryPayload', payload)
@@ -80,12 +91,15 @@ const actions = {
     .then(function(response) {
       commit('setResults', response.data);
       commit('initFacetsModel');
+      commit("setSearchingStatus", false)
     })
     .catch(function(error) {
-        console.log(error)
+      console.log(error)
+      commit("setSearchingStatus", false)
     });
   },
   filter({ commit, state }, facetsModel) {
+    commit("setSearchingStatus", true)
     let currentPage = state.queryPayload.currentPage
     commit('setResults', [])
     var url = '/api/search?'
@@ -98,15 +112,20 @@ const actions = {
     .then(function(response) {
       commit('setResults', response.data);
       commit('updateFacetsModel');
+      commit("setSearchingStatus", false)
     })
     .catch(function(error) {
       console.log(error)
+      commit("setSearchingStatus", false)
     });
   }
 }
 
 // mutations
 const mutations = {
+  setSearchingStatus (state, bool) {
+    state.isSearching = bool
+  },
   setResults (state, results) {
     state.results = results
   },
