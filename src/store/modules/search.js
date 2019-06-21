@@ -123,6 +123,24 @@ const actions = {
       console.log(error)
       commit('setSearchingStatus', false)
     })
+  },
+  resetState({commit, state}) {
+    commit('setResults', [])
+    commit('setQueryPayload', [])
+    commit('setFacetsModel', {
+      selectedPublishers: [],
+      selectedYears: [],
+      selectedAuthors: [],
+      selectedLanguages: [],
+      selectedPublishersForLastFiltering: [],
+      selectedYearsForLastFiltering: [],
+      selectedAuthorsForLastFiltering: [],
+      selectedLanguagesForLastFiltering: [],
+      countsOfAllPublishers: {},
+      countsOfAllYears: {},
+      countsOfAllAuthors: {},
+      countsOfAllLanguages: {}
+    })
   }
 }
 
