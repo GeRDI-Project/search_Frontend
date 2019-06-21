@@ -19,7 +19,7 @@ import querybuilder from '../../util/querybuilder.js'
 /* eslint-disable */
 // initial state
 const state = {
-  isSearching: true,
+  isSearching: false,
   results: {},
   queryPayload: {},
   numDocsPerPage: 10,
@@ -79,27 +79,29 @@ const getters = {
 // actions
 const actions = {
   search({ commit, state }, payload) {
-    commit('setSearchingStatus', true)
     let querystring = payload.query
     let currentPage = payload.currentPage
-    commit('setQueryPayload', payload)
-    commit('setResults', [])
-    var url = '/api/search?'
-    if (currentPage) {
-      url = url.concat('&from=').concat(currentPage * state.numDocsPerPage - state.numDocsPerPage)
+    if (state.queryPayload.query !== querystring) {
+      commit('setSearchingStatus', true)
+      commit('setQueryPayload', payload)
+      commit('setResults', [])
+      var url = '/api/search?'
+      if (currentPage) {
+        url = url.concat('&from=').concat(currentPage * state.numDocsPerPage - state.numDocsPerPage)
+      }
+      url = url.concat('&size=').concat(state.numDocsPerPage)
+      axios.post(url,
+        querybuilder.buildQuery(querystring, {}))
+        .then(function (response) {
+          commit('setResults', response.data)
+          commit('initFacetsModel')
+          commit('setSearchingStatus', false)
+        })
+        .catch(function (error) {
+          console.log(error)
+          commit('setSearchingStatus', false)
+        })
     }
-    url = url.concat('&size=').concat(state.numDocsPerPage)
-    axios.post(url,
-      querybuilder.buildQuery(querystring, {}))
-    .then(function(response) {
-      commit('setResults', response.data)
-      commit('initFacetsModel')
-      commit('setSearchingStatus', false)
-    })
-    .catch(function(error) {
-      console.log(error)
-      commit('setSearchingStatus', false)
-    })
   },
   filter({ commit, state }, facetsModel) {
     commit('setSearchingStatus', true)
