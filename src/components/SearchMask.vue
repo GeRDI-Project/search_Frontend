@@ -12,7 +12,7 @@
 </template>
 
 <script>
-/*eslint-disable*/
+/* eslint-disable */
 export default {
   name: 'search-mask',
   props: ['loading'],
@@ -34,19 +34,18 @@ export default {
       this.inputvalue = this.$route.query.q
     },
     search() {
-      if (this.inputvalue != '')
+      if (this.inputvalue !== '') {
         this.$router.push({
           name: 'results',
           query: {
             q: this.inputvalue
           }
         })
+      }
     }
   }
 }
 </script>
 
-
 <style scoped>
-
 </style>

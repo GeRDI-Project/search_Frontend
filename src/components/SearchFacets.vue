@@ -151,17 +151,17 @@ export default {
   methods: {
 
     clearAllFacets() {
-      this.facetsModel.selectedPublishers = [];
-      this.facetsModel.selectedAuthors = [];
-      this.facetsModel.selectedYears= [];
-      this.facetsModel.selectedLanguages= [];
+      this.facetsModel.selectedPublishers = []
+      this.facetsModel.selectedAuthors = []
+      this.facetsModel.selectedYears = []
+      this.facetsModel.selectedLanguages = []
     },
 
     facetOptions(allCounts) {
-      return Object.entries(allCounts).map( x => ({
-        text: x[0] + " - (" + x[1] + ")",
+      return Object.entries(allCounts).map(x => ({
+        text: x[0] + ' - (' + x[1] + ')',
         value: x[0],
-        disabled: x[1] == 0
+        disabled: x[1] === 0
       }))
     },
 
@@ -170,7 +170,6 @@ export default {
     }
   }
 }
-
 </script>
 
 <style scoped>

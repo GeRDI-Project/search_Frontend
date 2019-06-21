@@ -87,7 +87,7 @@ export default {
     isChecked: function () {
       if (this.loadedBookmarks === true || this.$gerdi.aai.getUser() === null) return
       var self = this
-      this.$store.dispatch('refreshCollections', { vm: this }).then(function () {self.loadedBookmarks = true })
+      this.$store.dispatch('refreshCollections', { vm: this }).then(function () { self.loadedBookmarks = true })
     }
   },
   methods: {
