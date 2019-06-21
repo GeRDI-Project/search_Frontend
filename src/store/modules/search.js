@@ -50,6 +50,9 @@ const getters = {
     }
     return []
   },
+  getResultsQueryString: state => {
+    return state.queryPayload.query
+  },
   getAggregations: state => {
     if (state.results.aggregations) {
       return state.results.aggregations
