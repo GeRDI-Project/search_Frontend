@@ -31,10 +31,19 @@
         <p class="card-text">
           <b-form-group>
             <b-form-checkbox-group stacked v-model="facetsModel.selectedPublishers" name="publishersFacets"
-              :options="displayList(facetOptions(facetsModel.countsOfAllPublishers), valuesToShow)">
+              :options="facetOptions(facetsModel.countsOfAllPublishers).slice(0,5)">
             </b-form-checkbox-group>
-            <b-button variant = "link" @click="showLess = !showLess">Show {{ showLess ? 'More' : 'Less' }}</b-button>
+            <b-form-checkbox-group stacked v-model="facetsModel.selectedPublishers" name="publishersFacets"
+              :options="displayValues(facetOptions(facetsModel.countsOfAllPublishers), valuesToShow)">
+            </b-form-checkbox-group>
           </b-form-group>
+          <b-button variant="link" :disabled="facetOptions(facetsModel.countsOfAllPublishers).length <= valuesToShow"
+            @click="valuesToShow += 5">
+            More
+          </b-button>
+          <b-button class="float-right" variant="link" :disabled="valuesToShow == 5" @click="valuesToShow -= 5">
+            Less
+          </b-button>
         </p>
       </b-card-body>
     </b-collapse>
@@ -55,15 +64,17 @@
         <p class="card-text">
           <b-form-group>
             <b-form-checkbox-group stacked v-model="facetsModel.selectedAuthors" name="authorFacets"
-              :options="lessData(facetOptions(facetsModel.countsOfAllAuthors))"></b-form-checkbox-group>
-            <b-collapse id="my-collapse">
+              :options="facetOptions(facetsModel.countsOfAllAuthors).slice(0,5)"></b-form-checkbox-group>
               <b-form-checkbox-group stacked v-model="facetsModel.selectedAuthors" name="authorsFacets"
-                :options="moreData(facetOptions(facetsModel.countsOfAllAuthors))"></b-form-checkbox-group>
-            </b-collapse>
-            <b-button v-b-toggle.my-collapse variant="link">
-              <span class="when-opened2">Less</span> <span class="when-closed2">More</span> ...
-            </b-button>
+                :options="displayValues(facetOptions(facetsModel.countsOfAllAuthors), valuesToShow)"></b-form-checkbox-group>
           </b-form-group>
+           <b-button variant="link" :disabled="facetOptions(facetsModel.countsOfAllAuthors).length <= valuesToShow"
+            @click="valuesToShow += 5">
+            More
+          </b-button>
+          <b-button class="float-right" variant="link" :disabled="valuesToShow == 5" @click="valuesToShow -= 5">
+            Less
+          </b-button>
         </p>
       </b-card-body>
     </b-collapse>
@@ -84,15 +95,17 @@
         <p class="card-text">
           <b-form-group>
             <b-form-checkbox-group stacked v-model="facetsModel.selectedYears" name="pubYearFacets"
-              :options="lessData(facetOptions(facetsModel.countsOfAllYears))"></b-form-checkbox-group>
-            <b-collapse id="my-collapse">
+              :options="facetOptions(facetsModel.countsOfAllYears).slice(0,5)"></b-form-checkbox-group>
               <b-form-checkbox-group stacked v-model="facetsModel.selectedYears" name="yearsFacets"
-                :options="moreData(facetOptions(facetsModel.countsOfAllYears))"></b-form-checkbox-group>
-            </b-collapse>
-            <b-button v-b-toggle.my-collapse variant="link">
-              <span class="when-opened2">Less</span> <span class="when-closed2">More</span> ...
-            </b-button>
+                :options="displayValues(facetOptions(facetsModel.countsOfAllYears), valuesToShow)"></b-form-checkbox-group>
           </b-form-group>
+          <b-button variant="link" :disabled="facetOptions(facetsModel.countsOfAllYears).length <= valuesToShow"
+            @click="valuesToShow += 5">
+            More
+          </b-button>
+          <b-button class="float-right" variant="link" :disabled="valuesToShow == 5" @click="valuesToShow -= 5">
+            Less
+          </b-button>
         </p>
       </b-card-body>
     </b-collapse>
@@ -113,15 +126,17 @@
         <p class="card-text">
           <b-form-group>
             <b-form-checkbox-group stacked v-model="facetsModel.selectedLanguages" name="LanguageFacets"
-              :options="lessData(facetOptions(facetsModel.countsOfAllLanguages))"></b-form-checkbox-group>
-            <b-collapse id="my-collapse">
+              :options="facetOptions(facetsModel.countsOfAllLanguages).slice(0,5)"></b-form-checkbox-group>
               <b-form-checkbox-group stacked v-model="facetsModel.selectedLanguages" name="languagesFacets"
-                :options="moreData(facetOptions(facetsModel.countsOfAllLanguages))"></b-form-checkbox-group>
-            </b-collapse>
-            <b-button v-b-toggle.my-collapse variant="link">
-              <span class="when-opened2">Less</span> <span class="when-closed2">More</span> ...
-            </b-button>
+                :options="displayValues(facetOptions(facetsModel.countsOfAllLanguages), valuesToShow)"></b-form-checkbox-group>
           </b-form-group>
+           <b-button variant="link" :disabled="facetOptions(facetsModel.countsOfAllLanguages).length <= valuesToShow"
+            @click="valuesToShow += 5">
+            More
+          </b-button>
+          <b-button class="float-right" variant="link" :disabled="valuesToShow == 5" @click="valuesToShow -= 5">
+            Less
+          </b-button>
         </p>
       </b-card-body>
     </b-collapse>
@@ -135,57 +150,52 @@
 </template>
 
 <script>
-
 /* eslint-disable */
 export default {
 
   name: 'search-facets',
   data() {
     return {
-      showLess: true,
-      valuesToShow: 3
+      valuesToShow: 5
     }
   },
-  
+
   computed: {
 
-    anyFacetValueSelected: function() {
+    anyFacetValueSelected: function () {
       return this.facetsModel.selectedPublishers.length || this.facetsModel.selectedAuthors.length || this.facetsModel.selectedYears.length || this.facetsModel.selectedLanguages.length
     },
-
-
-    aggs: function() {
+    aggs: function () {
       return this.$store.getters.getAggregations
     },
 
     facetsModel: {
-      get: function() {
+      get: function () {
         return this.$store.getters.getFacetsModel
       },
-      set: function(val) {
+      set: function (val) {
         this.$store.commit('updateFacetsModel', val)
       }
     }
   },
 
   methods: {
-
     clearAllFacets() {
       this.facetsModel.selectedPublishers = [];
       this.facetsModel.selectedAuthors = [];
-      this.facetsModel.selectedYears= [];
-      this.facetsModel.selectedLanguages= [];
+      this.facetsModel.selectedYears = [];
+      this.facetsModel.selectedLanguages = [];
     },
 
     facetOptions(allCounts) {
-      return Object.entries(allCounts).map( x => ({
+      return Object.entries(allCounts).map(x => ({
         text: x[0] + " - (" + x[1] + ")",
         value: x[0],
         disabled: x[1] == 0
       }))
     },
 
-    lessData(arr){
+    lessData(arr) {
       return arr.slice(0, 5)
     },
 
@@ -193,9 +203,13 @@ export default {
       return arr.slice(5)
     },
 
-    displayList(arr, countValues) {
-    return this.showLess ? arr.slice(0, countValues) : arr;
-  },
+    displayValues(arr, stepsValues) {
+      if (arr.length != 0) {
+        return arr.slice(5, stepsValues);
+      } else {
+        return arr;
+      }
+    },
 
     doFilter() {
       this.$store.dispatch('filter', this.facetsModel)
@@ -258,10 +272,6 @@ export default {
   display: none;
 }
 
-.collapsed>.when-opened2,
-:not(.collapsed)>.when-closed2 {
-  display: none;
-}
 
 /* should be done in this way, cause of firefox*/
 .when-closed,
