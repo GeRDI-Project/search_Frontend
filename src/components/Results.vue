@@ -21,9 +21,15 @@
       <b-col v-if="anyResults">
         <h6 class="results-annotation"><b>{{ numResults }}</b> results found for <b> {{$route.query.q}} </b></h6>
       </b-col>
+      <b-col v-else-if="isSearching">
+        <div class="text-center">
+          <b-spinner class="m-4" variant="primary" label="Spinning"></b-spinner>
+        </div>
+      </b-col>
       <b-col v-else>
-        <b-alert v-if="isSearching" class="nothing-found-alert" show>Searching...</b-alert>
-        <b-alert v-else             class="now-searching-alert" show>No results</b-alert>
+        <b-alert class="nothing-found-alert" show>
+          No results
+        </b-alert>
       </b-col>
     </b-row>
     <b-row v-if="anyResults || anyFacetFilteringApplied">
@@ -87,7 +93,7 @@ export default {
     isChecked: function () {
       if (this.loadedBookmarks === true || this.$gerdi.aai.getUser() === null) return
       var self = this
-      this.$store.dispatch('refreshCollections', { vm: this }).then(function () {self.loadedBookmarks = true })
+      this.$store.dispatch('refreshCollections', { vm: this }).then(function () { self.loadedBookmarks = true })
     }
   },
   methods: {
@@ -129,5 +135,4 @@ export default {
 .results-annotation {
   margin-top: 1rem;
 }
-
 </style>
