@@ -30,14 +30,10 @@
       <b-card-body>
         <p class="card-text">
           <b-form-group>
-            <b-form-checkbox-group stacked v-model="facetsModel.selectedPublishers" name="publisherFacets" :options="lessData(facetOptions(facetsModel.countsOfAllPublishers))"></b-form-checkbox-group>
-             <b-collapse id="my-collapse">
-                    <b-form-checkbox-group stacked v-model="facetsModel.selectedPublishers" name="publishersFacets"
-              :options="moreData(facetOptions(facetsModel.countsOfAllPublishers))"></b-form-checkbox-group>
-                  </b-collapse>
-            <b-button v-b-toggle.my-collapse variant="link">
-              <span class="when-opened2">Less</span> <span class="when-closed2">More</span> ...
-            </b-button>
+            <b-form-checkbox-group stacked v-model="facetsModel.selectedPublishers" name="publishersFacets"
+              :options="displayList(facetOptions(facetsModel.countsOfAllPublishers), valuesToShow)">
+            </b-form-checkbox-group>
+            <b-button variant = "link" @click="showLess = !showLess">Show {{ showLess ? 'More' : 'Less' }}</b-button>
           </b-form-group>
         </p>
       </b-card-body>
@@ -58,11 +54,12 @@
       <b-card-body>
         <p class="card-text">
           <b-form-group>
-            <b-form-checkbox-group stacked v-model="facetsModel.selectedAuthors" name="authorFacets" :options="lessData(facetOptions(facetsModel.countsOfAllAuthors))"></b-form-checkbox-group>
-             <b-collapse id="my-collapse">
-                    <b-form-checkbox-group stacked v-model="facetsModel.selectedAuthors" name="authorsFacets"
-              :options="moreData(facetOptions(facetsModel.countsOfAllAuthors))"></b-form-checkbox-group>
-                  </b-collapse>
+            <b-form-checkbox-group stacked v-model="facetsModel.selectedAuthors" name="authorFacets"
+              :options="lessData(facetOptions(facetsModel.countsOfAllAuthors))"></b-form-checkbox-group>
+            <b-collapse id="my-collapse">
+              <b-form-checkbox-group stacked v-model="facetsModel.selectedAuthors" name="authorsFacets"
+                :options="moreData(facetOptions(facetsModel.countsOfAllAuthors))"></b-form-checkbox-group>
+            </b-collapse>
             <b-button v-b-toggle.my-collapse variant="link">
               <span class="when-opened2">Less</span> <span class="when-closed2">More</span> ...
             </b-button>
@@ -86,11 +83,12 @@
       <b-card-body>
         <p class="card-text">
           <b-form-group>
-            <b-form-checkbox-group stacked v-model="facetsModel.selectedYears" name="pubYearFacets" :options="lessData(facetOptions(facetsModel.countsOfAllYears))"></b-form-checkbox-group>
-             <b-collapse id="my-collapse">
-                    <b-form-checkbox-group stacked v-model="facetsModel.selectedYears" name="yearsFacets"
-              :options="moreData(facetOptions(facetsModel.countsOfAllYears))"></b-form-checkbox-group>
-                  </b-collapse>
+            <b-form-checkbox-group stacked v-model="facetsModel.selectedYears" name="pubYearFacets"
+              :options="lessData(facetOptions(facetsModel.countsOfAllYears))"></b-form-checkbox-group>
+            <b-collapse id="my-collapse">
+              <b-form-checkbox-group stacked v-model="facetsModel.selectedYears" name="yearsFacets"
+                :options="moreData(facetOptions(facetsModel.countsOfAllYears))"></b-form-checkbox-group>
+            </b-collapse>
             <b-button v-b-toggle.my-collapse variant="link">
               <span class="when-opened2">Less</span> <span class="when-closed2">More</span> ...
             </b-button>
@@ -114,11 +112,12 @@
       <b-card-body>
         <p class="card-text">
           <b-form-group>
-            <b-form-checkbox-group stacked v-model="facetsModel.selectedLanguages" name="LanguageFacets" :options="lessData(facetOptions(facetsModel.countsOfAllLanguages))"></b-form-checkbox-group>
-             <b-collapse id="my-collapse">
-                    <b-form-checkbox-group stacked v-model="facetsModel.selectedLanguages" name="languagesFacets"
-              :options="moreData(facetOptions(facetsModel.countsOfAllLanguages))"></b-form-checkbox-group>
-                  </b-collapse>
+            <b-form-checkbox-group stacked v-model="facetsModel.selectedLanguages" name="LanguageFacets"
+              :options="lessData(facetOptions(facetsModel.countsOfAllLanguages))"></b-form-checkbox-group>
+            <b-collapse id="my-collapse">
+              <b-form-checkbox-group stacked v-model="facetsModel.selectedLanguages" name="languagesFacets"
+                :options="moreData(facetOptions(facetsModel.countsOfAllLanguages))"></b-form-checkbox-group>
+            </b-collapse>
             <b-button v-b-toggle.my-collapse variant="link">
               <span class="when-opened2">Less</span> <span class="when-closed2">More</span> ...
             </b-button>
@@ -127,9 +126,10 @@
       </b-card-body>
     </b-collapse>
   </b-card>
-  <div class="all-facets-buttons" >
-    <b-button block class="facets-button" variant="primary"   @click="doFilter">Apply</b-button>
-    <b-button block class="facets-button" variant="secondary" @click="clearAllFacets" :disabled="! anyFacetValueSelected">Clear All</b-button>
+  <div class="all-facets-buttons">
+    <b-button block class="facets-button" variant="primary" @click="doFilter">Apply</b-button>
+    <b-button block class="facets-button" variant="secondary" @click="clearAllFacets"
+      :disabled="! anyFacetValueSelected">Clear All</b-button>
   </div>
 </div>
 </template>
@@ -141,9 +141,12 @@ export default {
 
   name: 'search-facets',
   data() {
-    return {}
+    return {
+      showLess: true,
+      valuesToShow: 3
+    }
   },
-
+  
   computed: {
 
     anyFacetValueSelected: function() {
@@ -188,9 +191,12 @@ export default {
 
     moreData(arr) {
       return arr.slice(5)
-    }
+    },
 
-    ,
+    displayList(arr, countValues) {
+    return this.showLess ? arr.slice(0, countValues) : arr;
+  },
+
     doFilter() {
       this.$store.dispatch('filter', this.facetsModel)
     }

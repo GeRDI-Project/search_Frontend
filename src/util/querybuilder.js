@@ -39,7 +39,8 @@ export default {
                         Publisher: {
                           terms: {
                             field: 'publisher.raw',
-                            order : { '_count' : 'desc' }
+                            order : { '_count' : 'desc' },
+                            size: 300
                           }
                         },
                         Creator: {
