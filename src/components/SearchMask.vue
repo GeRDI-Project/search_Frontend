@@ -4,7 +4,7 @@
     <b-input-group>
       <b-input id="inlineFormInputGroupUsername2" v-model="inputvalue" :placeholder="placeholder" autofocus/>
       <b-input-group-append>
-        <b-btn @click="search" :disabled="inputvalue == $store.getters.getResultsQueryString" variant="primary">Search</b-btn> 
+        <b-btn @click="search" variant="primary">Search</b-btn> 
       </b-input-group-append>
     </b-input-group>
   </b-form>
