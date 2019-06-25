@@ -1,5 +1,5 @@
 /**
- * Copyright 2018 Nelson Tavares de Sousa, Alvaro Aguilera
+ * Copyright 2018 Nelson Tavares de Sousa, Alvaro Aguilera, Ingo Thomsen
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,19 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-// just a example state management with vuex
-
 import Vue from 'vue'
 import Vuex from 'vuex'
 
 import searchModule from './modules/search'
 import collectionsModule from './modules/collections'
+import VuexPersist from 'vuex-persist'
 
 Vue.use(Vuex)
+
+const vuexLocalStorage = new VuexPersist({
+  key: 'vuex-state',
+  storage: window.localStorage
+})
 
 export const store = new Vuex.Store({
   modules: {
     search: searchModule,
     collections: collectionsModule
-  }
+  },
+  plugins: [vuexLocalStorage.plugin]
 })
