@@ -195,14 +195,6 @@ export default {
       }))
     },
 
-    lessData(arr) {
-      return arr.slice(0, 5)
-    },
-
-    moreData(arr) {
-      return arr.slice(5)
-    },
-
     displayValues(arr, stepsValues) {
       if (arr.length != 0) {
         return arr.slice(5, stepsValues);
