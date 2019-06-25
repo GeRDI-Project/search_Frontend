@@ -92,7 +92,6 @@ export default {
   },
   methods: {
     search() {
-      delete this.$route.query.refresh
       let q = this.$route.query.q
       let page = this.currentPage
       this.$store.dispatch('search', {
