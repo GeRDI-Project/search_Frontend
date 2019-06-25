@@ -4,7 +4,7 @@
     <b-input-group>
       <b-input id="inlineFormInputGroupUsername2" v-model="inputvalue" :placeholder="placeholder" autofocus/>
       <b-input-group-append>
-        <b-btn @click="search" variant="primary">Search</b-btn> 
+        <b-btn @click="search" variant="primary">Search</b-btn>
       </b-input-group-append>
     </b-input-group>
   </b-form>
@@ -35,12 +35,16 @@ export default {
     },
     search() {
       if (this.inputvalue !== '') {
-        this.$router.push({
+        let payload = {
           name: 'results',
           query: {
             q: this.inputvalue
           }
-        })
+        }
+        if (this.inputvalue === this.$route.query.q) {
+          payload.query.refresh = true
+        }
+        this.$router.push( payload )
       }
     }
   }
