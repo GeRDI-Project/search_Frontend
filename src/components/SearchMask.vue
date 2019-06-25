@@ -4,7 +4,7 @@
     <b-input-group>
       <b-input id="inlineFormInputGroupUsername2" v-model="inputvalue" :placeholder="placeholder" autofocus/>
       <b-input-group-append>
-        <b-btn @click="search" variant="primary">Search</b-btn>
+        <b-btn @click="search" variant="primary">Search</b-btn> 
       </b-input-group-append>
     </b-input-group>
   </b-form>
@@ -12,7 +12,7 @@
 </template>
 
 <script>
-/*eslint-disable*/
+/* eslint-disable */
 export default {
   name: 'search-mask',
   props: ['loading'],
@@ -34,19 +34,18 @@ export default {
       this.inputvalue = this.$route.query.q
     },
     search() {
-      if (this.inputvalue != '')
+      if (this.inputvalue !== '') {
         this.$router.push({
           name: 'results',
           query: {
             q: this.inputvalue
           }
         })
+      }
     }
   }
 }
 </script>
 
-
 <style scoped>
-
 </style>

@@ -1,5 +1,5 @@
 /**
- * Copyright 2018 Nelson Tavares de Sousa
+ * Copyright 2018 Nelson Tavares de Sousa, Ingo Thomsen
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,19 +16,36 @@
 <template>
 <div class="results">
   <search-mask :query-value="$route.query.q"></search-mask>
-  <h6 v-if="numResults > 0" class="results-annotation"><b>{{ numResults }}</b> results found for <b> {{$route.query.q}} </b></h6>
-  <b-alert class="nothing-found-alert" :show="numResults == 0">Nothing to see here</b-alert>
   <b-container>
     <b-row>
-      <b-col cols="3">
-        <search-facets v-if="numResults > 0"></search-facets>
+      <b-col v-if="anyResults">
+        <h6 class="results-annotation"><b>{{ numResults }}</b> results found for <b> {{$route.query.q}} </b></h6>
       </b-col>
-      <b-col cols="9">
+      <b-col v-else-if="isSearching">
+        <div class="text-center">
+          <b-spinner class="m-4" variant="primary" label="Spinning"></b-spinner>
+        </div>
+      </b-col>
+      <b-col v-else>
+        <b-alert class="nothing-found-alert" show>
+          No results
+        </b-alert>
+      </b-col>
+    </b-row>
+    <b-row v-if="anyResults || anyFacetFilteringApplied">
+      <b-col cols="3">
+        <search-facets/>
+      </b-col>
+      <b-col v-if="anyResults" cols="9">
         <search-result-entry id="result-list" v-for="result in results" :result="result" :key="result._id"></search-result-entry>
       </b-col>
     </b-row>
+    <b-row v-if="anyResults">
+      <b-col>
+        <b-pagination align="center" size="md" :total-rows="numResults" v-model="currentPage" :per-page="numDocsPerPage" @change="paginationInput"/>
+      </b-col>
+    </b-row>
   </b-container>
-  <b-pagination align="center" size="md" :total-rows="numResults" v-model="currentPage" :per-page="numDocsPerPage" @change="paginationInput"/>
 </div>
 </template>
 
@@ -43,6 +60,15 @@ export default {
     }
   },
   computed: {
+    isSearching: function() {
+      return this.$store.getters.isSearching
+    },
+    anyFacetFilteringApplied: function() {
+      return this.$store.getters.areAnyFacetFilteringApplied
+    },
+    anyResults: function() {
+      return (this.$store.getters.getResultsAmount > 0)
+    },
     isChecked: function () {
       return this.$gerdi.aai.isChecked()
     },
@@ -67,7 +93,7 @@ export default {
     isChecked: function () {
       if (this.loadedBookmarks === true || this.$gerdi.aai.getUser() === null) return
       var self = this
-      this.$store.dispatch('refreshCollections', { vm: this }).then(function () {self.loadedBookmarks = true })
+      this.$store.dispatch('refreshCollections', { vm: this }).then(function () { self.loadedBookmarks = true })
     }
   },
   methods: {
@@ -100,7 +126,7 @@ export default {
 .results {
   margin-top: 1rem;
 }
-.nothing-found-alert {
+.nothing-found-alert, .now-searching-alert {
   margin-top: 1rem;
 }
 .pagination {
@@ -109,5 +135,4 @@ export default {
 .results-annotation {
   margin-top: 1rem;
 }
-
 </style>
