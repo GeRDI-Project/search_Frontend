@@ -33,25 +33,29 @@ export default {
                         PublicationYear: {
                           terms: {
                             field: 'publicationYear',
-                            order : { '_count' : 'desc' }
+                            order : { '_count' : 'desc' },
+                            size: 300
                           }
                         },
                         Publisher: {
                           terms: {
                             field: 'publisher.raw',
-                            order : { '_count' : 'desc' }
+                            order : { '_count' : 'desc' },
+                            size: 300
                           }
                         },
                         Creator: {
                           terms: {
                             field: 'creators.creatorName.value.raw',
-                            order : { '_count' : 'desc' }
+                            order : { '_count' : 'desc' },
+                            size: 300
                           }
                         },
                         Language: {
                           terms: {
                             field: 'language',
-                            order : { '_count' : 'desc' }
+                            order : { '_count' : 'desc' },
+                            size: 300
                           }
                         }
                       }
