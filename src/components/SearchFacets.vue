@@ -42,14 +42,14 @@
               :options="facetOptions(facetsModel.countsOfAllPublishers).slice(0,5)">
             </b-form-checkbox-group>
             <b-form-checkbox-group stacked v-model="facetsModel.selectedPublishers" name="publishersFacets"
-              :options="displayValues(facetOptions(facetsModel.countsOfAllPublishers), valuesToShow)">
+              :options="displayValues(facetOptions(facetsModel.countsOfAllPublishers), valuesToShowPublisher)">
             </b-form-checkbox-group>
           </b-form-group>
-          <b-button variant="link" :disabled="facetOptions(facetsModel.countsOfAllPublishers).length <= valuesToShow"
-            @click="valuesToShow += 5">
+          <b-button variant="link" :disabled="facetOptions(facetsModel.countsOfAllPublishers).length <= valuesToShowPublisher"
+            @click="valuesToShowPublisher += 5">
             More
           </b-button>
-          <b-button class="float-right" variant="link" :disabled="valuesToShow == 5" @click="valuesToShow -= 5">
+          <b-button class="float-right" variant="link" :disabled="valuesToShowPublisher == 5" @click="valuesToShowPublisher -= 5">
             Less
           </b-button>
         </p>
@@ -82,13 +82,13 @@
             <b-form-checkbox-group stacked v-model="facetsModel.selectedAuthors" name="authorFacets"
               :options="facetOptions(facetsModel.countsOfAllAuthors).slice(0,5)"></b-form-checkbox-group>
               <b-form-checkbox-group stacked v-model="facetsModel.selectedAuthors" name="authorsFacets"
-                :options="displayValues(facetOptions(facetsModel.countsOfAllAuthors), valuesToShow)"></b-form-checkbox-group>
+                :options="displayValues(facetOptions(facetsModel.countsOfAllAuthors), valuesToShowAuthor)"></b-form-checkbox-group>
           </b-form-group>
-           <b-button variant="link" :disabled="facetOptions(facetsModel.countsOfAllAuthors).length <= valuesToShow"
-            @click="valuesToShow += 5">
+           <b-button variant="link" :disabled="facetOptions(facetsModel.countsOfAllAuthors).length <= valuesToShowAuthor"
+            @click="valuesToShowAuthor += 5">
             More
           </b-button>
-          <b-button class="float-right" variant="link" :disabled="valuesToShow == 5" @click="valuesToShow -= 5">
+          <b-button class="float-right" variant="link" :disabled="valuesToShowAuthor == 5" @click="valuesToShowAuthor -= 5">
             Less
           </b-button>
         </p>
@@ -121,13 +121,13 @@
             <b-form-checkbox-group stacked v-model="facetsModel.selectedYears" name="pubYearFacets"
               :options="facetOptions(facetsModel.countsOfAllYears).slice(0,5)"></b-form-checkbox-group>
               <b-form-checkbox-group stacked v-model="facetsModel.selectedYears" name="yearsFacets"
-                :options="displayValues(facetOptions(facetsModel.countsOfAllYears), valuesToShow)"></b-form-checkbox-group>
+                :options="displayValues(facetOptions(facetsModel.countsOfAllYears), valuesToShowYear)"></b-form-checkbox-group>
           </b-form-group>
-          <b-button variant="link" :disabled="facetOptions(facetsModel.countsOfAllYears).length <= valuesToShow"
-            @click="valuesToShow += 5">
+          <b-button variant="link" :disabled="facetOptions(facetsModel.countsOfAllYears).length <= valuesToShowYear"
+            @click="valuesToShowYear += 5">
             More
           </b-button>
-          <b-button class="float-right" variant="link" :disabled="valuesToShow == 5" @click="valuesToShow -= 5">
+          <b-button class="float-right" variant="link" :disabled="valuesToShowYear == 5" @click="valuesToShowYear -= 5">
             Less
           </b-button>
         </p>
@@ -160,13 +160,13 @@
             <b-form-checkbox-group stacked v-model="facetsModel.selectedLanguages" name="LanguageFacets"
               :options="facetOptions(facetsModel.countsOfAllLanguages).slice(0,5)"></b-form-checkbox-group>
               <b-form-checkbox-group stacked v-model="facetsModel.selectedLanguages" name="languagesFacets"
-                :options="displayValues(facetOptions(facetsModel.countsOfAllLanguages), valuesToShow)"></b-form-checkbox-group>
+                :options="displayValues(facetOptions(facetsModel.countsOfAllLanguages), valuesToShowLanguage)"></b-form-checkbox-group>
           </b-form-group>
-           <b-button variant="link" :disabled="facetOptions(facetsModel.countsOfAllLanguages).length <= valuesToShow"
-            @click="valuesToShow += 5">
+           <b-button variant="link" :disabled="facetOptions(facetsModel.countsOfAllLanguages).length <= valuesToShowLanguage"
+            @click="valuesToShowLanguage += 5">
             More
           </b-button>
-          <b-button class="float-right" variant="link" :disabled="valuesToShow == 5" @click="valuesToShow -= 5">
+          <b-button class="float-right" variant="link" :disabled="valuesToShowLanguage == 5" @click="valuesToShowLanguage -= 5">
             Less
           </b-button>
         </p>
@@ -187,7 +187,10 @@ export default {
   name: 'search-facets',
   data() {
     return {
-      valuesToShow: 5
+      valuesToShowPublisher: 5,
+      valuesToShowAuthor: 5,
+      valuesToShowYear: 5,
+      valuesToShowLanguage: 5
     }
   },
 
