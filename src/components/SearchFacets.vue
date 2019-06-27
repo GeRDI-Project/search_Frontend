@@ -29,10 +29,10 @@
     <b-collapse id="accordion1" visible accordion="accordion1" role="tabpanel">
       <b-card-body>
         <div>
-          <b-button variant="link" :disabled="facetsModel.selectedPublishers.length == Object.keys(facetsModel.countsOfAllPublishers).length" @click="facetsModel.selectedPublishers = Object.keys(facetsModel.countsOfAllPublishers)">
+          <b-button variant="link" :disabled="selectedPublishers.length == Object.keys(countsOfAllPublishers).length" @click="gi.selectedPublishers = Object.keys(countsOfAllPublishers)">
             Select all
           </b-button>
-          <b-button class="clear-all" variant="link" :disabled="facetsModel.selectedPublishers.length == 0" @click="facetsModel.selectedPublishers = []">
+          <b-button class="clear-all" variant="link" :disabled="selectedPublishers.length == 0" @click="facetsModel.selectedPublishers = []">
             Clear all
           </b-button>
         </div>
@@ -70,10 +70,10 @@
     <b-collapse id="accordion2" visible accordion="accordion2" role="tabpanel">
       <b-card-body>
         <div>
-          <b-button variant="link" :disabled="facetsModel.selectedAuthors.length == Object.keys(facetsModel.countsOfAllAuthors).length" @click="facetsModel.selectedAuthors = Object.keys(facetsModel.countsOfAllAuthors)">
+          <b-button variant="link" :disabled="selectedAuthors.length == Object.keys(countsOfAllAuthors).length" @click="facetsModel.selectedAuthors = Object.keys(countsOfAllAuthors)">
             Select all
           </b-button>
-            <b-button class="clear-all" variant="link" :disabled="facetsModel.selectedAuthors.length == 0"  @click="facetsModel.selectedAuthors = []">
+            <b-button class="clear-all" variant="link" :disabled="selectedAuthors.length == 0"  @click="facetsModel.selectedAuthors = []">
             Clear all
           </b-button>
         </div>
@@ -109,10 +109,10 @@
     <b-collapse id="accordion3" visible accordion="accordion3" role="tabpanel">
       <b-card-body>
         <div>
-          <b-button variant="link" :disabled="facetsModel.selectedYears.length == Object.keys(facetsModel.countsOfAllYears).length" @click="facetsModel.selectedYears = Object.keys(facetsModel.countsOfAllYears)">
+          <b-button variant="link" :disabled="selectedYears.length == Object.keys(countsOfAllYears).length" @click="facetsModel.selectedYears = Object.keys(countsOfAllYears)">
             Select all
           </b-button>
-            <b-button class="clear-all" variant="link" :disabled="facetsModel.selectedYears.length == 0"  @click="facetsModel.selectedYears = []">
+            <b-button class="clear-all" variant="link" :disabled="selectedYears.length == 0"  @click="facetsModel.selectedYears = []">
             Clear all
           </b-button>
         </div>
@@ -148,10 +148,10 @@
     <b-collapse id="accordion4" visible accordion="accordion4" role="tabpanel">
       <b-card-body>
         <div>
-          <b-button variant="link" :disabled="facetsModel.selectedLanguages.length == Object.keys(facetsModel.countsOfAllLanguages).length" @click="facetsModel.selectedLanguages = Object.keys(facetsModel.countsOfAllLanguages)">
+          <b-button variant="link" :disabled="selectedLanguages.length == Object.keys(countsOfAllLanguages).length" @click="facetsModel.selectedLanguages = Object.keys(countsOfAllLanguages)">
             Select all
           </b-button>
-            <b-button class="clear-all" variant="link" :disabled="facetsModel.selectedLanguages.length == 0"  @click="facetsModel.selectedLanguages = []">
+            <b-button class="clear-all" variant="link" :disabled="selectedLanguages.length == 0"  @click="facetsModel.selectedLanguages = []">
             Clear all
           </b-button>
         </div>
@@ -207,7 +207,17 @@ export default {
       set: function (val) {
         this.$store.commit('updateFacetsModel', val)
       }
-    }
+    },
+
+    selectedPublishers: function() { return this.facetsModel.selectedPublishers },
+    selectedAuthors: function() { return this.facetsModel.selectedAuthors },
+    selectedYears: function() { return this.facetsModel.selectedYears },
+    selectedLanguages: function() { return this.facetsModel.selectedLanguages },
+
+    countsOfAllPublishers: function() { return this.facetsModel.countsOfAllPublishers },
+    countsOfAllAuthors: function() { return this.facetsModel.countsOfAllAuthors },
+    countsOfAllYears: function() { return this.facetsModel.countsOfAllYears },
+    countsOfAllLanguages: function() { return this.facetsModel.countsOfAllLanguages }
   },
 
   methods: {
