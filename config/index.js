@@ -12,7 +12,7 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: {
       '/api': {
-        target: 'https://www.test.gerdi.org',
+        target: 'https://www.demo.gerdi.org',
         changeOrigin: true,
 
       }
