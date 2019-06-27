@@ -39,13 +39,13 @@
         <p class="card-text">
           <b-form-group>
             <b-form-checkbox-group stacked v-model="facetsModel.selectedPublishers" name="publishersFacets"
-              :options="facetOptions(facetsModel.countsOfAllPublishers).slice(0,5)">
+              :options="facetOptionsPublisher.slice(0,5)">
             </b-form-checkbox-group>
             <b-form-checkbox-group stacked v-model="facetsModel.selectedPublishers" name="publishersFacets"
-              :options="displayValues(facetOptions(facetsModel.countsOfAllPublishers), valuesToShowPublisher)">
+              :options="displayValues(facetOptionsPublisher, valuesToShowPublisher)">
             </b-form-checkbox-group>
           </b-form-group>
-          <b-button variant="link" :disabled="facetOptions(facetsModel.countsOfAllPublishers).length <= valuesToShowPublisher"
+          <b-button variant="link" :disabled="facetOptionsPublisher.length <= valuesToShowPublisher"
             @click="valuesToShowPublisher += 5">
             More
           </b-button>
@@ -80,11 +80,11 @@
         <p class="card-text">
           <b-form-group>
             <b-form-checkbox-group stacked v-model="facetsModel.selectedAuthors" name="authorFacets"
-              :options="facetOptions(facetsModel.countsOfAllAuthors).slice(0,5)"></b-form-checkbox-group>
+              :options="facetOptionsAuthor.slice(0,5)"></b-form-checkbox-group>
               <b-form-checkbox-group stacked v-model="facetsModel.selectedAuthors" name="authorsFacets"
-                :options="displayValues(facetOptions(facetsModel.countsOfAllAuthors), valuesToShowAuthor)"></b-form-checkbox-group>
+                :options="displayValues(facetOptionsAuthor, valuesToShowAuthor)"></b-form-checkbox-group>
           </b-form-group>
-           <b-button variant="link" :disabled="facetOptions(facetsModel.countsOfAllAuthors).length <= valuesToShowAuthor"
+           <b-button variant="link" :disabled="facetOptionsAuthor.length <= valuesToShowAuthor"
             @click="valuesToShowAuthor += 5">
             More
           </b-button>
@@ -119,11 +119,11 @@
         <p class="card-text">
           <b-form-group>
             <b-form-checkbox-group stacked v-model="facetsModel.selectedYears" name="pubYearFacets"
-              :options="facetOptions(facetsModel.countsOfAllYears).slice(0,5)"></b-form-checkbox-group>
+              :options="facetOptionsYear.slice(0,5)"></b-form-checkbox-group>
               <b-form-checkbox-group stacked v-model="facetsModel.selectedYears" name="yearsFacets"
-                :options="displayValues(facetOptions(facetsModel.countsOfAllYears), valuesToShowYear)"></b-form-checkbox-group>
+                :options="displayValues(facetOptionsYear, valuesToShowYear)"></b-form-checkbox-group>
           </b-form-group>
-          <b-button variant="link" :disabled="facetOptions(facetsModel.countsOfAllYears).length <= valuesToShowYear"
+          <b-button variant="link" :disabled="facetOptionsYear.length <= valuesToShowYear"
             @click="valuesToShowYear += 5">
             More
           </b-button>
@@ -158,11 +158,11 @@
         <p class="card-text">
           <b-form-group>
             <b-form-checkbox-group stacked v-model="facetsModel.selectedLanguages" name="LanguageFacets"
-              :options="facetOptions(facetsModel.countsOfAllLanguages).slice(0,5)"></b-form-checkbox-group>
+              :options="facetOptionsLanguage.slice(0,5)"></b-form-checkbox-group>
               <b-form-checkbox-group stacked v-model="facetsModel.selectedLanguages" name="languagesFacets"
-                :options="displayValues(facetOptions(facetsModel.countsOfAllLanguages), valuesToShowLanguage)"></b-form-checkbox-group>
+                :options="displayValues(facetOptionsLanguage, valuesToShowLanguage)"></b-form-checkbox-group>
           </b-form-group>
-           <b-button variant="link" :disabled="facetOptions(facetsModel.countsOfAllLanguages).length <= valuesToShowLanguage"
+           <b-button variant="link" :disabled="facetOptionsLanguage.length <= valuesToShowLanguage"
             @click="valuesToShowLanguage += 5">
             More
           </b-button>
@@ -183,10 +183,14 @@
 <script>
 /* eslint-disable */
 export default {
-
+  
   name: 'search-facets',
   data() {
     return {
+      facetOptionsPublisher: [],
+      facetOptionsAuthor: [],
+      facetOptionsYear: [],
+      facetOptionsLanguage: [],
       valuesToShowPublisher: 5,
       valuesToShowAuthor: 5,
       valuesToShowYear: 5,
@@ -194,11 +198,15 @@ export default {
     }
   },
 
-  computed: {
+  created: function() {
+    this.createAllFacetOptions()
+  },
 
     aggs: function() {
       return this.$store.getters.getAggregations
     },
+
+  computed: {
 
     facetsModel: {
       get: function () {
@@ -228,12 +236,34 @@ export default {
       this.facetsModel.selectedLanguages = []
     },
 
-    facetOptions(allCounts) {
-      return Object.entries(allCounts).map(x => ({
-        text: x[0] + ' - (' + x[1] + ')',
-        value: x[0],
-        disabled: x[1] === 0
-      }))
+    createAllFacetOptions() {
+      this.facetOptionsPublisher = this.createSortedOptionsForAFacet(this.countsOfAllPublishers, this.facetsModel.selectedPublishers)
+      this.facetOptionsAuthor = this.createSortedOptionsForAFacet(this.countsOfAllAuthors, this.facetsModel.selectedAuthors)
+      this.facetOptionsYear = this.createSortedOptionsForAFacet(this.countsOfAllYears, this.facetsModel.selectedYears)
+      this.facetOptionsLanguage = this.createSortedOptionsForAFacet(this.countsOfAllLanguages, this.facetsModel.selectedLanguages)
+    },
+
+    createSortedOptionsForAFacet(allCounts, selectedEntries) {
+
+      var allSelected = []
+      var allUnselected = []
+      var allDisabled = []
+
+      Object.entries(allCounts).forEach( element => {
+        let value = element[0]        
+        let count = element[1]        
+        let option = {
+          text: value + " - (" + count + ")",
+          value: value,
+        }                
+        if (count == 0) {
+          option.disabled = true
+          allDisabled.push(option)
+        } else {
+          (selectedEntries.includes(value) ? allSelected : allUnselected).push(option)
+        }
+      })
+      return Array.concat(allSelected, allUnselected, allDisabled)
     },
 
     displayValues(arr, stepsValues) {
