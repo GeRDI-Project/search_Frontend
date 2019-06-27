@@ -183,7 +183,7 @@
 <script>
 /* eslint-disable */
 export default {
-  
+
   name: 'search-facets',
   data() {
     return {
@@ -202,9 +202,12 @@ export default {
     this.createAllFacetOptions()
   },
 
-    aggs: function() {
-      return this.$store.getters.getAggregations
-    },
+  watch: {
+    countsOfAllPublishers: function() { this.facetOptionsPublisher = this.createSortedOptionsForAFacet(this.countsOfAllPublishers, this.selectedPublishers )},
+    countsOfAllAuthors: function() { this.facetOptionsAuthor = this.createSortedOptionsForAFacet(this.countsOfAllAuthors, this.selectedAuthors )},
+    countsOfAllYears: function() { this.facetOptionsYear = this.createSortedOptionsForAFacet(this.countsOfAllYears, this.selectedYears )},
+    countsOfAllLanguages: function() { this.facetOptionsLanguage = this.createSortedOptionsForAFacet(this.countsOfAllLanguages, this.selectedLanguages )}
+  },
 
   computed: {
 
@@ -229,6 +232,7 @@ export default {
   },
 
   methods: {
+
     clearAllFacets() {
       this.facetsModel.selectedPublishers = []
       this.facetsModel.selectedAuthors = []
@@ -250,12 +254,12 @@ export default {
       var allDisabled = []
 
       Object.entries(allCounts).forEach( element => {
-        let value = element[0]        
-        let count = element[1]        
+        let value = element[0]
+        let count = element[1]
         let option = {
           text: value + " - (" + count + ")",
           value: value,
-        }                
+        }
         if (count == 0) {
           option.disabled = true
           allDisabled.push(option)

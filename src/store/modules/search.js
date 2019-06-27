@@ -180,17 +180,31 @@ const mutations = {
     }
   },
   updateFacetsModel (state) {
-    function setCountsToNullAndUpdate (currentSelection, lastSelection, counts, buckets, converter = x => x) {
-      if (lastSelection.length === currentSelection.length && lastSelection.every(e => currentSelection.includes(e))) {
-        Object.keys(counts).forEach(k => { counts[k] = 0 })
-        buckets.forEach(x => { counts[converter(x.key)] = x.doc_count })
-      }
+    function selectionHasChanged(currentSelection, lastSelection) {
+      lastSelection.length === currentSelection.length && lastSelection.every(e => currentSelection.includes(e))
     }
+
+    function createNewCounts (counts, buckets, converter = x => x) {
+        let new_counts = {}      
+        Object.keys(counts).forEach(k => { new_counts[k] = 0 })
+        buckets.forEach(x => { new_counts[converter(x.key)] = x.doc_count })
+        return new_counts
+    }
+
     var fm = state.facetsModel
-    setCountsToNullAndUpdate(fm.selectedPublishers, fm.selectedPublishersForLastFiltering, fm.countsOfAllPublishers, state.results.aggregations.Publisher.buckets)
-    setCountsToNullAndUpdate(fm.selectedAuthors,    fm.selectedAuthorsForLastFiltering,    fm.countsOfAllAuthors,    state.results.aggregations.Creator.buckets)
-    setCountsToNullAndUpdate(fm.selectedLanguages,  fm.selectedLanguagesForLastFiltering,  fm.countsOfAllLanguages,  state.results.aggregations.Language.buckets)
-    setCountsToNullAndUpdate(fm.selectedYears,      fm.selectedYearsForLastFiltering,      fm.countsOfAllYears,      state.results.aggregations.PublicationYear.buckets, x => new Date(x).getYear() + 1900)
+    if (fm.selectedPublishers, fm.selectedPublishersForLastFiltering) {
+      fm.countsOfAllPublishers = createNewCounts(fm.countsOfAllPublishers, state.results.aggregations.Publisher.buckets)
+    }
+    if (fm.selectedAuthors,    fm.selectedAuthorsForLastFiltering) {
+      fm.countsOfAllAuthors = createNewCounts(fm.countsOfAllAuthors, state.results.aggregations.Creator.buckets)
+    }
+    if (fm.selectedLanguages,  fm.selectedLanguagesForLastFiltering) {
+      fm.countsOfAllLanguages = createNewCounts(fm.countsOfAllLanguages, state.results.aggregations.Language.buckets)
+    }
+    if (fm.selectedYears,      fm.selectedYearsForLastFiltering) {
+      fm.countsOfAllYears = createNewCounts(fm.countsOfAllYears, state.results.aggregations.PublicationYear.buckets, x => new Date(x).getYear() + 1900)
+    }
+
     // save current facets
     fm.selectedPublishersForLastFiltering = fm.selectedPublishers.slice(0)
     fm.selectedYearsForLastFiltering = fm.selectedYears.slice(0)
