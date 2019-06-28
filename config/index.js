@@ -12,9 +12,8 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: {
       '/api': {
-        target: 'https://www.demo.gerdi.org',
+        target: 'https://www.test.gerdi.org',
         changeOrigin: true,
-
       }
     },
 
@@ -36,7 +35,6 @@ module.exports = {
     /**
      * Source Maps
      */
-
     // https://webpack.js.org/configuration/devtool/#development
     devtool: 'eval-source-map',
 
@@ -65,7 +63,6 @@ module.exports = {
     /**
      * Source Maps
      */
-
     productionSourceMap: true,
     // https://webpack.js.org/configuration/devtool/#production
     devtool: '#source-map',

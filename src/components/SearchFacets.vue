@@ -29,23 +29,23 @@
     <b-collapse id="accordion1" visible accordion="accordion1" role="tabpanel">
       <b-card-body>
         <div>
-          <b-button variant="link" :disabled="facetsModel.selectedPublishers.length == Object.keys(facetsModel.countsOfAllPublishers).length" @click="facetsModel.selectedPublishers = Object.keys(facetsModel.countsOfAllPublishers)">
+          <b-button variant="link" :disabled="selectedPublishers.length == Object.keys(countsOfAllPublishers).length" @click="gi.selectedPublishers = Object.keys(countsOfAllPublishers)">
             Select all
           </b-button>
-          <b-button class="clear-all" variant="link" :disabled="facetsModel.selectedPublishers.length == 0" @click="facetsModel.selectedPublishers = []">
+          <b-button class="clear-all" variant="link" :disabled="selectedPublishers.length == 0" @click="facetsModel.selectedPublishers = []">
             Clear all
           </b-button>
         </div>
         <p class="card-text">
           <b-form-group>
             <b-form-checkbox-group stacked v-model="facetsModel.selectedPublishers" name="publishersFacets"
-              :options="facetOptions(facetsModel.countsOfAllPublishers).slice(0,5)">
+              :options="facetOptionsPublisher.slice(0,5)">
             </b-form-checkbox-group>
             <b-form-checkbox-group stacked v-model="facetsModel.selectedPublishers" name="publishersFacets"
-              :options="displayValues(facetOptions(facetsModel.countsOfAllPublishers), valuesToShowPublisher)">
+              :options="displayValues(facetOptionsPublisher, valuesToShowPublisher)">
             </b-form-checkbox-group>
           </b-form-group>
-          <b-button variant="link" :disabled="facetOptions(facetsModel.countsOfAllPublishers).length <= valuesToShowPublisher"
+          <b-button variant="link" :disabled="facetOptionsPublisher.length <= valuesToShowPublisher"
             @click="valuesToShowPublisher += 5">
             More
           </b-button>
@@ -70,21 +70,21 @@
     <b-collapse id="accordion2" visible accordion="accordion2" role="tabpanel">
       <b-card-body>
         <div>
-          <b-button variant="link" :disabled="facetsModel.selectedAuthors.length == Object.keys(facetsModel.countsOfAllAuthors).length" @click="facetsModel.selectedAuthors = Object.keys(facetsModel.countsOfAllAuthors)">
+          <b-button variant="link" :disabled="selectedAuthors.length == Object.keys(countsOfAllAuthors).length" @click="facetsModel.selectedAuthors = Object.keys(countsOfAllAuthors)">
             Select all
           </b-button>
-            <b-button class="clear-all" variant="link" :disabled="facetsModel.selectedAuthors.length == 0"  @click="facetsModel.selectedAuthors = []">
+            <b-button class="clear-all" variant="link" :disabled="selectedAuthors.length == 0"  @click="facetsModel.selectedAuthors = []">
             Clear all
           </b-button>
         </div>
         <p class="card-text">
           <b-form-group>
             <b-form-checkbox-group stacked v-model="facetsModel.selectedAuthors" name="authorFacets"
-              :options="facetOptions(facetsModel.countsOfAllAuthors).slice(0,5)"></b-form-checkbox-group>
+              :options="facetOptionsAuthor.slice(0,5)"></b-form-checkbox-group>
               <b-form-checkbox-group stacked v-model="facetsModel.selectedAuthors" name="authorsFacets"
-                :options="displayValues(facetOptions(facetsModel.countsOfAllAuthors), valuesToShowAuthor)"></b-form-checkbox-group>
+                :options="displayValues(facetOptionsAuthor, valuesToShowAuthor)"></b-form-checkbox-group>
           </b-form-group>
-           <b-button variant="link" :disabled="facetOptions(facetsModel.countsOfAllAuthors).length <= valuesToShowAuthor"
+           <b-button variant="link" :disabled="facetOptionsAuthor.length <= valuesToShowAuthor"
             @click="valuesToShowAuthor += 5">
             More
           </b-button>
@@ -109,21 +109,21 @@
     <b-collapse id="accordion3" visible accordion="accordion3" role="tabpanel">
       <b-card-body>
         <div>
-          <b-button variant="link" :disabled="facetsModel.selectedYears.length == Object.keys(facetsModel.countsOfAllYears).length" @click="facetsModel.selectedYears = Object.keys(facetsModel.countsOfAllYears)">
+          <b-button variant="link" :disabled="selectedYears.length == Object.keys(countsOfAllYears).length" @click="facetsModel.selectedYears = Object.keys(countsOfAllYears)">
             Select all
           </b-button>
-            <b-button class="clear-all" variant="link" :disabled="facetsModel.selectedYears.length == 0"  @click="facetsModel.selectedYears = []">
+            <b-button class="clear-all" variant="link" :disabled="selectedYears.length == 0"  @click="facetsModel.selectedYears = []">
             Clear all
           </b-button>
         </div>
         <p class="card-text">
           <b-form-group>
             <b-form-checkbox-group stacked v-model="facetsModel.selectedYears" name="pubYearFacets"
-              :options="facetOptions(facetsModel.countsOfAllYears).slice(0,5)"></b-form-checkbox-group>
+              :options="facetOptionsYear.slice(0,5)"></b-form-checkbox-group>
               <b-form-checkbox-group stacked v-model="facetsModel.selectedYears" name="yearsFacets"
-                :options="displayValues(facetOptions(facetsModel.countsOfAllYears), valuesToShowYear)"></b-form-checkbox-group>
+                :options="displayValues(facetOptionsYear, valuesToShowYear)"></b-form-checkbox-group>
           </b-form-group>
-          <b-button variant="link" :disabled="facetOptions(facetsModel.countsOfAllYears).length <= valuesToShowYear"
+          <b-button variant="link" :disabled="facetOptionsYear.length <= valuesToShowYear"
             @click="valuesToShowYear += 5">
             More
           </b-button>
@@ -148,21 +148,21 @@
     <b-collapse id="accordion4" visible accordion="accordion4" role="tabpanel">
       <b-card-body>
         <div>
-          <b-button variant="link" :disabled="facetsModel.selectedLanguages.length == Object.keys(facetsModel.countsOfAllLanguages).length" @click="facetsModel.selectedLanguages = Object.keys(facetsModel.countsOfAllLanguages)">
+          <b-button variant="link" :disabled="selectedLanguages.length == Object.keys(countsOfAllLanguages).length" @click="facetsModel.selectedLanguages = Object.keys(countsOfAllLanguages)">
             Select all
           </b-button>
-            <b-button class="clear-all" variant="link" :disabled="facetsModel.selectedLanguages.length == 0"  @click="facetsModel.selectedLanguages = []">
+            <b-button class="clear-all" variant="link" :disabled="selectedLanguages.length == 0"  @click="facetsModel.selectedLanguages = []">
             Clear all
           </b-button>
         </div>
         <p class="card-text">
           <b-form-group>
             <b-form-checkbox-group stacked v-model="facetsModel.selectedLanguages" name="LanguageFacets"
-              :options="facetOptions(facetsModel.countsOfAllLanguages).slice(0,5)"></b-form-checkbox-group>
+              :options="facetOptionsLanguage.slice(0,5)"></b-form-checkbox-group>
               <b-form-checkbox-group stacked v-model="facetsModel.selectedLanguages" name="languagesFacets"
-                :options="displayValues(facetOptions(facetsModel.countsOfAllLanguages), valuesToShowLanguage)"></b-form-checkbox-group>
+                :options="displayValues(facetOptionsLanguage, valuesToShowLanguage)"></b-form-checkbox-group>
           </b-form-group>
-           <b-button variant="link" :disabled="facetOptions(facetsModel.countsOfAllLanguages).length <= valuesToShowLanguage"
+           <b-button variant="link" :disabled="facetOptionsLanguage.length <= valuesToShowLanguage"
             @click="valuesToShowLanguage += 5">
             More
           </b-button>
@@ -187,6 +187,10 @@ export default {
   name: 'search-facets',
   data() {
     return {
+      facetOptionsPublisher: [],
+      facetOptionsAuthor: [],
+      facetOptionsYear: [],
+      facetOptionsLanguage: [],
       valuesToShowPublisher: 5,
       valuesToShowAuthor: 5,
       valuesToShowYear: 5,
@@ -194,11 +198,18 @@ export default {
     }
   },
 
-  computed: {
+  created: function() {
+    this.createAllFacetOptions()
+  },
 
-    aggs: function() {
-      return this.$store.getters.getAggregations
-    },
+  watch: {
+    countsOfAllPublishers: function() { this.facetOptionsPublisher = this.createSortedOptionsForAFacet(this.countsOfAllPublishers, this.selectedPublishers )},
+    countsOfAllAuthors: function() { this.facetOptionsAuthor = this.createSortedOptionsForAFacet(this.countsOfAllAuthors, this.selectedAuthors )},
+    countsOfAllYears: function() { this.facetOptionsYear = this.createSortedOptionsForAFacet(this.countsOfAllYears, this.selectedYears )},
+    countsOfAllLanguages: function() { this.facetOptionsLanguage = this.createSortedOptionsForAFacet(this.countsOfAllLanguages, this.selectedLanguages )}
+  },
+
+  computed: {
 
     facetsModel: {
       get: function () {
@@ -207,10 +218,21 @@ export default {
       set: function (val) {
         this.$store.commit('updateFacetsModel', val)
       }
-    }
+    },
+
+    selectedPublishers: function() { return this.facetsModel.selectedPublishers },
+    selectedAuthors: function() { return this.facetsModel.selectedAuthors },
+    selectedYears: function() { return this.facetsModel.selectedYears },
+    selectedLanguages: function() { return this.facetsModel.selectedLanguages },
+
+    countsOfAllPublishers: function() { return this.facetsModel.countsOfAllPublishers },
+    countsOfAllAuthors: function() { return this.facetsModel.countsOfAllAuthors },
+    countsOfAllYears: function() { return this.facetsModel.countsOfAllYears },
+    countsOfAllLanguages: function() { return this.facetsModel.countsOfAllLanguages }
   },
 
   methods: {
+
     clearAllFacets() {
       this.facetsModel.selectedPublishers = []
       this.facetsModel.selectedAuthors = []
@@ -218,12 +240,34 @@ export default {
       this.facetsModel.selectedLanguages = []
     },
 
-    facetOptions(allCounts) {
-      return Object.entries(allCounts).map(x => ({
-        text: x[0] + ' - (' + x[1] + ')',
-        value: x[0],
-        disabled: x[1] === 0
-      }))
+    createAllFacetOptions() {
+      this.facetOptionsPublisher = this.createSortedOptionsForAFacet(this.countsOfAllPublishers, this.facetsModel.selectedPublishers)
+      this.facetOptionsAuthor = this.createSortedOptionsForAFacet(this.countsOfAllAuthors, this.facetsModel.selectedAuthors)
+      this.facetOptionsYear = this.createSortedOptionsForAFacet(this.countsOfAllYears, this.facetsModel.selectedYears)
+      this.facetOptionsLanguage = this.createSortedOptionsForAFacet(this.countsOfAllLanguages, this.facetsModel.selectedLanguages)
+    },
+
+    createSortedOptionsForAFacet(allCounts, selectedEntries) {
+
+      var allSelected = []
+      var allUnselected = []
+      var allDisabled = []
+
+      Object.entries(allCounts).forEach( element => {
+        let value = element[0]
+        let count = element[1]
+        let option = {
+          text: value + " - (" + count + ")",
+          value: value,
+        }
+        if (count == 0) {
+          option.disabled = true
+          allDisabled.push(option)
+        } else {
+          (selectedEntries.includes(value) ? allSelected : allUnselected).push(option)
+        }
+      })
+      return Array.concat(allSelected, allUnselected, allDisabled)
     },
 
     displayValues(arr, stepsValues) {
