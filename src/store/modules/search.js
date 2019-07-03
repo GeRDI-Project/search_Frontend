@@ -180,14 +180,14 @@ const mutations = {
     }
   },
   updateFacetsModel (state) {
-    
+
     function anyFacetValuesAddedOrOmitted(lastSelection, currentSelection) {
       return {
         added: !currentSelection.every(e => lastSelection.includes(e)),
         omitted: !lastSelection.every(e => currentSelection.includes(e))
       }
     }
-    
+
     function updatedCounts (counts, buckets, invalidPreviousCounts, converter = x => x) {
       let updated_counts = {}
       if (!invalidPreviousCounts) {
@@ -204,19 +204,19 @@ const mutations = {
     let languagesValues = anyFacetValuesAddedOrOmitted(fm.selectedLanguagesForLastFiltering, fm.selectedLanguages)
     let invalidPreviousCounts = publishersValues.omitted || authorsValues.omitted || yearsValues.omitted || languagesValues.omitted
 
-    if (publishersValues.omitted || publishersValues.added) {
+    if (publishersValues.omitted || publishersValues.added || invalidPreviousCounts) {
       fm.countsOfAllPublishers = updatedCounts(fm.countsOfAllPublishers, state.results.aggregations.Publisher.buckets, invalidPreviousCounts)
     }
-    if (authorsValues.omitted || authorsValues.added) {
+    if (authorsValues.omitted || authorsValues.added || invalidPreviousCounts) {
       fm.countsOfAllAuthors = updatedCounts(fm.countsOfAllAuthors, state.results.aggregations.Creator.buckets, invalidPreviousCounts)
     }
-    if (yearsValues.omitted || yearsValues.added) {
+    if (yearsValues.omitted || yearsValues.added || invalidPreviousCounts) {
       fm.countsOfAllYears = updatedCounts(fm.countsOfAllYears, state.results.aggregations.PublicationYear.buckets, invalidPreviousCounts, x => new Date(x).getYear() + 1900)
     }
-    if (languagesValues.omitted || languagesValues.added) {
+    if (languagesValues.omitted || languagesValues.added || invalidPreviousCounts) {
       fm.countsOfAllLanguages = updatedCounts(fm.countsOfAllLanguages, state.results.aggregations.Language.buckets, invalidPreviousCounts)
     }
-    
+
     // save current facets
     fm.selectedPublishersForLastFiltering = fm.selectedPublishers.slice(0)
     fm.selectedYearsForLastFiltering = fm.selectedYears.slice(0)
