@@ -18,13 +18,14 @@ import Vuex from 'vuex'
 
 import searchModule from './modules/search'
 import collectionsModule from './modules/collections'
-import VuexPersist from 'vuex-persist'
+import VuexPersistence from 'vuex-persist'
 
 Vue.use(Vuex)
 
-const vuexLocalStorage = new VuexPersist({
-  key: 'vuex-state',
-  storage: window.localStorage
+const searchState = new VuexPersistence({
+  key: 'vuex-search-state',
+  storage: window.sessionStorage,
+  modules: ['search']
 })
 
 export const store = new Vuex.Store({
@@ -32,5 +33,5 @@ export const store = new Vuex.Store({
     search: searchModule,
     collections: collectionsModule
   },
-  plugins: [vuexLocalStorage.plugin]
+  plugins: [searchState.plugin]
 })
