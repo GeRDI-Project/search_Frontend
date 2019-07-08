@@ -15,11 +15,11 @@
  */
 <template>
 <div class="results">
-  <search-mask :query-value="$route.query.q"></search-mask>
+  <search-mask :query-value="query_string"></search-mask>
   <b-container>
     <b-row>
       <b-col v-if="anyResults">
-        <h6 class="results-annotation"><b>{{ numResults }}</b> results found for <b> {{$route.query.q}} </b></h6>
+        <h6 class="results-annotation"><b>{{ numResults }}</b> results found for <b> {{ query_string }} </b></h6>
       </b-col>
       <b-col v-else-if="isSearching">
         <div class="text-center">
@@ -60,6 +60,9 @@ export default {
     }
   },
   computed: {
+    query_string: function() {
+      return decodeURIComponent(this.$route.query.q)
+    },
     isSearching: function() {
       return this.$store.getters.isSearching
     },
@@ -98,11 +101,9 @@ export default {
   },
   methods: {
     search() {
-      let q = this.$route.query.q
-      let page = this.currentPage
       this.$store.dispatch('search', {
-        query: q,
-        currentPage: page
+        query: this.$route.query.q,
+        currentPage: this.currentPage
       })
     },
     paginationInput(val) {

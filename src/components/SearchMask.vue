@@ -31,14 +31,14 @@ export default {
   },
   methods: {
     checkValue() {
-      this.inputvalue = this.$route.query.q
+      this.inputvalue = this.$route.query.q ? decodeURIComponent(this.$route.query.q) : ""
     },
     search() {
       if (this.inputvalue !== '') {
         this.$router.push({
           name: 'results',
           query: {
-            q: this.inputvalue
+            q: encodeURIComponent(this.inputvalue)
           }
         })
       }
