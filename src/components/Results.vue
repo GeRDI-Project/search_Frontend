@@ -89,7 +89,15 @@ export default {
     }
   },
   created() {
-    this.search()
+    // selected facet values from URI override store
+    if (this.$route.query.s) {
+      this.$store.commit('setSelectedFacetValues', JSON.parse(decodeURIComponent(this.$route.query.s)))
+    }
+    if (this.$store.getters.areAnyFacetValueSelected) {
+      this.filter()
+    } else {
+      this.search()
+    }
   },
   watch: {
     '$route.query': 'search',
@@ -105,6 +113,13 @@ export default {
         query: this.$route.query.q,
         currentPage: this.currentPage
       })
+    },
+    filter() {
+      this.$store.commit('setQueryPayload', {
+        query: this.$route.query.q,
+        currentPage: this.currentPage
+      })
+      this.$store.dispatch('filter')
     },
     paginationInput(val) {
       this.$router.push({

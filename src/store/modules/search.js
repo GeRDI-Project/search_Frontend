@@ -15,6 +15,7 @@
  */
 import axios from 'axios'
 import querybuilder from '../../util/querybuilder.js'
+import router from '../../router'
 
 /* eslint-disable */
 // initial state
@@ -131,6 +132,15 @@ const actions = {
     .catch(function(error) {
       console.log(error)
       commit('setSearchingStatus', false)
+    })
+    let new_query = {
+      q: router.currentRoute.query.q
+    }
+    if (this.getters.areAnyFacetValueSelected) {
+      new_query.s = encodeURIComponent(JSON.stringify(this.getters.getSelectedFacetValues))
+    }
+    router.push({
+      query: new_query
     })
   },
   resetState({commit, state}) {
