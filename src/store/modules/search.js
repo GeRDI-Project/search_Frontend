@@ -68,6 +68,15 @@ const getters = {
   getFacetsModel: state => {
     return state.facetsModel
   },
+  getSelectedFacetValues: state => {
+    var ret = {}
+    var fm = state.facetsModel
+    if (fm.selectedPublishers.length > 0) ret.selectedPublishers = fm.selectedPublishers
+    if (fm.selectedAuthors.length > 0) ret.selectedAuthors = fm.selectedAuthors
+    if (fm.selectedYears.length > 0) ret.selectedYears = fm.selectedYears
+    if (fm.selectedLanguages.length > 0) ret.selectedLanguages = fm.selectedLanguages
+    return ret
+  },
   areAnyFacetValueSelected: state => {
     return state.facetsModel.selectedPublishers.length || state.facetsModel.selectedAuthors.length || state.facetsModel.selectedYears.length || state.facetsModel.selectedLanguages.length
   },
@@ -79,8 +88,8 @@ const getters = {
 // actions
 const actions = {
   search({ commit, state }, payload) {
-    let querystring = payload.query
-    let currentPage = payload.currentPage
+    var querystring = payload.query
+    var currentPage = payload.currentPage
     if (state.queryPayload.query !== querystring) {
       commit('setSearchingStatus', true)
       commit('setQueryPayload', payload)
@@ -103,9 +112,9 @@ const actions = {
         })
     }
   },
-  filter({ commit, state }, facetsModel) {
+  filter({ commit, state }) {
     commit('setSearchingStatus', true)
-    let currentPage = state.queryPayload.currentPage
+    var currentPage = state.queryPayload.currentPage
     commit('setResults', [])
     var url = '/api/search?'
     if (currentPage) {
@@ -113,7 +122,7 @@ const actions = {
     }
     url = url.concat('&size=').concat(state.numDocsPerPage)
     axios.post(url,
-      querybuilder.buildQuery(state.queryPayload.query, facetsModel))
+      querybuilder.buildQuery(state.queryPayload.query, state.facetsModel))
     .then(function(response) {
       commit('setResults', response.data)
       commit('updateFacetsModel')
@@ -158,6 +167,13 @@ const mutations = {
   setFacetsModel (state, newModel) {
     state.facetsModel = newModel
   },
+  setSelectedFacetValues (state, values) {
+    var fm = state.facetsModel
+    fm.selectedPublishers = Array.isArray(values.selectedPublishers) ? values.selectedPublishers : []
+    fm.selectedAuthors = Array.isArray(values.selectedAuthors) ? values.selectedAuthors : []
+    fm.selectedYears = Array.isArray(values.selectedYears) ? values.selectedYears : []
+    fm.selectedLanguages = Array.isArray(values.selectedLanguages) ? values.selectedLanguages : []
+  },
   initFacetsModel (state) {
     function fromBuckets (buckets, converter = x => x) {
       var res = {}
@@ -185,7 +201,7 @@ const mutations = {
     }
 
     function createNewCounts (counts, buckets, converter = x => x) {
-        let new_counts = {}      
+        var new_counts = {}
         Object.keys(counts).forEach(k => { new_counts[k] = 0 })
         buckets.forEach(x => { new_counts[converter(x.key)] = x.doc_count })
         return new_counts

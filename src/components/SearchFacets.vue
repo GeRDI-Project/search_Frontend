@@ -29,7 +29,7 @@
     <b-collapse id="accordion1" visible accordion="accordion1" role="tabpanel">
       <b-card-body>
         <div>
-          <b-button variant="link" :disabled="selectedPublishers.length == Object.keys(countsOfAllPublishers).length" @click="gi.selectedPublishers = Object.keys(countsOfAllPublishers)">
+          <b-button variant="link" :disabled="selectedPublishers.length == Object.keys(countsOfAllPublishers).length" @click="facetsModel.selectedPublishers = Object.keys(countsOfAllPublishers)">
             Select all
           </b-button>
           <b-button class="clear-all" variant="link" :disabled="selectedPublishers.length == 0" @click="facetsModel.selectedPublishers = []">
@@ -279,9 +279,8 @@ export default {
     },
 
     doFilter() {
-      this.$store.dispatch('filter', this.facetsModel)
+      this.$store.dispatch('filter')
     }
-
   }
 }
 </script>
