@@ -107,7 +107,7 @@ const actions = {
           // initFacetsModel
           commit('setSelectedFacetValuesForLastFiltering', {})
           commit('setSelectedFacetValues', {})
-          commit('getCountsFromResults')       
+          commit('getCountsFromResults')
           commit('setSearchingStatus', false)
         })
         .catch(function (error) {
@@ -174,7 +174,7 @@ const mutations = {
     helper.setArrayOrEmpty("selectedAuthorsForLastFiltering", values)
     helper.setArrayOrEmpty("selectedYearsForLastFiltering", values)
     helper.setArrayOrEmpty("selectedLanguagesForLastFiltering", values)
-  }, 
+  },
   setSearchingStatus (state, bool) {
     state.isSearching = bool
   },
@@ -183,7 +183,7 @@ const mutations = {
   },
   setQueryPayload (state, payload) {
     state.queryPayload = payload
-  },   
+  },
   getCountsFromResults (state) {
     function fromBuckets (buckets, converter = x => x) {
       var res = {}
@@ -193,7 +193,7 @@ const mutations = {
     state.facetsModel.countsOfAllPublishers = fromBuckets(state.results.aggregations.Publisher.buckets)
     state.facetsModel.countsOfAllAuthors = fromBuckets(state.results.aggregations.Creator.buckets)
     state.facetsModel.countsOfAllYears = fromBuckets(state.results.aggregations.PublicationYear.buckets, x => new Date(x).getYear() + 1900)
-    state.facetsModel.countsOfAllLanguages = fromBuckets(state.results.aggregations.Language.buckets) 
+    state.facetsModel.countsOfAllLanguages = fromBuckets(state.results.aggregations.Language.buckets)
   },
   updateFacetsModel (state) {
 
@@ -245,7 +245,7 @@ const mutations = {
 
 const helper = {
   setArrayOrEmpty (key, values) {
-    state.facetsModel[key] = Array.isArray(values[key]) ? values[key] : []    
+    state.facetsModel[key] = Array.isArray(values[key]) ? values[key] : []
   }
 }
 

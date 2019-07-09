@@ -1,5 +1,5 @@
 /**
- * Copyright 2018 Nelson Tavares de Sousa, Ingo Thomsen
+ * Copyright 2019 Nelson Tavares de Sousa, Ingo Thomsen
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -119,7 +119,7 @@ export default {
         query: this.$route.query.q,
         currentPage: this.currentPage
       })
-      this.$store.dispatch('filter')
+      this.$store.dispatch('filter', true)
     },
     paginationInput(val) {
       this.$router.push({
