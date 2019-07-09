@@ -1,5 +1,5 @@
 /**
- * Copyright 2018 Nelson Tavares de Sousa, Ingo Thomsen
+ * Copyright 2019 Nelson Tavares de Sousa, Ingo Thomsen
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -104,7 +104,10 @@ const actions = {
         querybuilder.buildQuery(querystring, {}))
         .then(function (response) {
           commit('setResults', response.data)
-          commit('initFacetsModel')
+          // initFacetsModel
+          commit('setSelectedFacetValuesForLastFiltering', {})
+          commit('setSelectedFacetValues', {})
+          commit('getCountsFromResults')       
           commit('setSearchingStatus', false)
         })
         .catch(function (error) {
@@ -113,7 +116,7 @@ const actions = {
         })
     }
   },
-  filter({ commit, state }) {
+  filter({ commit, state }, getCountsFromResults = false) {
     commit('setSearchingStatus', true)
     var currentPage = state.queryPayload.currentPage
     commit('setResults', [])
@@ -126,6 +129,9 @@ const actions = {
       querybuilder.buildQuery(state.queryPayload.query, state.facetsModel))
     .then(function(response) {
       commit('setResults', response.data)
+      if (getCountsFromResults) {
+        commit('getCountsFromResults')
+      }
       commit('updateFacetsModel')
       commit('setSearchingStatus', false)
     })
@@ -133,7 +139,7 @@ const actions = {
       console.log(error)
       commit('setSearchingStatus', false)
     })
-    let new_query = {
+    var new_query = {
       q: router.currentRoute.query.q
     }
     if (this.getters.areAnyFacetValueSelected) {
@@ -146,25 +152,29 @@ const actions = {
   resetState({commit, state}) {
     commit('setResults', [])
     commit('setQueryPayload', [])
-    commit('setFacetsModel', {
-      selectedPublishers: [],
-      selectedYears: [],
-      selectedAuthors: [],
-      selectedLanguages: [],
-      selectedPublishersForLastFiltering: [],
-      selectedYearsForLastFiltering: [],
-      selectedAuthorsForLastFiltering: [],
-      selectedLanguagesForLastFiltering: [],
-      countsOfAllPublishers: {},
-      countsOfAllYears: {},
-      countsOfAllAuthors: {},
-      countsOfAllLanguages: {}
-    })
+    commit('setSelectedFacetValues', {})
+    commit('setSelectedFacetValuesForLastFiltering', {})
+    state.facetsModel.countsOfAllPublishers = {}
+    state.facetsModel.countsOfAllYears = {}
+    state.facetsModel.countsOfAllAuthors = {}
+    state.facetsModel.countsOfAllLanguages = {}
   }
 }
 
 // mutations
 const mutations = {
+  setSelectedFacetValues (state, values) {
+    helper.setArrayOrEmpty("selectedPublishers", values)
+    helper.setArrayOrEmpty("selectedAuthors", values)
+    helper.setArrayOrEmpty("selectedYears", values)
+    helper.setArrayOrEmpty("selectedLanguages", values)
+  },
+  setSelectedFacetValuesForLastFiltering (state, values) {
+    helper.setArrayOrEmpty("selectedPublishersForLastFiltering", values)
+    helper.setArrayOrEmpty("selectedAuthorsForLastFiltering", values)
+    helper.setArrayOrEmpty("selectedYearsForLastFiltering", values)
+    helper.setArrayOrEmpty("selectedLanguagesForLastFiltering", values)
+  }, 
   setSearchingStatus (state, bool) {
     state.isSearching = bool
   },
@@ -173,37 +183,17 @@ const mutations = {
   },
   setQueryPayload (state, payload) {
     state.queryPayload = payload
-  },
-  setFacetsModel (state, newModel) {
-    state.facetsModel = newModel
-  },
-  setSelectedFacetValues (state, values) {
-    var fm = state.facetsModel
-    fm.selectedPublishers = Array.isArray(values.selectedPublishers) ? values.selectedPublishers : []
-    fm.selectedAuthors = Array.isArray(values.selectedAuthors) ? values.selectedAuthors : []
-    fm.selectedYears = Array.isArray(values.selectedYears) ? values.selectedYears : []
-    fm.selectedLanguages = Array.isArray(values.selectedLanguages) ? values.selectedLanguages : []
-  },
-  initFacetsModel (state) {
+  },   
+  getCountsFromResults (state) {
     function fromBuckets (buckets, converter = x => x) {
       var res = {}
       buckets.forEach(x => { res[converter(x.key)] = x.doc_count })
       return res
     }
-    state.facetsModel = {
-      countsOfAllPublishers: fromBuckets(state.results.aggregations.Publisher.buckets),
-      countsOfAllAuthors: fromBuckets(state.results.aggregations.Creator.buckets),
-      countsOfAllYears: fromBuckets(state.results.aggregations.PublicationYear.buckets, x => new Date(x).getYear() + 1900),
-      countsOfAllLanguages: fromBuckets(state.results.aggregations.Language.buckets),
-      selectedPublishers: [],
-      selectedYears: [],
-      selectedAuthors: [],
-      selectedLanguages: [],
-      selectedPublishersForLastFiltering: [],
-      selectedYearsForLastFiltering: [],
-      selectedAuthorsForLastFiltering: [],
-      selectedLanguagesForLastFiltering: []
-    }
+    state.facetsModel.countsOfAllPublishers = fromBuckets(state.results.aggregations.Publisher.buckets)
+    state.facetsModel.countsOfAllAuthors = fromBuckets(state.results.aggregations.Creator.buckets)
+    state.facetsModel.countsOfAllYears = fromBuckets(state.results.aggregations.PublicationYear.buckets, x => new Date(x).getYear() + 1900)
+    state.facetsModel.countsOfAllLanguages = fromBuckets(state.results.aggregations.Language.buckets) 
   },
   updateFacetsModel (state) {
 
@@ -215,7 +205,7 @@ const mutations = {
     }
 
     function updatedCounts (counts, buckets, invalidPreviousCounts, converter = x => x) {
-      let updated_counts = {}
+      var updated_counts = {}
       if (!invalidPreviousCounts) {
         Object.keys(counts).forEach(k => { updated_counts[k] = 0 })
       }
@@ -244,10 +234,18 @@ const mutations = {
     }
 
     // save current facets
-    fm.selectedPublishersForLastFiltering = fm.selectedPublishers.slice(0)
-    fm.selectedYearsForLastFiltering = fm.selectedYears.slice(0)
-    fm.selectedAuthorsForLastFiltering = fm.selectedAuthors.slice(0)
-    fm.selectedLanguagesForLastFiltering = fm.selectedLanguages.slice(0)
+    mutations.setSelectedFacetValuesForLastFiltering(state, {
+      selectedPublishersForLastFiltering: fm.selectedPublishers.slice(0),
+      selectedYearsForLastFiltering: fm.selectedYears.slice(0),
+      selectedAuthorsForLastFiltering: fm.selectedAuthors.slice(0),
+      selectedLanguagesForLastFiltering: fm.selectedLanguages.slice(0)
+    })
+  }
+}
+
+const helper = {
+  setArrayOrEmpty (key, values) {
+    state.facetsModel[key] = Array.isArray(values[key]) ? values[key] : []    
   }
 }
 
