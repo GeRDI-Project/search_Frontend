@@ -185,52 +185,30 @@ const mutations = {
     state.queryPayload = payload
   },
   getCountsFromResults (state) {
-    function fromBuckets (buckets, converter = x => x) {
-      var res = {}
-      buckets.forEach(x => { res[converter(x.key)] = x.doc_count })
-      return res
-    }
-    state.facetsModel.countsOfAllPublishers = fromBuckets(state.results.aggregations.Publisher.buckets)
-    state.facetsModel.countsOfAllAuthors = fromBuckets(state.results.aggregations.Creator.buckets)
-    state.facetsModel.countsOfAllYears = fromBuckets(state.results.aggregations.PublicationYear.buckets, x => new Date(x).getYear() + 1900)
-    state.facetsModel.countsOfAllLanguages = fromBuckets(state.results.aggregations.Language.buckets)
+    state.facetsModel.countsOfAllPublishers = helper.facetValueCountsfromBuckets(state.results.aggregations.Publisher.buckets)
+    state.facetsModel.countsOfAllAuthors = helper.facetValueCountsfromBuckets(state.results.aggregations.Creator.buckets)
+    state.facetsModel.countsOfAllYears = helper.facetValueCountsfromBuckets(state.results.aggregations.PublicationYear.buckets, x => new Date(x).getYear() + 1900)
+    state.facetsModel.countsOfAllLanguages = helper.facetValueCountsfromBuckets(state.results.aggregations.Language.buckets)
   },
   updateFacetsModel (state) {
-
-    function anyFacetValuesAddedOrOmitted(lastSelection, currentSelection) {
-      return {
-        added: !currentSelection.every(e => lastSelection.includes(e)),
-        omitted: !lastSelection.every(e => currentSelection.includes(e))
-      }
-    }
-
-    function updatedCounts (counts, buckets, invalidPreviousCounts, converter = x => x) {
-      var updated_counts = {}
-      if (!invalidPreviousCounts) {
-        Object.keys(counts).forEach(k => { updated_counts[k] = 0 })
-      }
-      buckets.forEach(x => { updated_counts[converter(x.key)] = x.doc_count })
-      return updated_counts
-    }
-
     let fm = state.facetsModel
-    let publishersValues = anyFacetValuesAddedOrOmitted(fm.selectedPublishersForLastFiltering, fm.selectedPublishers)
-    let authorsValues = anyFacetValuesAddedOrOmitted(fm.selectedAuthorsForLastFiltering, fm.selectedAuthors)
-    let yearsValues = anyFacetValuesAddedOrOmitted(fm.selectedYearsForLastFiltering, fm.selectedYears)
-    let languagesValues = anyFacetValuesAddedOrOmitted(fm.selectedLanguagesForLastFiltering, fm.selectedLanguages)
+    let publishersValues = helper.anyFacetValuesAddedOrOmitted(fm.selectedPublishersForLastFiltering, fm.selectedPublishers)
+    let authorsValues = helper.anyFacetValuesAddedOrOmitted(fm.selectedAuthorsForLastFiltering, fm.selectedAuthors)
+    let yearsValues = helper.anyFacetValuesAddedOrOmitted(fm.selectedYearsForLastFiltering, fm.selectedYears)
+    let languagesValues = helper.anyFacetValuesAddedOrOmitted(fm.selectedLanguagesForLastFiltering, fm.selectedLanguages)
     let invalidPreviousCounts = publishersValues.omitted || authorsValues.omitted || yearsValues.omitted || languagesValues.omitted
 
     if (publishersValues.omitted || publishersValues.added || invalidPreviousCounts) {
-      fm.countsOfAllPublishers = updatedCounts(fm.countsOfAllPublishers, state.results.aggregations.Publisher.buckets, invalidPreviousCounts)
+      fm.countsOfAllPublishers = helper.updatedFacetValueCounts(fm.countsOfAllPublishers, state.results.aggregations.Publisher.buckets, invalidPreviousCounts)
     }
     if (authorsValues.omitted || authorsValues.added || invalidPreviousCounts) {
-      fm.countsOfAllAuthors = updatedCounts(fm.countsOfAllAuthors, state.results.aggregations.Creator.buckets, invalidPreviousCounts)
+      fm.countsOfAllAuthors = helper.updatedFacetValueCounts(fm.countsOfAllAuthors, state.results.aggregations.Creator.buckets, invalidPreviousCounts)
     }
     if (yearsValues.omitted || yearsValues.added || invalidPreviousCounts) {
-      fm.countsOfAllYears = updatedCounts(fm.countsOfAllYears, state.results.aggregations.PublicationYear.buckets, invalidPreviousCounts, x => new Date(x).getYear() + 1900)
+      fm.countsOfAllYears = helper.updatedFacetValueCounts(fm.countsOfAllYears, state.results.aggregations.PublicationYear.buckets, invalidPreviousCounts, x => new Date(x).getYear() + 1900)
     }
     if (languagesValues.omitted || languagesValues.added || invalidPreviousCounts) {
-      fm.countsOfAllLanguages = updatedCounts(fm.countsOfAllLanguages, state.results.aggregations.Language.buckets, invalidPreviousCounts)
+      fm.countsOfAllLanguages = helper.updatedFacetValueCounts(fm.countsOfAllLanguages, state.results.aggregations.Language.buckets, invalidPreviousCounts)
     }
 
     // save current facets
@@ -246,6 +224,25 @@ const mutations = {
 const helper = {
   setArrayOrEmpty (key, values) {
     state.facetsModel[key] = Array.isArray(values[key]) ? values[key] : []
+  },
+  facetValueCountsfromBuckets (buckets, converter = x => x) {
+    var res = {}
+    buckets.forEach(x => { res[converter(x.key)] = x.doc_count })
+    return res
+  },
+  anyFacetValuesAddedOrOmitted(lastSelection, currentSelection) {
+    return {
+      added: !currentSelection.every(e => lastSelection.includes(e)),
+      omitted: !lastSelection.every(e => currentSelection.includes(e))
+    }
+  },
+  updatedFacetValueCounts (counts, buckets, invalidPreviousCounts, converter = x => x) {
+    var updated_counts = {}
+    if (!invalidPreviousCounts) {
+      Object.keys(counts).forEach(k => { updated_counts[k] = 0 })
+    }
+    buckets.forEach(x => { updated_counts[converter(x.key)] = x.doc_count })
+    return updated_counts
   }
 }
 
