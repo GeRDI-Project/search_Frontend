@@ -1,5 +1,5 @@
 /**
- * Copyright 2019 Nelson Tavares de Sousa, Ingo Thomsen
+ * Copyright 2018 Nelson Tavares de Sousa, Ingo Thomsen
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,11 +15,11 @@
  */
 <template>
 <div class="results">
-  <search-mask :query-value="query_string"></search-mask>
+  <search-mask :query-value="queryString"></search-mask>
   <b-container>
     <b-row>
       <b-col v-if="anyResults">
-        <h6 class="results-annotation"><b>{{ numResults }}</b> results found for <b> {{ query_string }} </b></h6>
+        <h6 class="results-annotation"><b>{{ numResults }}</b> results found for <b> {{ queryString }} </b></h6>
       </b-col>
       <b-col v-else-if="isSearching">
         <div class="text-center">
@@ -60,7 +60,7 @@ export default {
     }
   },
   computed: {
-    query_string: function() {
+    queryString: function() {
       return decodeURIComponent(this.$route.query.q)
     },
     isSearching: function() {
