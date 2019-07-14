@@ -18,6 +18,11 @@ import querybuilder from '../../util/querybuilder.js'
 import router from '../../router'
 
 /* eslint-disable */
+
+const constant = {
+  facets: ["publisher", "author", "year", "language"],
+}
+
 // initial state
 const state = {
   isSearching: false,
@@ -44,6 +49,32 @@ const state = {
 const getters = {
   isSearching: state => {
     return state.isSearching
+  },
+  availableFacets: state => {
+    return constant.facets
+  },
+  facetTitle: state => (facet) => {
+    switch (facet) {
+    case "publisher": return "Publisher"; break;
+    case "author": return "Author"; break;
+    case "year": return "Publication Year"; break;
+    case "language": return "Language"; break;
+    }
+  },
+  selectedConstraints: state => (facet) => {
+    switch (facet) {
+      case "publisher": return state.facetsModel.selectedPublishers; break;
+      case "author": return state.facetsModel.selectedAuthors; break;
+      case "year": return state.facetsModel.selectedYears; break;
+      case "language": return state.facetsModel.selectedLanguages; break;
+    }
+  },
+  constraintCounts: state => (facet) => {    
+    switch (facet) {
+      case "publisher": return state.facetsModel.countsOfAllPublishers; break;
+      case "author": return state.facetsModel.countsOfAllAuthors; break;
+      case "year": return state.facetsModel.countsOfAllYears; break;
+      case "language": return state.facetsModel.countsOfAllLanguages; break;   }
   },
   getResults: state => {
     if (state.results.hits) {
@@ -78,7 +109,7 @@ const getters = {
     if (fm.selectedLanguages.length > 0) ret.selectedLanguages = fm.selectedLanguages
     return ret
   },
-  areAnyFacetValueSelected: state => {
+  areAnyConstraintsSelected: state => {
     return state.facetsModel.selectedPublishers.length || state.facetsModel.selectedAuthors.length || state.facetsModel.selectedYears.length || state.facetsModel.selectedLanguages.length
   },
   areAnyFacetFilteringApplied: state => {
@@ -142,7 +173,7 @@ const actions = {
     var new_query = {
       q: router.currentRoute.query.q
     }
-    if (this.getters.areAnyFacetValueSelected) {
+    if (this.getters.areAnyConstraintsSelected) {
       new_query.s = encodeURIComponent(JSON.stringify(this.getters.getSelectedFacetValues))
     }
     router.push({
@@ -163,6 +194,24 @@ const actions = {
 
 // mutations
 const mutations = {
+  setSelectedConstraints (state, payload) {
+    var facet = payload.facet
+    var arr = payload.arr
+    switch (facet) {
+      case "publisher": state.facetsModel.selectedPublishers = Array.isArray(arr) ? arr : []; break; 
+      case "author": state.facetsModel.selectedAuthors = Array.isArray(arr) ? arr : []; break; 
+      case "year": state.facetsModel.selectedYears = Array.isArray(arr) ? arr : []; break; 
+      case "language": state.facetsModel.selectedLanguages = Array.isArray(arr) ? arr : []; break; 
+    }    
+  },
+  clearFacetConstraints(state, facet) {
+    switch (facet) {
+      case "publisher": state.facetsModel.selectedPublishers = []; break;
+      case "author": state.facetsModel.selectedAuthors = []; break;
+      case "year": state.facetsModel.selectedYears = []; break;
+      case "language": state.facetsModel.selectedLanguages = []; break;  
+    }
+  },
   setSelectedFacetValues (state, values) {
     helper.setArrayOrEmpty("selectedPublishers", values)
     helper.setArrayOrEmpty("selectedAuthors", values)
@@ -191,12 +240,12 @@ const mutations = {
     state.facetsModel.countsOfAllLanguages = helper.facetValueCountsfromBuckets(state.results.aggregations.Language.buckets)
   },
   updateFacetsModel (state) {
-    let fm = state.facetsModel
-    let publishersValues = helper.anyFacetValuesAddedOrOmitted(fm.selectedPublishersForLastFiltering, fm.selectedPublishers)
-    let authorsValues = helper.anyFacetValuesAddedOrOmitted(fm.selectedAuthorsForLastFiltering, fm.selectedAuthors)
-    let yearsValues = helper.anyFacetValuesAddedOrOmitted(fm.selectedYearsForLastFiltering, fm.selectedYears)
-    let languagesValues = helper.anyFacetValuesAddedOrOmitted(fm.selectedLanguagesForLastFiltering, fm.selectedLanguages)
-    let invalidPreviousCounts = publishersValues.omitted || authorsValues.omitted || yearsValues.omitted || languagesValues.omitted
+    var fm = state.facetsModel
+    var publishersValues = helper.anyFacetValuesAddedOrOmitted(fm.selectedPublishersForLastFiltering, fm.selectedPublishers)
+    var authorsValues = helper.anyFacetValuesAddedOrOmitted(fm.selectedAuthorsForLastFiltering, fm.selectedAuthors)
+    var yearsValues = helper.anyFacetValuesAddedOrOmitted(fm.selectedYearsForLastFiltering, fm.selectedYears)
+    var languagesValues = helper.anyFacetValuesAddedOrOmitted(fm.selectedLanguagesForLastFiltering, fm.selectedLanguages)
+    var invalidPreviousCounts = publishersValues.omitted || authorsValues.omitted || yearsValues.omitted || languagesValues.omitted
 
     if (publishersValues.omitted || publishersValues.added || invalidPreviousCounts) {
       fm.countsOfAllPublishers = helper.updatedFacetValueCounts(fm.countsOfAllPublishers, state.results.aggregations.Publisher.buckets, invalidPreviousCounts)
