@@ -55,24 +55,23 @@ export default {
   name: 'results',
   data() {
     return {
-      numDocsPerPage: 10,
       loadedBookmarks: false
     }
   },
   computed: {
-    queryString: function() {
+    queryString() {
       return decodeURIComponent(this.$route.query.q)
     },
-    isSearching: function() {
+    isSearching() {
       return this.$store.getters.isSearching
     },
-    anyFacetFilteringApplied: function() {
+    anyFacetFilteringApplied() {
       return this.$store.getters.areAnyFacetFilteringApplied
     },
-    anyResults: function() {
+    anyResults() {
       return (this.$store.getters.getResultsAmount > 0)
     },
-    isChecked: function () {
+    isChecked() {
       return this.$gerdi.aai.isChecked()
     },
     currentPage() {
@@ -81,11 +80,14 @@ export default {
       }
       return parseInt(this.$route.query.p)
     },
-    results: function() {
+    results() {
       return this.$store.getters.getResults
     },
-    numResults: function() {
+    numResults() {
       return this.$store.getters.getResultsAmount
+    },
+    numDocsPerPage() {
+      return this.$store.getters.getNumDocsPerPage
     }
   },
   created() {
@@ -101,7 +103,7 @@ export default {
   },
   watch: {
     '$route.query': 'search',
-    isChecked: function () {
+    isChecked() {
       if (this.loadedBookmarks === true || this.$gerdi.aai.getUser() === null) return
       var self = this
       this.$store.dispatch('refreshCollections', { vm: this }).then(function () { self.loadedBookmarks = true })

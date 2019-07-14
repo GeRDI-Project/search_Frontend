@@ -8,6 +8,7 @@
 </template>
 
 <script>
+/* eslint-disable */
 export default {
   name: 'start',
   data () {
@@ -15,16 +16,16 @@ export default {
       loadedBookmarks: false
     }
   },
-  mounted: function () {
+  mounted() {
     this.$store.dispatch('resetState')
   },
   computed: {
-    isChecked: function () {
+    isChecked() {
       return this.$gerdi.aai.isChecked()
     }
   },
   watch: {
-    isChecked: function () {
+    isChecked() {
       if (this.loadedBookmarks === true || this.$gerdi.aai.getUser() === null) return
       var self = this
       this.$store.dispatch('refreshCollections', { vm: this }).then(function () { self.loadedBookmarks = true })

@@ -21,6 +21,7 @@ import router from '../../router'
 
 const constant = {
   facets: ["publisher", "author", "year", "language"],
+  numDocsPerPage: 10,
 }
 
 // initial state
@@ -28,7 +29,6 @@ const state = {
   isSearching: false,
   results: {},
   queryPayload: {},
-  numDocsPerPage: 10,
   facetsModel: {
     selectedPublishers: [],
     selectedYears: [],
@@ -75,6 +75,9 @@ const getters = {
       case "author": return state.facetsModel.countsOfAllAuthors; break;
       case "year": return state.facetsModel.countsOfAllYears; break;
       case "language": return state.facetsModel.countsOfAllLanguages; break;   }
+  },
+  getNumDocsPerPage: state => {
+    return constant.numDocsPerPage
   },
   getResults: state => {
     if (state.results.hits) {
@@ -128,9 +131,9 @@ const actions = {
       commit('setResults', [])
       var url = '/api/search?'
       if (currentPage) {
-        url = url.concat('&from=').concat(currentPage * state.numDocsPerPage - state.numDocsPerPage)
+        url = url.concat('&from=').concat(currentPage * constant.numDocsPerPage - constant.numDocsPerPage)
       }
-      url = url.concat('&size=').concat(state.numDocsPerPage)
+      url = url.concat('&size=').concat(constant.numDocsPerPage)
       axios.post(url,
         querybuilder.buildQuery(querystring, {}))
         .then(function (response) {
@@ -153,9 +156,9 @@ const actions = {
     commit('setResults', [])
     var url = '/api/search?'
     if (currentPage) {
-      url = url.concat('&from=').concat(currentPage * state.numDocsPerPage - state.numDocsPerPage)
+      url = url.concat('&from=').concat(currentPage * constant.numDocsPerPage - constant.numDocsPerPage)
     }
-    url = url.concat('&size=').concat(state.numDocsPerPage)
+    url = url.concat('&size=').concat(constant.numDocsPerPage)
     axios.post(url,
       querybuilder.buildQuery(state.queryPayload.query, state.facetsModel))
     .then(function(response) {
