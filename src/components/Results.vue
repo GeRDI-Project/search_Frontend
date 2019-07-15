@@ -15,7 +15,7 @@
  */
 <template>
 <div class="results">
-  <search-mask :query-value="queryString"></search-mask>
+  <search-mask :query-value="queryString" />
   <b-container>
     <b-row>
       <b-col v-if="anyResults">
@@ -23,7 +23,7 @@
       </b-col>
       <b-col v-else-if="isSearching">
         <div class="text-center">
-          <b-spinner class="m-4" variant="primary" label="Spinning"></b-spinner>
+          <b-spinner class="m-4" variant="primary" label="Spinning" />
         </div>
       </b-col>
       <b-col v-else>
@@ -37,12 +37,12 @@
         <search-facets/>
       </b-col>
       <b-col v-if="anyResults" cols="9">
-        <search-result-entry id="result-list" v-for="result in results" :result="result" :key="result._id"></search-result-entry>
+        <search-result-entry id="result-list" v-for="result in results" :result="result" :key="result._id" />
       </b-col>
     </b-row>
     <b-row v-if="anyResults">
       <b-col>
-        <b-pagination align="center" size="md" :total-rows="numResults" v-model="currentPage" :per-page="numDocsPerPage" @change="paginationInput"/>
+        <b-pagination align="center" size="md" :total-rows="numResults" v-model="currentPage" :per-page="numDocsPerPage" @change="applyPagination"/>
       </b-col>
     </b-row>
   </b-container>
@@ -66,7 +66,7 @@ export default {
       return this.$store.getters.isSearching
     },
     anyFacetFilteringApplied() {
-      return this.$store.getters.areAnyFacetFilteringApplied
+      return this.$store.getters.haveAnyConstraintsBeenApplied
     },
     anyResults() {
       return (this.$store.getters.getResultsAmount > 0)
@@ -91,15 +91,7 @@ export default {
     }
   },
   created() {
-    // selected facet values from URI override store
-    if (this.$route.query.s) {
-      this.$store.commit('setSelectedFacetValues', JSON.parse(decodeURIComponent(this.$route.query.s)))
-    }
-    if (this.$store.getters.areAnyFacetValueSelected) {
-      this.filter()
-    } else {
-      this.search()
-    }
+    this.search()
   },
   watch: {
     '$route.query': 'search',
@@ -112,24 +104,23 @@ export default {
   methods: {
     search() {
       this.$store.dispatch('search', {
-        query: this.$route.query.q,
-        currentPage: this.currentPage
+        queryString: this.queryString,
+        currentPage: this.currentPage,
+        selectedConstraints: this.$route.query.s ? JSON.parse(decodeURIComponent(this.$route.query.s)) : {}
       })
     },
-    filter() {
-      this.$store.commit('setQueryPayload', {
-        query: this.$route.query.q,
-        currentPage: this.currentPage
-      })
-      this.$store.dispatch('filter', true)
-    },
-    paginationInput(val) {
+    applyPagination(val) {
+      // TODO: is acutally called?
+      var newQuery = {
+        q: this.$route.query.q,
+        p: val
+      }
+      if (this.$store.getters.areAnyConstraintsSelected) {
+        newQuery.s = encodeURIComponent(JSON.stringify(this.$store.getters.getAllSelectedConstraints))
+      } 
       this.$router.push({
         name: 'results',
-        query: {
-          q: this.$route.query.q,
-          p: val
-        }
+        query: newQuery
       })
     }
   }

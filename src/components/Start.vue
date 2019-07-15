@@ -16,9 +16,6 @@ export default {
       loadedBookmarks: false
     }
   },
-  mounted() {
-    this.$store.dispatch('resetState')
-  },
   computed: {
     isChecked() {
       return this.$gerdi.aai.isChecked()

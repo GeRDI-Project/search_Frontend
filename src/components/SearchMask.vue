@@ -1,10 +1,10 @@
 <template>
 <div>
-  <b-form @submit="search">
+  <b-form @submit="startSearch">
     <b-input-group>
       <b-input id="inlineFormInputGroupUsername2" v-model="inputvalue" :placeholder="placeholder" autofocus/>
       <b-input-group-append>
-        <b-btn @click="search" variant="primary">Search</b-btn>
+        <b-btn @click="startSearch" variant="primary">Search</b-btn>
       </b-input-group-append>
     </b-input-group>
   </b-form>
@@ -18,7 +18,6 @@ export default {
   props: ['loading'],
   data() {
     return {
-      // loading: false,
       inputvalue: '',
       placeholder: 'Enter your search query here'
     }
@@ -33,7 +32,7 @@ export default {
     checkValue() {
       this.inputvalue = this.$route.query.q ? decodeURIComponent(this.$route.query.q) : ""
     },
-    search() {
+    startSearch() {
       if (this.inputvalue !== '') {
         this.$router.push({
           name: 'results',

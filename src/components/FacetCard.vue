@@ -16,7 +16,7 @@
 <template>
   <b-card no-body class="mb-1">
     <b-card-header header-tag="header" class="p-1" role="tab">
-      <b-btn block href="#" v-b-toggle="facet" variant="accordion-gerdi"> {{ $store.getters.facetTitle(facet) }}
+      <b-btn block href="#" v-b-toggle="facet" variant="accordion-gerdi"> {{ $store.getters.getFacetTitle(facet) }}
         <span class="when-opened">
           <font-awesome-icon icon="chevron-up" />
         </span>
@@ -77,14 +77,14 @@ export default {
       return this.constraintOptions.slice(0, Math.min(this.numberOfConstraintsToShow, this.constraintOptions.length))
     },
     constraintCounts() {
-      return this.$store.getters.constraintCounts(this.facet)
+      return this.$store.getters.getConstraintCounts(this.facet)
     },
     selectedConstraints: {
-      get() {
-        return this.$store.getters.selectedConstraints(this.facet)
+      get() {     
+        return this.$store.getters.getSelectedConstraints(this.facet)
       },
-      set(arr) {
-        this.$store.commit('setSelectedConstraints', {
+      set(arr) {       
+        this.$store.commit('setConstraintsForAFacet', {
           facet: this.facet,
           arr: arr
         })

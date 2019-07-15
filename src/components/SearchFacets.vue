@@ -15,9 +15,9 @@
  */
 <template>
 <div role="tablist">
-  <facet-card v-for="facet in $store.getters.availableFacets" :facet="facet" :key="facet._id"/>
+  <facet-card v-for="facet in $store.getters.getAvailableFacets" :facet="facet" :key="facet._id"/>
   <div class="all-facets-buttons" >
-    <b-button block class="facets-button" variant="primary"   @click="$store.dispatch('filter')">
+    <b-button block class="facets-button" variant="primary" @click="applyConstraints">
       Apply
     </b-button>
     <b-button block class="facets-button" variant="secondary" @click="clearAllFacets" :disabled="!$store.getters.areAnyConstraintsSelected">
@@ -34,9 +34,27 @@ export default {
   name: 'search-facets',
   methods: {
     clearAllFacets() {
-      this.$store.getters.availableFacets.forEach(facet => {
-        this.$store.commit('clearFacetConstraints', facet)
+      this.$store.getters.getAvailableFacets.forEach(facet => {        
+        this.$store.commit('setConstraintsForAFacet', {
+          facet: facet,
+          arr: []
         })
+      })
+    },
+    applyConstraints() {
+      var newQuery = {
+        q: this.$route.query.q
+      }
+      if (this.$store.getters.areAnyConstraintsSelected) {
+        newQuery.s = encodeURIComponent(JSON.stringify(this.$store.getters.getOnlySelectedConstraints))
+      } 
+      if (this.$route.query.p) {
+        newQuery.p = this.$route.query.p
+      }
+      this.$router.push({
+        name: 'results',
+        query: newQuery
+      })
     }
   }
 }
