@@ -1,5 +1,5 @@
 /**
- * Copyright 2018 Nelson Tavares de Sousa
+ * Copyright 2018 Nelson Tavares de Sousa, Ingo Thomsen
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,78 +15,65 @@
  */
 
 /* eslint-disable */
-export default {
-  buildQuery(qs, facets) {
-    let queryBody = {
-      query: {
-        bool: {
-          must: [
-            {
-              query_string: {
-                query: qs
-              }
-            }
-          ]
-        }
-      },
-      aggs: {
-        PublicationYear: {
-          terms: {
-            field: 'publicationYear',
-            order: { '_count': 'desc' },
-            size: 300
-          }
-        },
-        Publisher: {
-          terms: {
-            field: 'publisher.raw',
-            order: { '_count': 'desc' },
-            size: 300
-          }
-        },
-        Creator: {
-          terms: {
-            field: 'creators.creatorName.value.raw',
-            order: { '_count': 'desc' },
-            size: 300
-          }
-        },
-        Language: {
-          terms: {
-            field: 'language',
-            order: { '_count': 'desc' },
-            size: 300
-          }
-        }
-      }
-    }
-
-    if (facets.selectedPublishers !== undefined && facets.selectedPublishers.length > 0) {
-      queryBody.query.bool.must.push(buildSubQuery(facets.selectedPublishers, 'publisher'))
-    }
-    if (facets.selectedAuthors !== undefined && facets.selectedAuthors.length > 0) {
-      queryBody.query.bool.must.push(buildSubQuery(facets.selectedAuthors, 'creators.creatorName.value'))
-    }
-    if (facets.selectedLanguages !== undefined && facets.selectedLanguages.length > 0) {
-      queryBody.query.bool.must.push(buildSubQuery(facets.selectedLanguages, 'language'))
-    }
-    if (facets.selectedYears !== undefined && facets.selectedYears.length > 0) {
-      let max = Math.max.apply(null, facets.selectedYears)
-      let min = Math.min.apply(null, facets.selectedYears)
-      let subQuery = {
+const constants = {
+  facets: ["publisher", "author", "year", "language"],
+  facetFieldNames: { publisher: "publisher.raw", author: "creators.creatorName.value.raw", year: "publicationYear", language: "language" },
+  facetSubFieldNames: { publisher: "publisher", author: "creators.creatorName.value", year: "publicationYear", language: "language" },
+  facetSubQueryBuilder: {
+    year: selectedYears => {
+      return {
         range: {
           publicationYear: {
-            gte: 0,
-            lte: 0
+            gte: Math.min.apply(null, selectedYears),
+            lte: Math.max.apply(null, selectedYears)
           }
         }
       }
-      subQuery.range.publicationYear.gte = min
-      subQuery.range.publicationYear.lte = max
-      queryBody.query.bool.must.push(subQuery)
     }
+  }
+}
+
+export default {
+  buildQuery(queryString, constraints) {
+    var queryBody = buildQueryBody(queryString)
+    constants.facets.forEach(facet => {
+      if (constraints[facet] && constraints[facet].length > 0) {
+        if (constants.facetSubQueryBuilder[facet]) {
+          queryBody.query.bool.must.push(constants.facetSubQueryBuilder[facet](constraints[facet]))
+        } else {
+          queryBody.query.bool.must.push(buildSubQuery(constraints[facet], constants.facetSubFieldNames[facet]))
+        }
+      }
+    })
     return queryBody
   }
+}
+
+function buildQueryBody(queryString) {
+  var queryBody = {
+    query: {
+      bool: {
+        must: [
+          {
+            query_string: {
+              query: queryString
+            }
+          }
+        ]
+      }
+    }
+  }
+  queryBody.aggs = {}
+  constants.facets.forEach(facet => {
+    queryBody.aggs[facet] = {
+      terms: {
+        field: constants.facetFieldNames[facet],
+        order: { '_count': 'desc' },
+        size: 300
+      }
+    }
+  })
+  return queryBody
 }
 
 function buildSubQuery(elems, fieldName) {

@@ -18,10 +18,9 @@ import querybuilder from '../../util/querybuilder.js'
 
 /* eslint-disable */
 
-const constant = {
+const constants = {
   facets: ["publisher", "author", "year", "language"],
   facetTitles: { publisher: "Publisher", author: "Author", year: "Publication Year", language: "Language" },
-  facetBucketNames: { publisher: "Publisher", author: "Creator", year: "PublicationYear", language: "Language" },
   facetConverters: { year: x => new Date(x).getYear() + 1900 },
   numDocsPerPage: 10,
   apiUrlPrefix: '/api/search?'
@@ -30,14 +29,13 @@ const constant = {
 // initial state 
 const state = {
   isSearching: false,
+  results: {},
   previousQueryString: "",
   facets: {
-    selectedConstraints: constant.facets.reduce((obj, facet) => { obj[facet] = []; return obj }, {}),
-    selectedConstraintsForLastFiltering: constant.facets.reduce((obj, facet) => { obj[facet] = []; return obj }, {}),
-    constraintCounts: constant.facets.reduce((obj, facet) => { obj[facet] = {}; return obj }, {}),
-  },
-  results: {},
-  queryPayload: {}
+    selectedConstraints: constants.facets.reduce((obj, facet) => { obj[facet] = []; return obj }, {}),
+    selectedConstraintsForLastFiltering: constants.facets.reduce((obj, facet) => { obj[facet] = []; return obj }, {}),
+    constraintCounts: constants.facets.reduce((obj, facet) => { obj[facet] = {}; return obj }, {})
+  }
 }
 
 const getters = {
@@ -45,10 +43,10 @@ const getters = {
     return state.isSearching
   },
   getAvailableFacets: state => {
-    return constant.facets
+    return constants.facets
   },
   getFacetTitle: (state) => (facet) => {
-    return constant.facetTitles[facet]
+    return constants.facetTitles[facet]
   },
   getSelectedConstraints: (state) => (facet) => {
     return state.facets.selectedConstraints[facet]
@@ -57,68 +55,47 @@ const getters = {
     return state.facets.constraintCounts[facet]
   },
   getNumDocsPerPage: state => {
-    return constant.numDocsPerPage
+    return constants.numDocsPerPage
   },
   getResults: state => {
-    return state.results.hits ? state.results.hits.hits : [] 
-  },
-  getResultsQueryString: state => {
-    return state.queryPayload.query
+    return state.results.hits ? state.results.hits.hits : []
   },
   getResultsAmount: state => {
     return state.results.hits ? state.results.hits.total : 0
   },
   getOnlySelectedConstraints: state => {
-    var res = {}
-    constant.facets.forEach(facet => {
+    return constants.facets.reduce((obj, facet) => {
       if (state.facets.selectedConstraints[facet].length > 0) {
-        res[facet] = state.facets.selectedConstraints[facet]
+        obj[facet] = state.facets.selectedConstraints[facet]
       }
-    })
-    return res
+      return obj
+    }, {})
   },
   areAnyConstraintsSelected: state => {
-    var res = false
-    constant.facets.forEach(facet => { 
-      if (state.facets.selectedConstraints[facet].length > 0) { res = true }
-    })
-    return res
+    return constants.facets.some(facet => state.facets.selectedConstraints[facet].length > 0)
   },
   haveAnyConstraintsBeenApplied: state => {
-    var res = false    
-    constant.facets.forEach(facet => { 
-      if (state.facets.selectedConstraintsForLastFiltering[facet].length > 0) { res = true }
-    })
-    return res
+    return constants.facets.some(facet => state.facets.selectedConstraintsForLastFiltering[facet].length > 0)
   }
 }
 
 const actions = {
   search({ commit, state }, payload) {
-    var querystring = payload.query
-    var currentPage = payload.currentPage
-    if (state.queryPayload.query !== querystring) {
     commit('setSearchingStatus', true)
-      commit('setQueryPayload', payload)
     commit('setResults', [])
-    var queryString = payload.queryString
-    var currentPage = payload.currentPage ? payload.currentPage : 1                            // TODO: sanity checks: Number.isInteger > 0
-    var constraintsFromQuery = payload.selectedConstraints ? payload.selectedConstraints : {}  // TODO: sanity check(s)      
-    var query = querybuilder.buildQuery(queryString, {
-      selectedPublishers: constraintsFromQuery.publisher || [],
-      selectedAuthors: constraintsFromQuery.author || [],
-      selectedYears: constraintsFromQuery.year || [],
-      selectedLanguages: constraintsFromQuery.language || []
-    })
-    var url = constant.apiUrlPrefix.concat('&size=').concat(constant.numDocsPerPage)
-    if (currentPage > 1) {
-      url = url.concat('&from=').concat(currentPage * constant.numDocsPerPage - constant.numDocsPerPage)
+    var queryStringFromQuery = payload.queryString
+    var currentPageFromQuery = helper.checkedCurrentPage(payload)
+    var constraintsFromQuery = helper.checkedConstraints(payload)
+    var query = querybuilder.buildQuery(queryStringFromQuery, constraintsFromQuery)
+    var url = constants.apiUrlPrefix.concat('&size=').concat(constants.numDocsPerPage)
+    if (currentPageFromQuery > 1) {
+      url = url.concat('&from=').concat(currentPageFromQuery * constants.numDocsPerPage - constants.numDocsPerPage)
     }
     axios.post(url, query)
       .then(function (response) {
         commit('setResults', response.data)
         commit('setConstraintsFromQuery', constraintsFromQuery)
-        commit('updateFacetsModel', queryString)
+        commit('updateFacetsModel', queryStringFromQuery)
         commit('setSearchingStatus', false)
       })
       .catch(function (error) {
@@ -130,11 +107,11 @@ const actions = {
 
 const mutations = {
   setConstraintsForAFacet(state, payload) {
-    state.facets.selectedConstraints[payload.facet] = Array.isArray(payload.arr) ? payload.arr : []
+    state.facets.selectedConstraints[payload.facet] = payload.arr || []
   },
   setConstraintsFromQuery(state, constraintsFromQuery) {
-    constant.facets.forEach(facet => {
-      state.facets.selectedConstraints[facet] = constraintsFromQuery[facet] ? constraintsFromQuery[facet] : []
+    constants.facets.forEach(facet => {
+      state.facets.selectedConstraints[facet] = constraintsFromQuery[facet] || []
     })
   },
   setSearchingStatus(state, bool) {
@@ -143,66 +120,79 @@ const mutations = {
   setResults(state, results) {
     state.results = results
   },
-  setQueryPayload (state, payload) {
-    state.queryPayload = payload
-  },
-  updateFacetsModel(state, queryString) {
-    if (queryString != state.previousQueryString) {
-      constant.facets.forEach(facet => state.facets.selectedConstraints[facet] = [])
+  updateFacetsModel(state, queryStringFromQuery) {
+    if (queryStringFromQuery != state.previousQueryString) {
+      constants.facets.forEach(facet => {
+        state.facets.selectedConstraints[facet] = []
+      })
       helper.updateAllConstraintCountsFromResults()
     } else if (!getters.areAnyConstraintsSelected(state)) {
       helper.updateAllConstraintCountsFromResults()
     } else {
-      // Which facets have constraints added? Are the counts invalid due to any removal?
+      // Which facets have constraints added? Are the counts invalid due to any constraint removal?
       let addedConstraints = {}
       let previousCountsInvalid = false
-      constant.facets.forEach(facet => {
+      constants.facets.forEach(facet => {
         let currentSelection = state.facets.selectedConstraints[facet]
         let lastSelection = state.facets.selectedConstraintsForLastFiltering[facet]
         addedConstraints[facet] = !currentSelection.every(e => lastSelection.includes(e))
         previousCountsInvalid |= !lastSelection.every(e => currentSelection.includes(e))
       })
       // Update counts of facet depending of any changes
-      constant.facets.forEach(facet => {
+      constants.facets.forEach(facet => {
         if (previousCountsInvalid) {
           if (addedConstraints[facet]) {
             helper.updateAConstraintFromResult(facet, true, false)
           } else {
             helper.updateAConstraintFromResult(facet)
           }
-
         } else if (!addedConstraints[facet]) {
           helper.updateAConstraintFromResult(facet, true)
         }
       })
     }
     // store for next search/filtering
-    state.previousQueryString = queryString
-    constant.facets.forEach(facet => {
+    state.previousQueryString = queryStringFromQuery
+    constants.facets.forEach(facet => {
       state.facets.selectedConstraintsForLastFiltering[facet] = state.facets.selectedConstraints[facet].slice(0)
     })
   }
 }
 
 const helper = {
+  checkedCurrentPage(payload) {
+    var page = payload.checkedCurrentPage
+    return Number.isInteger(page) && page > 0 ? page : 1
+  },
+  checkedConstraints(payload) {
+    var constraints = payload.selectedConstraints || {}
+    Object.values(constraints).forEach((key, value) => {
+      if (!constants.facets.includes(key) || !Array.isArray(value)) {
+        return {}
+      }
+    })
+    return constraints
+  },
   updateAllConstraintCountsFromResults() {
-    constant.facets.forEach(facet => {
+    constants.facets.forEach(facet => {
       helper.updateAConstraintFromResult(facet)
     })
   },
   updateAConstraintFromResult(facet, amendConstraintsNotPresentInResults = false, setAmendedToZero = true) {
     var updatedCounts = {}
     if (amendConstraintsNotPresentInResults) {
-      Object.keys(state.facets.constraintCounts[facet]).forEach(constraint => {
-        if (setAmendedToZero) {
+      if (setAmendedToZero) {
+        Object.keys(state.facets.constraintCounts[facet]).forEach(constraint => {
           updatedCounts[constraint] = 0
-        } else {
-          updatedCounts[constraint] = state.facets.constraintCounts[facet][constraint]
-        }
-      })
+        })
+      } else {
+        Object.values(state.facets.constraintCounts[facet]).forEach((constraint, count) => {
+          updatedCounts[constraint] = count
+        })
+      }
     }
-    var converter = constant.facetConverters[facet] ? constant.facetConverters[facet] : x => x
-    state.results.aggregations[constant.facetBucketNames[facet]].buckets.forEach(bucketEntry => {
+    var converter = constants.facetConverters[facet] ? constants.facetConverters[facet] : x => x
+    state.results.aggregations[facet].buckets.forEach(bucketEntry => {
       updatedCounts[converter(bucketEntry.key)] = bucketEntry.doc_count
     })
     state.facets.constraintCounts[facet] = updatedCounts
