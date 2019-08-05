@@ -88,6 +88,12 @@ export default {
     },
     numDocsPerPage() {
       return this.$store.getters.getNumDocsPerPage
+    },
+    anyConstraintsSelected() {
+      return this.$store.getters.areAnyConstraintsSelected
+    },
+    onlySelectedConstraints() {
+      return this.$store.getters.getOnlySelectedConstraints
     }
   },
   created() {
@@ -110,14 +116,13 @@ export default {
       })
     },
     applyPagination(val) {
-      // TODO: is acutally called?
       var newQuery = {
         q: this.$route.query.q,
         p: val
       }
-      if (this.$store.getters.areAnyConstraintsSelected) {
-        newQuery.s = encodeURIComponent(JSON.stringify(this.$store.getters.getAllSelectedConstraints))
-      } 
+      if (this.anyConstraintsSelected) {
+        newQuery.s = encodeURIComponent(JSON.stringify(this.onlySelectedConstraints))
+      }
       this.$router.push({
         name: 'results',
         query: newQuery

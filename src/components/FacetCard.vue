@@ -16,7 +16,7 @@
 <template>
   <b-card no-body class="mb-1">
     <b-card-header header-tag="header" class="p-1" role="tab">
-      <b-btn block href="#" v-b-toggle="facet" variant="accordion-gerdi"> {{ $store.getters.getFacetTitle(facet) }}
+      <b-btn block href="#" v-b-toggle="facet" variant="accordion-gerdi"> {{ this.facetTitle }}
         <span class="when-opened">
           <font-awesome-icon icon="chevron-up" />
         </span>
@@ -73,6 +73,9 @@ export default {
   },
 
   computed: {
+    facetTitle() {
+      return this.$store.getters.getFacetTitle(this.facet)
+    },
     clippedConstraintOptions() {
       return this.constraintOptions.slice(0, Math.min(this.numberOfConstraintsToShow, this.constraintOptions.length))
     },
