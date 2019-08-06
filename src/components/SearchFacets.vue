@@ -39,8 +39,8 @@ export default {
     anyConstraintsSelected() {
       return this.$store.getters.areAnyConstraintsSelected
     },    
-    onlySelectedConstraints() {
-      return this.$store.getters.getOnlySelectedConstraints
+    onlyFacetsWithSelectedConstraints() {
+      return this.$store.getters.getOnlyFacetsWithSelectedConstraints
     }
   },
   methods: {
@@ -57,7 +57,7 @@ export default {
         q: this.$route.query.q
       }
       if (this.anyConstraintsSelected) {
-        newQuery.s = encodeURIComponent(JSON.stringify(this.onlySelectedConstraints))
+        newQuery.s = encodeURIComponent(JSON.stringify(this.onlyFacetsWithSelectedConstraints))
       } 
       if (this.$route.query.p) {
         newQuery.p = this.$route.query.p
