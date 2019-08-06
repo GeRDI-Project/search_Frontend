@@ -36,17 +36,24 @@ const helper = {
       }
     })
     return constraints
+  },
+  objectHoldingForEachConstraintAnEmpty(type) {
+    let obj = {}
+    facetsprovider.facetNames.forEach(facetName => {
+      obj[facetName] = new type()
+    })
+    return obj
   }
 }
 
-// initial state 
+// initial state
 const state = {
   isSearching: false,
   results: {},
-  previousQueryString: "",
-  selectedConstraints: facetsprovider.facetNames.reduce((obj, facet) => { obj[facet] = []; return obj }, {}),
-  selectedConstraintsForLastFiltering: facetsprovider.facetNames.reduce((obj, facet) => { obj[facet] = []; return obj }, {}),
-  constraintCounts: facetsprovider.facetNames.reduce((obj, facet) => { obj[facet] = {}; return obj }, {})
+  previousQueryString: '',
+  selectedConstraints: helper.objectHoldingForEachConstraintAnEmpty(Array),
+  selectedConstraintsForLastFiltering: helper.objectHoldingForEachConstraintAnEmpty(Array),
+  constraintCounts: helper.objectHoldingForEachConstraintAnEmpty(Object)
 }
 
 const getters = {
@@ -133,9 +140,7 @@ const mutations = {
   },
   updateFacetsModel(state, queryStringFromQuery) {
     if (queryStringFromQuery != state.previousQueryString) {
-      facetsprovider.facetNames.forEach(facetName => {
-        state.selectedConstraints[facetName] = []
-      })
+      state.selectedConstraints = helper.objectHoldingForEachConstraintAnEmpty(Array)
       mutations.updateAllConstraintCountsFromResults(state)
     } else if (!getters.areAnyConstraintsSelected(state)) {
       mutations.updateAllConstraintCountsFromResults(state)
