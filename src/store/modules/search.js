@@ -15,13 +15,10 @@
  */
 import axios from 'axios'
 import querybuilder from '../../util/querybuilder.js'
+import facetsprovider from '../../util/facetsprovider.js'
 
 /* eslint-disable */
-
-const constants = {
-  facets: ["publisher", "author", "year", "language"],
-  facetTitles: { publisher: "Publisher", author: "Author", year: "Publication Year", language: "Language" },
-  facetConverters: { year: x => new Date(x).getYear() + 1900 },
+const constants = {  
   numDocsPerPage: 10,
   apiUrlPrefix: '/api/search?'
 }
@@ -31,28 +28,26 @@ const state = {
   isSearching: false,
   results: {},
   previousQueryString: "",
-  facets: {
-    selectedConstraints: constants.facets.reduce((obj, facet) => { obj[facet] = []; return obj }, {}),
-    selectedConstraintsForLastFiltering: constants.facets.reduce((obj, facet) => { obj[facet] = []; return obj }, {}),
-    constraintCounts: constants.facets.reduce((obj, facet) => { obj[facet] = {}; return obj }, {})
-  }
+  selectedConstraints: facetsprovider.facetNames.reduce((obj, facet) => { obj[facet] = []; return obj }, {}),
+  selectedConstraintsForLastFiltering: facetsprovider.facetNames.reduce((obj, facet) => { obj[facet] = []; return obj }, {}),
+  constraintCounts: facetsprovider.facetNames.reduce((obj, facet) => { obj[facet] = {}; return obj }, {})
 }
 
 const getters = {
   isSearching: state => {
     return state.isSearching
   },
-  getAvailableFacets: state => {
-    return constants.facets
+  getFacetNames: state => {
+    return facetsprovider.facetNames
   },
-  getFacetTitle: (state) => (facet) => {
-    return constants.facetTitles[facet]
+  getFacetTitle: state => facetName => {
+    return facetsprovider.facet[facetName].title
   },
-  getSelectedConstraints: (state) => (facet) => {
-    return state.facets.selectedConstraints[facet]
+  getSelectedConstraints: state => facetName => {
+    return state.selectedConstraints[facetName]
   },
-  getConstraintCounts: (state) => (facet) => {
-    return state.facets.constraintCounts[facet]
+  getConstraintCounts: state => facetName => {
+    return state.constraintCounts[facetName]
   },
   getNumDocsPerPage: state => {
     return constants.numDocsPerPage
@@ -64,18 +59,18 @@ const getters = {
     return state.results.hits ? state.results.hits.total : 0
   },
   getOnlySelectedConstraints: state => {
-    return constants.facets.reduce((obj, facet) => {
-      if (state.facets.selectedConstraints[facet].length > 0) {
-        obj[facet] = state.facets.selectedConstraints[facet]
+    return facetsprovider.facetNames.reduce((obj, facetName) => {
+      if (state.selectedConstraints[facetName].length > 0) {
+        obj[facetName] = state.selectedConstraints[facetName]
       }
       return obj
     }, {})
   },
   areAnyConstraintsSelected: state => {
-    return constants.facets.some(facet => state.facets.selectedConstraints[facet].length > 0)
+    return facetsprovider.facetNames.some(facetName => state.selectedConstraints[facetName].length > 0)
   },
   haveAnyConstraintsBeenApplied: state => {
-    return constants.facets.some(facet => state.facets.selectedConstraintsForLastFiltering[facet].length > 0)
+    return facetsprovider.facetNames.some(facetName => state.selectedConstraintsForLastFiltering[facetName].length > 0)
   }
 }
 
@@ -107,11 +102,11 @@ const actions = {
 
 const mutations = {
   setConstraintsForAFacet(state, payload) {
-    state.facets.selectedConstraints[payload.facet] = payload.arr || []
+    state.selectedConstraints[payload.facetName] = payload.arr || []
   },
   setConstraintsFromQuery(state, constraintsFromQuery) {
-    constants.facets.forEach(facet => {
-      state.facets.selectedConstraints[facet] = constraintsFromQuery[facet] || []
+    facetsprovider.facetNames.forEach(facetName => {
+      state.selectedConstraints[facetName] = constraintsFromQuery[facetName] || []
     })
   },
   setSearchingStatus(state, bool) {
@@ -122,8 +117,8 @@ const mutations = {
   },
   updateFacetsModel(state, queryStringFromQuery) {
     if (queryStringFromQuery != state.previousQueryString) {
-      constants.facets.forEach(facet => {
-        state.facets.selectedConstraints[facet] = []
+      facetsprovider.facetNames.forEach(facetName => {
+        state.selectedConstraints[facetName] = []
       })
       helper.updateAllConstraintCountsFromResults()
     } else if (!getters.areAnyConstraintsSelected(state)) {
@@ -132,29 +127,29 @@ const mutations = {
       // Which facets have constraints added? Are the counts invalid due to any constraint removal?
       let addedConstraints = {}
       let previousCountsInvalid = false
-      constants.facets.forEach(facet => {
-        let currentSelection = state.facets.selectedConstraints[facet]
-        let lastSelection = state.facets.selectedConstraintsForLastFiltering[facet]
-        addedConstraints[facet] = !currentSelection.every(e => lastSelection.includes(e))
+      facetsprovider.facetNames.forEach(facetName => {
+        let currentSelection = state.selectedConstraints[facetName]
+        let lastSelection = state.selectedConstraintsForLastFiltering[facetName]
+        addedConstraints[facetName] = !currentSelection.every(e => lastSelection.includes(e))
         previousCountsInvalid |= !lastSelection.every(e => currentSelection.includes(e))
       })
       // Update counts of facet depending of any changes
-      constants.facets.forEach(facet => {
+      facetsprovider.facetNames.forEach(facetName => {
         if (previousCountsInvalid) {
-          if (addedConstraints[facet]) {
-            helper.updateAConstraintFromResult(facet, true, false)
+          if (addedConstraints[facetName]) {
+            helper.updateAConstraintFromResult(facetName, true, false)
           } else {
-            helper.updateAConstraintFromResult(facet)
+            helper.updateAConstraintFromResult(facetName)
           }
-        } else if (!addedConstraints[facet]) {
-          helper.updateAConstraintFromResult(facet, true)
+        } else if (!addedConstraints[facetName]) {
+          helper.updateAConstraintFromResult(facetName, true)
         }
       })
     }
     // store for next search/filtering
     state.previousQueryString = queryStringFromQuery
-    constants.facets.forEach(facet => {
-      state.facets.selectedConstraintsForLastFiltering[facet] = state.facets.selectedConstraints[facet].slice(0)
+    facetsprovider.facetNames.forEach(facetName => {
+      state.selectedConstraintsForLastFiltering[facetName] = state.selectedConstraints[facetName].slice(0)
     })
   }
 }
@@ -167,35 +162,35 @@ const helper = {
   checkedConstraints(payload) {
     var constraints = payload.selectedConstraints || {}
     Object.values(constraints).forEach((key, value) => {
-      if (!constants.facets.includes(key) || !Array.isArray(value)) {
+      if (!facetsprovider.facetNames.includes(key) || !Array.isArray(value)) {
         return {}
       }
     })
     return constraints
   },
   updateAllConstraintCountsFromResults() {
-    constants.facets.forEach(facet => {
-      helper.updateAConstraintFromResult(facet)
+    facetsprovider.facetNames.forEach(facetName => {
+      helper.updateAConstraintFromResult(facetName)
     })
   },
-  updateAConstraintFromResult(facet, amendConstraintsNotPresentInResults = false, setAmendedToZero = true) {
+  updateAConstraintFromResult(facetName, amendConstraintsNotPresentInResults = false, setAmendedToZero = true) {
     var updatedCounts = {}
     if (amendConstraintsNotPresentInResults) {
       if (setAmendedToZero) {
-        Object.keys(state.facets.constraintCounts[facet]).forEach(constraint => {
+        Object.keys(state.constraintCounts[facetName]).forEach(constraint => {
           updatedCounts[constraint] = 0
         })
       } else {
-        Object.values(state.facets.constraintCounts[facet]).forEach((constraint, count) => {
+        Object.values(state.constraintCounts[facetName]).forEach((constraint, count) => {
           updatedCounts[constraint] = count
         })
       }
-    }
-    var converter = constants.facetConverters[facet] ? constants.facetConverters[facet] : x => x
-    state.results.aggregations[facet].buckets.forEach(bucketEntry => {
+    }    
+    var converter = facetsprovider.facet[facetName].esConverter || ( x => x )
+    state.results.aggregations[facetName].buckets.forEach(bucketEntry => {
       updatedCounts[converter(bucketEntry.key)] = bucketEntry.doc_count
     })
-    state.facets.constraintCounts[facet] = updatedCounts
+    state.constraintCounts[facetName] = updatedCounts
   }
 }
 

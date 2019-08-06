@@ -16,7 +16,7 @@
 <template>
   <b-card no-body class="mb-1">
     <b-card-header header-tag="header" class="p-1" role="tab">
-      <b-btn block href="#" v-b-toggle="facet" variant="accordion-gerdi"> {{ this.facetTitle }}
+      <b-btn block href="#" v-b-toggle="facetName" variant="accordion-gerdi"> {{ this.facetTitle }}
         <span class="when-opened">
           <font-awesome-icon icon="chevron-up" />
         </span>
@@ -25,7 +25,7 @@
         </span>
       </b-btn>
     </b-card-header>
-    <b-collapse :id="facet" visible role="tabpanel">
+    <b-collapse :id="facetName" visible role="tabpanel">
       <b-card-body>
           <b-button variant="link" :disabled="selectedConstraints.length == nonDisabledConstraints.length" @click="selectedConstraints = nonDisabledConstraints">
             Select all
@@ -35,7 +35,7 @@
           </b-button>
           <p class="card-text">
             <b-form-group>
-              <b-form-checkbox-group stacked v-model="selectedConstraints" :name="facet" :options="clippedConstraintOptions" />
+              <b-form-checkbox-group stacked v-model="selectedConstraints" :name="facetName" :options="clippedConstraintOptions" />
             </b-form-group>
           </p>
           <b-button variant="link" :disabled="constraintOptions.length <= numberOfConstraintsToShow" @click="numberOfConstraintsToShow += constraintsClippingStepSize">
@@ -53,7 +53,7 @@
 /* eslint-disable */
 export default {
   name: 'facet-card',
-  props: ['facet'],
+  props: ['facetName'],
 
   data() {
     return {
@@ -74,21 +74,21 @@ export default {
 
   computed: {
     facetTitle() {
-      return this.$store.getters.getFacetTitle(this.facet)
+      return this.$store.getters.getFacetTitle(this.facetName)
     },
     clippedConstraintOptions() {
       return this.constraintOptions.slice(0, Math.min(this.numberOfConstraintsToShow, this.constraintOptions.length))
     },
     constraintCounts() {
-      return this.$store.getters.getConstraintCounts(this.facet)
+      return this.$store.getters.getConstraintCounts(this.facetName)
     },
     selectedConstraints: {
       get() {     
-        return this.$store.getters.getSelectedConstraints(this.facet)
+        return this.$store.getters.getSelectedConstraints(this.facetName)
       },
       set(arr) {       
         this.$store.commit('setConstraintsForAFacet', {
-          facet: this.facet,
+          facetName: this.facetName,
           arr: arr
         })
       }

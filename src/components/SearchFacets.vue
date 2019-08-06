@@ -15,12 +15,12 @@
  */
 <template>
 <div role="tablist">
-  <facet-card v-for="facet in availableFacets" :facet="facet" :key="facet._id"/>
+  <facet-card v-for="facetName in facetNames" :facetName="facetName" :key="facetName"/>
   <div class="all-facets-buttons" >
     <b-button block class="facets-button" variant="primary" @click="applyConstraints">
       Apply
     </b-button>
-    <b-button block class="facets-button" variant="secondary" @click="clearAllFacets" :disabled="!anyConstraintsSelected">
+    <b-button block class="facets-button" variant="secondary" @click="clearAllFacetContraints" :disabled="!anyConstraintsSelected">
       Clear All
     </b-button>
   </div>
@@ -33,8 +33,8 @@ export default {
 
   name: 'search-facets',
   computed: {
-    availableFacets() {
-      return this.$store.getters.getAvailableFacets
+    facetNames() {
+      return this.$store.getters.getFacetNames
     },
     anyConstraintsSelected() {
       return this.$store.getters.areAnyConstraintsSelected
@@ -44,10 +44,10 @@ export default {
     }
   },
   methods: {
-    clearAllFacets() {
-      this.availableFacets.forEach(facet => {        
+    clearAllFacetContraints() {
+      this.facetNames.forEach(facetName => {
         this.$store.commit('setConstraintsForAFacet', {
-          facet: facet,
+          facetName: facetName,
           arr: []
         })
       })
