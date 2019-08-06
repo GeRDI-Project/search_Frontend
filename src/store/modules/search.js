@@ -23,6 +23,22 @@ const constants = {
   apiUrlPrefix: '/api/search?'
 }
 
+const helper = {
+  checkedCurrentPage(payload) {
+    var page = payload.checkedCurrentPage
+    return Number.isInteger(page) && page > 0 ? page : 1
+  },
+  checkedConstraints(payload) {
+    var constraints = payload.selectedConstraints || {}
+    Object.values(constraints).forEach((key, value) => {
+      if (!facetsprovider.facetNames.includes(key) || !Array.isArray(value)) {
+        return {}
+      }
+    })
+    return constraints
+  }
+}
+
 // initial state 
 const state = {
   isSearching: false,
@@ -120,9 +136,9 @@ const mutations = {
       facetsprovider.facetNames.forEach(facetName => {
         state.selectedConstraints[facetName] = []
       })
-      helper.updateAllConstraintCountsFromResults()
+      mutations.updateAllConstraintCountsFromResults(state)
     } else if (!getters.areAnyConstraintsSelected(state)) {
-      helper.updateAllConstraintCountsFromResults()
+      mutations.updateAllConstraintCountsFromResults(state)
     } else {
       // Which facets have constraints added? Are the counts invalid due to any constraint removal?
       let addedConstraints = {}
@@ -137,12 +153,12 @@ const mutations = {
       facetsprovider.facetNames.forEach(facetName => {
         if (previousCountsInvalid) {
           if (addedConstraints[facetName]) {
-            helper.updateAConstraintFromResult(facetName, true, false)
+            mutations.updateAConstraintFromResult(state, facetName, true, false)
           } else {
-            helper.updateAConstraintFromResult(facetName)
+            mutations.updateAConstraintFromResult(state, facetName)
           }
         } else if (!addedConstraints[facetName]) {
-          helper.updateAConstraintFromResult(facetName, true)
+          mutations.updateAConstraintFromResult(state, facetName, true)
         }
       })
     }
@@ -151,29 +167,13 @@ const mutations = {
     facetsprovider.facetNames.forEach(facetName => {
       state.selectedConstraintsForLastFiltering[facetName] = state.selectedConstraints[facetName].slice(0)
     })
-  }
-}
-
-const helper = {
-  checkedCurrentPage(payload) {
-    var page = payload.checkedCurrentPage
-    return Number.isInteger(page) && page > 0 ? page : 1
   },
-  checkedConstraints(payload) {
-    var constraints = payload.selectedConstraints || {}
-    Object.values(constraints).forEach((key, value) => {
-      if (!facetsprovider.facetNames.includes(key) || !Array.isArray(value)) {
-        return {}
-      }
-    })
-    return constraints
-  },
-  updateAllConstraintCountsFromResults() {
+  updateAllConstraintCountsFromResults(state) {
     facetsprovider.facetNames.forEach(facetName => {
-      helper.updateAConstraintFromResult(facetName)
+      mutations.updateAConstraintFromResult(state, facetName)
     })
   },
-  updateAConstraintFromResult(facetName, amendConstraintsNotPresentInResults = false, setAmendedToZero = true) {
+  updateAConstraintFromResult(state, facetName, amendConstraintsNotPresentInResults = false, setAmendedToZero = true) {
     var updatedCounts = {}
     if (amendConstraintsNotPresentInResults) {
       if (setAmendedToZero) {
