@@ -14,26 +14,26 @@
  * limitations under the License.
  */
 
-const availableFacets = [
-  {
+const availableFacets = {
+  publisher: {
     name: 'publisher',
     title: 'Publisher',
     fieldName: 'publisher.raw',
     subFieldName: 'publisher'
   },
-  {
+  author: {
     name: 'author',
     title: 'Author',
     fieldName: 'creators.creatorName.value.raw',
     subFieldName: 'creators.creatorName.value'
   },
-  {
+  language: {
     name: 'language',
     title: 'Language',
     fieldName: 'language',
     subFieldName: 'language'
   },
-  {
+  year: {
     name: 'year',
     title: 'Publication Year',
     fieldName: 'publicationYear',
@@ -48,14 +48,17 @@ const availableFacets = [
       }
     })
   }
-]
+}
 
 // export all facets and facet names as arrays resp. facets as object with facet name as key
 export default {
-  facetNames: availableFacets.map(facet => facet.name),
-  allFacets: availableFacets,
-  facet: availableFacets.reduce(
-    (obj, facet) => Object.assign(obj, { [facet.name]: facet }),
-    {}
-  )
+  getFacetNames () {
+    return Object.keys(availableFacets)
+  },
+  getFacet (facetName) {
+    return availableFacets[facetName]
+  },
+  getAllFacets () {
+    return Object.values(availableFacets)
+  }
 }

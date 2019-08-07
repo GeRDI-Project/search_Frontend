@@ -18,7 +18,7 @@ import facetsprovider from './facetsprovider.js'
 export default {
   buildQuery (queryString, constraints) {
     var queryBody = buildQueryBody(queryString)
-    facetsprovider.allFacets.forEach(facet => {
+    facetsprovider.getAllFacets().forEach(facet => {
       if (constraints[facet.name] && constraints[facet.name].length > 0) {
         if (facet.subQueryBuilder) {
           queryBody.query.bool.must.push(
@@ -50,7 +50,7 @@ function buildQueryBody (queryString) {
     }
   }
   queryBody.aggs = {}
-  facetsprovider.allFacets.forEach(facet => {
+  facetsprovider.getAllFacets().forEach(facet => {
     queryBody.aggs[facet.name] = {
       terms: {
         field: facet.fieldName,

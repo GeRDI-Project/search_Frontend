@@ -29,7 +29,7 @@ const helper = {
   },
   sanitizeConstraints(selectedConstraints) {
     Object.values(selectedConstraints).forEach((key, value) => {
-      if (!facetsprovider.facetNames.includes(key) || !Array.isArray(value)) {
+      if (!facetsprovider.getFacetNames().includes(key) || !Array.isArray(value)) {
         return {}
       }
     })
@@ -38,7 +38,7 @@ const helper = {
   // create an object which contains for each facet an initially empty Array or Object
   createInitialConstraintsObject(valueType) {
     let obj = {}
-    facetsprovider.facetNames.forEach(facetName => {
+    facetsprovider.getFacetNames().forEach(facetName => {
       obj[facetName] = new valueType()
     })
     return obj
@@ -60,10 +60,10 @@ const getters = {
     return state.isSearching
   },
   getFacetNames: state => {
-    return facetsprovider.facetNames
+    return facetsprovider.getFacetNames()
   },
   getFacetTitle: state => facetName => {
-    return facetsprovider.facet[facetName].title
+    return facetsprovider.getFacet(facetName).title
   },
   getSelectedConstraints: state => facetName => {
     return state.selectedConstraints[facetName]
@@ -82,7 +82,7 @@ const getters = {
   },
   getOnlyFacetsWithSelectedConstraints: state => {
     let obj = {}
-    facetsprovider.facetNames.forEach(facetName => {
+    facetsprovider.getFacetNames().forEach(facetName => {
       let arr = state.selectedConstraints[facetName]
       if (arr.length > 0) {
         obj[facetName] = arr
@@ -132,7 +132,7 @@ const mutations = {
     state.selectedConstraints[payload.facetName] = payload.arr || []
   },
   setConstraintsFromQuery(state, constraintsFromQuery) {
-    facetsprovider.facetNames.forEach(facetName => {
+    facetsprovider.getFacetNames().forEach(facetName => {
       state.selectedConstraints[facetName] =
         constraintsFromQuery[facetName] || []
     })
@@ -153,7 +153,7 @@ const mutations = {
       // Which facets have constraints added? Are the counts invalid due to any constraint removal?
       let addedConstraints = {}
       let previousCountsInvalid = false
-      facetsprovider.facetNames.forEach(facetName => {
+      facetsprovider.getFacetNames().forEach(facetName => {
         let currentSelection = state.selectedConstraints[facetName]
         let lastSelection = state.previouslyAppliedConstraints[facetName]
         addedConstraints[facetName] = !currentSelection.every(e =>
@@ -164,7 +164,7 @@ const mutations = {
         )
       })
       // Update counts of facet depending of any changes
-      facetsprovider.facetNames.forEach(facetName => {
+      facetsprovider.getFacetNames().forEach(facetName => {
         if (previousCountsInvalid) {
           if (addedConstraints[facetName]) {
             mutations.updateAConstraintFromResult(state, facetName, true, false)
@@ -178,14 +178,14 @@ const mutations = {
     }
     // store for next search/filtering
     state.previousQueryString = queryStringFromQuery
-    facetsprovider.facetNames.forEach(facetName => {
+    facetsprovider.getFacetNames().forEach(facetName => {
       state.previouslyAppliedConstraints[facetName] = state.selectedConstraints[
         facetName
       ].slice(0)
     })
   },
   updateAllConstraintCountsFromResults(state) {
-    facetsprovider.facetNames.forEach(facetName => {
+    facetsprovider.getFacetNames().forEach(facetName => {
       mutations.updateAConstraintFromResult(state, facetName)
     })
   },
@@ -209,7 +209,7 @@ const mutations = {
         )
       }
     }
-    var converter = facetsprovider.facet[facetName].converter || (x => x)
+    var converter = facetsprovider.getFacet(facetName).converter || (x => x)
     state.results.aggregations[facetName].buckets.forEach(bucketEntry => {
       updatedCounts[converter(bucketEntry.key)] = bucketEntry.doc_count
     })
