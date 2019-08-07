@@ -24,18 +24,16 @@ const constants = {
 }
 
 const helper = {
-  sanitizePageNumber(payload) {
-    var page = payload.checkedCurrentPage
-    return Number.isInteger(page) && page > 0 ? page : 1
+  sanitizePageNumber(pageNumber) {
+    return pageNumber && Number.isInteger(pageNumber) && pageNumber > 0 ? pageNumber : 1
   },
-  sanitizeConstraints(payload) {
-    var constraints = payload.selectedConstraints || {}
-    Object.values(constraints).forEach((key, value) => {
+  sanitizeConstraints(selectedConstraints) {
+    Object.values(selectedConstraints).forEach((key, value) => {
       if (!facetsprovider.facetNames.includes(key) || !Array.isArray(value)) {
         return {}
       }
     })
-    return constraints
+    return selectedConstraints || {}
   },
   // create an object which contains for each facet an initially empty Array or Object
   createInitialConstraintsObject(valueType) {
@@ -105,8 +103,8 @@ const actions = {
     commit('setSearchingStatus', true)
     commit('setResults', [])
     var queryStringFromQuery = payload.queryString
-    var currentPageFromQuery = helper.sanitizePageNumber(payload)
-    var constraintsFromQuery = helper.sanitizeConstraints(payload)
+    var currentPageFromQuery = helper.sanitizePageNumber(payload.checkedCurrentPage)
+    var constraintsFromQuery = helper.sanitizeConstraints(payload.selectedConstraints)
     var query = querybuilder.buildQuery(
       queryStringFromQuery,
       constraintsFromQuery
