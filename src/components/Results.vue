@@ -18,7 +18,7 @@
   <search-mask :query-value="queryString" />
   <b-container>
     <b-row>
-      <b-col v-if="anyResults">
+      <b-col v-if="wereAnyResultsFound">
         <h6 class="results-annotation"><b>{{ numResults }}</b> results found for <b> {{ queryString }} </b></h6>
       </b-col>
       <b-col v-else-if="isSearching">
@@ -32,15 +32,15 @@
         </b-alert>
       </b-col>
     </b-row>
-    <b-row v-if="anyResults || anyFacetFilteringApplied">
+    <b-row v-if="wereAnyResultsFound || wereAnyConstraintsApplied">
       <b-col cols="3">
         <search-facets/>
       </b-col>
-      <b-col v-if="anyResults" cols="9">
+      <b-col v-if="wereAnyResultsFound" cols="9">
         <search-result-entry id="result-list" v-for="result in results" :result="result" :key="result._id" />
       </b-col>
     </b-row>
-    <b-row v-if="anyResults">
+    <b-row v-if="wereAnyResultsFound">
       <b-col>
         <b-pagination align="center" size="md" :total-rows="numResults" v-model="currentPage" :per-page="numDocsPerPage" @change="applyPagination"/>
       </b-col>
@@ -65,10 +65,10 @@ export default {
     isSearching() {
       return this.$store.getters.isSearching
     },
-    anyFacetFilteringApplied() {
-      return this.$store.getters.haveAnyConstraintsBeenApplied
+    wereAnyConstraintsApplied() {
+      return this.$store.getters.wereAnyConstraintsApplied
     },
-    anyResults() {
+    wereAnyResultsFound() {
       return (this.$store.getters.getResultsAmount > 0)
     },
     isChecked() {
@@ -89,7 +89,7 @@ export default {
     numDocsPerPage() {
       return this.$store.getters.getNumDocsPerPage
     },
-    anyConstraintsSelected() {
+    areAnyConstraintsSelected() {
       return this.$store.getters.areAnyConstraintsSelected
     },
     onlyFacetsWithSelectedConstraints() {
@@ -120,7 +120,7 @@ export default {
         q: this.$route.query.q,
         p: val
       }
-      if (this.anyConstraintsSelected) {
+      if (this.areAnyConstraintsSelected) {
         newQuery.s = encodeURIComponent(JSON.stringify(this.onlyFacetsWithSelectedConstraints))
       }
       this.$router.push({

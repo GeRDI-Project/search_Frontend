@@ -24,11 +24,11 @@ const constants = {
 }
 
 const helper = {
-  sanitizedCurrentPage(payload) {
+  sanitizePageNumber(payload) {
     var page = payload.checkedCurrentPage
     return Number.isInteger(page) && page > 0 ? page : 1
   },
-  sanitizedConstraints(payload) {
+  sanitizeConstraints(payload) {
     var constraints = payload.selectedConstraints || {}
     Object.values(constraints).forEach((key, value) => {
       if (!facetsprovider.facetNames.includes(key) || !Array.isArray(value)) {
@@ -37,10 +37,11 @@ const helper = {
     })
     return constraints
   },
-  objectHoldingForEachConstraintAnEmpty(type) {
+  // create an object which contains for each facet an initially empty Array or Object
+  createInitialConstraintsObject(valueType) {
     let obj = {}
     facetsprovider.facetNames.forEach(facetName => {
-      obj[facetName] = new type()
+      obj[facetName] = new valueType()
     })
     return obj
   }
@@ -51,9 +52,9 @@ const state = {
   isSearching: false,
   results: {},
   previousQueryString: '',
-  selectedConstraints: helper.objectHoldingForEachConstraintAnEmpty(Array),
-  previouslyAppliedConstraints: helper.objectHoldingForEachConstraintAnEmpty(Array),
-  constraintCounts: helper.objectHoldingForEachConstraintAnEmpty(Object)
+  selectedConstraints: helper.createInitialConstraintsObject(Array),
+  previouslyAppliedConstraints: helper.createInitialConstraintsObject(Array),
+  constraintCounts: helper.createInitialConstraintsObject(Object)
 }
 
 const getters = {
@@ -94,7 +95,7 @@ const getters = {
   areAnyConstraintsSelected: state => {
     return Object.values(state.selectedConstraints).some(arr => arr.length > 0)
   },
-  haveAnyConstraintsBeenApplied: state => {
+  wereAnyConstraintsApplied: state => {
     return Object.values(state.previouslyAppliedConstraints).some(arr => arr.length > 0)
   }
 }
@@ -104,8 +105,8 @@ const actions = {
     commit('setSearchingStatus', true)
     commit('setResults', [])
     var queryStringFromQuery = payload.queryString
-    var currentPageFromQuery = helper.sanitizedCurrentPage(payload)
-    var constraintsFromQuery = helper.sanitizedConstraints(payload)
+    var currentPageFromQuery = helper.sanitizePageNumber(payload)
+    var constraintsFromQuery = helper.sanitizeConstraints(payload)
     var query = querybuilder.buildQuery(
       queryStringFromQuery,
       constraintsFromQuery
@@ -146,9 +147,7 @@ const mutations = {
   },
   updateFacetsModel(state, queryStringFromQuery) {
     if (queryStringFromQuery != state.previousQueryString) {
-      state.selectedConstraints = helper.objectHoldingForEachConstraintAnEmpty(
-        Array
-      )
+      state.selectedConstraints = helper.createInitialConstraintsObject(Array)
       mutations.updateAllConstraintCountsFromResults(state)
     } else if (!getters.areAnyConstraintsSelected(state)) {
       mutations.updateAllConstraintCountsFromResults(state)
@@ -158,7 +157,7 @@ const mutations = {
       let previousCountsInvalid = false
       facetsprovider.facetNames.forEach(facetName => {
         let currentSelection = state.selectedConstraints[facetName]
-        let lastSelection = state.selectedConstraintsForLastFiltering[facetName]
+        let lastSelection = state.previouslyAppliedConstraints[facetName]
         addedConstraints[facetName] = !currentSelection.every(e =>
           lastSelection.includes(e)
         )
@@ -212,7 +211,7 @@ const mutations = {
         )
       }
     }
-    var converter = facetsprovider.facet[facetName].esConverter || (x => x)
+    var converter = facetsprovider.facet[facetName].converter || (x => x)
     state.results.aggregations[facetName].buckets.forEach(bucketEntry => {
       updatedCounts[converter(bucketEntry.key)] = bucketEntry.doc_count
     })

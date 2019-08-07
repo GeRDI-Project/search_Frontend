@@ -20,7 +20,7 @@
     <b-button block class="facets-button" variant="primary" @click="applyConstraints">
       Apply
     </b-button>
-    <b-button block class="facets-button" variant="secondary" @click="clearAllFacetContraints" :disabled="!anyConstraintsSelected">
+    <b-button block class="facets-button" variant="secondary" @click="clearAllFacetContraints" :disabled="!areAnyConstraintsSelected">
       Clear All
     </b-button>
   </div>
@@ -36,7 +36,7 @@ export default {
     facetNames() {
       return this.$store.getters.getFacetNames
     },
-    anyConstraintsSelected() {
+    areAnyConstraintsSelected() {
       return this.$store.getters.areAnyConstraintsSelected
     },    
     onlyFacetsWithSelectedConstraints() {
@@ -56,7 +56,7 @@ export default {
       var newQuery = {
         q: this.$route.query.q
       }
-      if (this.anyConstraintsSelected) {
+      if (this.areAnyConstraintsSelected) {
         newQuery.s = encodeURIComponent(JSON.stringify(this.onlyFacetsWithSelectedConstraints))
       } 
       if (this.$route.query.p) {

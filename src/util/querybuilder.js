@@ -20,13 +20,13 @@ export default {
     var queryBody = buildQueryBody(queryString)
     facetsprovider.allFacets.forEach(facet => {
       if (constraints[facet.name] && constraints[facet.name].length > 0) {
-        if (facet.esSubQueryBuilder) {
+        if (facet.subQueryBuilder) {
           queryBody.query.bool.must.push(
-            facet.esSubQueryBuilder(constraints[facet.name])
+            facet.subQueryBuilder(constraints[facet.name])
           )
         } else {
           queryBody.query.bool.must.push(
-            buildSubQuery(constraints[facet.name], facet.esSubFieldName)
+            buildSubQuery(constraints[facet.name], facet.subFieldName)
           )
         }
       }
@@ -53,7 +53,7 @@ function buildQueryBody (queryString) {
   facetsprovider.allFacets.forEach(facet => {
     queryBody.aggs[facet.name] = {
       terms: {
-        field: facet.esFieldName,
+        field: facet.fieldName,
         size: 300,
         order: {
           _count: 'desc'

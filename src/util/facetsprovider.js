@@ -18,28 +18,28 @@ const availableFacets = [
   {
     name: 'publisher',
     title: 'Publisher',
-    esFieldName: 'publisher.raw',
-    esSubFieldName: 'publisher'
+    fieldName: 'publisher.raw',
+    subFieldName: 'publisher'
   },
   {
     name: 'author',
     title: 'Author',
-    esFieldName: 'creators.creatorName.value.raw',
-    esSubFieldName: 'creators.creatorName.value'
+    fieldName: 'creators.creatorName.value.raw',
+    subFieldName: 'creators.creatorName.value'
   },
   {
     name: 'language',
     title: 'Language',
-    esFieldName: 'language',
-    esSubFieldName: 'language'
+    fieldName: 'language',
+    subFieldName: 'language'
   },
   {
     name: 'year',
     title: 'Publication Year',
-    esFieldName: 'publicationYear',
-    esSubFieldName: 'publicationYear',
-    esConverter: x => new Date(x).getYear() + 1900,
-    esSubQueryBuilder: selectedYears => ({
+    fieldName: 'publicationYear',
+    subFieldName: 'publicationYear',
+    converter: x => new Date(x).getYear() + 1900,
+    subQueryBuilder: selectedYears => ({
       range: {
         publicationYear: {
           gte: Math.min.apply(null, selectedYears),
