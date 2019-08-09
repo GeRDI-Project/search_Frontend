@@ -38,7 +38,7 @@
     </b-form-select>
     <b-spinner v-else label="Logging you in..."></b-spinner>
   </b-modal>
-  <b-modal id="modal-center" centered ref="createCollection" title="Create a new Collection" @ok="createNewCollection">
+  <b-modal id="modal-center" centered ref="createCollection" title="Create a new Collection" @ok="createNewCollection" :ok-disabled="!validCollectionName">
     <b-form-input v-model="collectionName" type="text" placeholder="Please enter a name for the new Collection"></b-form-input>
   </b-modal>
   <b-modal id="modal-center" centered ref="logIn" title="Save Document to a Collection" @ok="memoAndSignIn()" ok-title="Log me in">
@@ -80,6 +80,9 @@ export default {
     },
     collections() {
       return this.$store.getters.getCollectionList
+    },
+    validCollectionName() {
+      return this.collectionName.length > 0
     }
   },
   mounted() {
