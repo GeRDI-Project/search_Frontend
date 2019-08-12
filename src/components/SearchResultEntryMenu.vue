@@ -85,13 +85,6 @@ export default {
       this.$refs.bookmarkingModal.show()
     }
   },
-  watch: {
-    isBookmarked(newStatus) {
-      if (newStatus) {
-        this.showBookmarkAlert()
-      }
-    }
-  },
   methods: {
     okClicked() {
       if (this.collectionID != 0) {
@@ -125,6 +118,7 @@ export default {
         collectionName: this.collectionName,
         docID: this.results._id
       })
+      this.showBookmarkAlert()
     },
     memoAndSignIn() {
       window.sessionStorage.setItem("item_to_be_bookmarked", this.results._id)
@@ -138,6 +132,7 @@ export default {
           collectionID: self.collectionID,
           docID: self.results._id
         })
+        this.showBookmarkAlert()
       } else {
          console.error("Empty collection ID");
       }
