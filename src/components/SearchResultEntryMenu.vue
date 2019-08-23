@@ -18,14 +18,16 @@
   <b-button-group>
     <b-button disabled variant="link" >More information</b-button>
     <b-button disabled variant="link" >Share</b-button>
-    <b-button v-b-modal.modal @click="showModal" variant="link">{{bookmarkBtn}}</b-button>
+    <b-button v-b-modal.modal @click="showModal" variant="link">{{ isBookmarked ? 'Bookmarked' : 'Add Bookmark'}}</b-button>
     <b-button disabled variant="link">Preprocess</b-button>
     <b-button disabled variant="link" >Store</b-button>
   </b-button-group>
   <b-alert :show="dismissCountDown" dismissible variant="success" @dismissed="dismissCountDown=0" @dismiss-count-down="countDownChanged">
     The bookmark is successfully set!
   </b-alert>
-  <b-modal id="modal-center" centered ref="bookmarkingModal" title="Save Document to a Collection" @ok="okClicked" :ok-disabled="collectionID === null && collections === null" :ok-title="okBtn">
+  <b-modal id="modal-center" centered ref="bookmarkingModal" title="Save Document to a Collection" @ok="okClicked" 
+    :ok-disabled="collectionID === null && collections === null"
+    :ok-title="isCollectionSelected ? 'Save Document' : 'Create new Collection'">
     <div>Please select whether you want to store the selected document in a new or existing collection.</div>
     <b-form-select v-if="collections !== null" v-model="collectionID" class="mt-3">
       <option :value="null" disabled>Please select an option</option>
@@ -38,7 +40,7 @@
     </b-form-select>
     <b-spinner v-else label="Logging you in..." />
   </b-modal>
-  <b-modal id="modal-center" centered ref="createCollection" title="Create a new Collection" @ok="createNewCollection">
+  <b-modal id="modal-center" centered ref="createCollection" title="Create a new Collection" @ok="createNewCollection" :ok-disabled="!validCollectionName">
     <b-form-input v-model="collectionName" type="text" placeholder="Please enter a name for the new Collection" />
   </b-modal>
   <b-modal id="modal-center" centered ref="logIn" title="Save Document to a Collection" @ok="memoAndSignIn()" ok-title="Log me in">
@@ -61,25 +63,20 @@ export default {
     }
   },
   computed: {
-    bookmarkBtn() {
-      if (this.$gerdi.aai.getUser() !== null && this.collections !== null && this.$store.getters.isBookmarked(this.results._id) === true) {
-        return 'Bookmarked'
-      } else {
-        return 'Add Bookmark'
-      }
+    isBookmarked() {
+      return (this.$gerdi.aai.getUser() !== null && this.collections !== null && this.$store.getters.isBookmarked(this.results._id) === true)
     },
-    okBtn() {
-      if (this.collectionID != 0) {
-        return 'Save Document'
-      } else {
-        return 'Create new Collection'
-      }
+    isCollectionSelected() {
+      return this.collectionID != 0
     },
     user () {
       return this.$gerdi.aai.getUser()
     },
     collections() {
       return this.$store.getters.getCollectionList
+    },
+    validCollectionName() {
+      return this.collectionName.length > 0
     }
   },
   mounted() {
@@ -91,17 +88,13 @@ export default {
   methods: {
     okClicked() {
       if (this.collectionID != 0) {
-        this.addBookmarkToExistingCollection();
-        this.showBookmarkAlert();
-        this.setAsBookmarked ()
+        this.addBookmarkToExistingCollection();        
       } else {
         this.$refs.createCollection.show()
       }
     },
     createNewCollection() {
-      this.addBookmark();
-      this.showBookmarkAlert();
-      this.setAsBookmarked ()
+      this.addBookmark();      
     },
     showModal() {
       if (this.$gerdi.aai.getUser() !== null || !this.$gerdi.aai.isChecked()) {
@@ -119,15 +112,13 @@ export default {
     showBookmarkAlert() {
       this.dismissCountDown = this.dismissSecs
     },
-    setAsBookmarked() {
-      this.bookmarkBtn = 'Bookmarked'
-    },
     addBookmark() {
       this.$store.dispatch('createBookmark', {
         vm: this,
         collectionName: this.collectionName,
         docID: this.results._id
       })
+      this.showBookmarkAlert()
     },
     memoAndSignIn() {
       window.sessionStorage.setItem("item_to_be_bookmarked", this.results._id)
@@ -141,6 +132,7 @@ export default {
           collectionID: self.collectionID,
           docID: self.results._id
         })
+        this.showBookmarkAlert()
       } else {
          console.error("Empty collection ID");
       }
