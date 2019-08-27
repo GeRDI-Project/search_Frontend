@@ -59,9 +59,6 @@ export default {
       if (this.areAnyConstraintsSelected) {
         newQuery.s = encodeURIComponent(JSON.stringify(this.onlyFacetsWithSelectedConstraints))
       } 
-      if (this.$route.query.p) {
-        newQuery.p = this.$route.query.p
-      }
       this.$router.push({
         name: 'results',
         query: newQuery

@@ -103,7 +103,7 @@ const actions = {
     commit('setSearchingStatus', true)
     commit('setResults', [])
     var queryStringFromQuery = payload.queryString
-    var currentPageFromQuery = helper.sanitizePageNumber(payload.checkedCurrentPage)
+    var currentPageFromQuery = helper.sanitizePageNumber(payload.currentPage)
     var constraintsFromQuery = helper.sanitizeConstraints(payload.selectedConstraints)
     var query = querybuilder.buildQuery(
       queryStringFromQuery,

@@ -117,8 +117,10 @@ export default {
     },
     applyPagination(val) {
       var newQuery = {
-        q: this.$route.query.q,
-        p: val
+        q: this.$route.query.q
+      }
+      if (val > 1) {
+        newQuery.p = val
       }
       if (this.areAnyConstraintsSelected) {
         newQuery.s = encodeURIComponent(JSON.stringify(this.onlyFacetsWithSelectedConstraints))
