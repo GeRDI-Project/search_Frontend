@@ -111,7 +111,7 @@ const actions = {
     )
     var url = constants.apiUrlPrefix + '&size=' + constants.numDocsPerPage
     if (currentPageFromQuery > 1) {
-      url += '&from=' + ((currentPageFromQuery - 1) * constants.numDocsPerPage)
+      url += '&from=' + (currentPageFromQuery - 1) * constants.numDocsPerPage
     }
     axios.post(url, query)
       .then(function (response) {
@@ -144,12 +144,7 @@ const mutations = {
     state.results = results
   },
   updateFacetsModel(state, queryStringFromQuery) {
-    if (queryStringFromQuery != state.previousQueryString) {
-      state.selectedConstraints = helper.createInitialConstraintsObject(Array)
-      mutations.updateAllConstraintCountsFromResults(state)
-    } else if (!getters.areAnyConstraintsSelected(state)) {
-      mutations.updateAllConstraintCountsFromResults(state)
-    } else {
+    if (queryStringFromQuery === state.previousQueryString && getters.areAnyConstraintsSelected(state)) {
       // Which facets have constraints added? Are the counts invalid due to any constraint removal?
       let addedConstraints = {}
       let previousCountsInvalid = false
@@ -175,6 +170,8 @@ const mutations = {
           mutations.updateAConstraintFromResult(state, facetName, true)
         }
       })
+    } else {
+      mutations.updateAllConstraintCountsFromResults(state)
     }
     // store for next search/filtering
     state.previousQueryString = queryStringFromQuery
