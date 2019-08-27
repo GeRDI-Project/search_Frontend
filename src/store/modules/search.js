@@ -20,6 +20,7 @@ import facetsprovider from '../../util/facetsprovider.js'
 /* eslint-disable */
 const constants = {
   numDocsPerPage: 10,
+  maxPagesToBeShow: 1000,
   apiUrlPrefix: '/api/search?'
 }
 
@@ -73,6 +74,9 @@ const getters = {
   },
   getNumDocsPerPage: state => {
     return constants.numDocsPerPage
+  },
+  getMaxNumberOfDocsToBeShow: state => {
+    return constants.maxPagesToBeShow * constants.numDocsPerPage
   },
   getResults: state => {
     return state.results.hits ? state.results.hits.hits : []

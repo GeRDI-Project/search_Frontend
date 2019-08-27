@@ -42,7 +42,7 @@
     </b-row>
     <b-row v-if="wereAnyResultsFound">
       <b-col>
-        <b-pagination align="center" size="md" :total-rows="numResults" v-model="currentPage" :per-page="numDocsPerPage" @change="applyPagination"/>
+        <b-pagination align="center" size="md" :total-rows="numResultsToBeShown" v-model="currentPage" :per-page="numDocsPerPage" @change="applyPagination"/>
       </b-col>
     </b-row>
   </b-container>
@@ -85,6 +85,9 @@ export default {
     },
     numResults() {
       return this.$store.getters.getResultsAmount
+    },
+    numResultsToBeShown() {
+      return Math.min(this.$store.getters.getMaxNumberOfDocsToBeShow, this.numResults)
     },
     numDocsPerPage() {
       return this.$store.getters.getNumDocsPerPage
