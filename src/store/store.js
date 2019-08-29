@@ -1,5 +1,5 @@
 /**
- * Copyright 2018 Nelson Tavares de Sousa, Alvaro Aguilera, Ingo Thomsen
+ * Copyright 2018 Nelson Tavares de Sousa, Alvaro Aguilera
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,20 +18,12 @@ import Vuex from 'vuex'
 
 import searchModule from './modules/search'
 import collectionsModule from './modules/collections'
-import VuexPersistence from 'vuex-persist'
 
 Vue.use(Vuex)
-
-const searchState = new VuexPersistence({
-  key: 'vuex-search-state',
-  storage: window.sessionStorage,
-  modules: ['search']
-})
 
 export const store = new Vuex.Store({
   modules: {
     search: searchModule,
     collections: collectionsModule
-  },
-  plugins: [searchState.plugin]
+  }
 })

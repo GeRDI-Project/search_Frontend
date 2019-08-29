@@ -1,9 +1,9 @@
 <template>
 <div>
   <b-card>
-    <document-media :doc="this.result"></document-media>
+    <document-media :doc="this.result" />
     <div slot="footer">
-        <search-result-entry-menu :results="this.result"></search-result-entry-menu>
+        <search-result-entry-menu :results="this.result" />
     </div>
   </b-card>
 </div>

@@ -15,213 +15,206 @@
  */
 import axios from 'axios'
 import querybuilder from '../../util/querybuilder.js'
+import facetsprovider from '../../util/facetsprovider.js'
 
 /* eslint-disable */
+const constants = {
+  numDocsPerPage: 10,
+  maxPagesToBeShow: 1000,
+  apiUrlPrefix: '/api/search?'
+}
+
+const helper = {
+  sanitizePageNumber(pageNumber) {
+    return pageNumber && Number.isInteger(pageNumber) && pageNumber > 0 ? pageNumber : 1
+  },
+  sanitizeConstraints(selectedConstraints) {
+    Object.values(selectedConstraints).forEach((key, value) => {
+      if (!facetsprovider.getFacetNames().includes(key) || !Array.isArray(value)) {
+        return {}
+      }
+    })
+    return selectedConstraints || {}
+  },
+  // create an object which contains for each facet an initially empty Array or Object
+  createInitialConstraintsObject(valueType) {
+    let obj = {}
+    facetsprovider.getFacetNames().forEach(facetName => {
+      obj[facetName] = new valueType()
+    })
+    return obj
+  }
+}
+
 // initial state
 const state = {
   isSearching: false,
   results: {},
-  queryPayload: {},
-  numDocsPerPage: 10,
-  facetsModel: {
-    selectedPublishers: [],
-    selectedYears: [],
-    selectedAuthors: [],
-    selectedLanguages: [],
-    selectedPublishersForLastFiltering: [],
-    selectedYearsForLastFiltering: [],
-    selectedAuthorsForLastFiltering: [],
-    selectedLanguagesForLastFiltering: [],
-    countsOfAllPublishers: {},
-    countsOfAllYears: {},
-    countsOfAllAuthors: {},
-    countsOfAllLanguages: {}
-  }
+  previousQueryString: '',
+  selectedConstraints: helper.createInitialConstraintsObject(Array),
+  previouslyAppliedConstraints: helper.createInitialConstraintsObject(Array),
+  constraintCounts: helper.createInitialConstraintsObject(Object)
 }
 
-// getters
 const getters = {
   isSearching: state => {
     return state.isSearching
   },
+  getFacetNames: state => {
+    return facetsprovider.getFacetNames()
+  },
+  getFacetTitle: state => facetName => {
+    return facetsprovider.getFacet(facetName).title
+  },
+  getSelectedConstraints: state => facetName => {
+    return state.selectedConstraints[facetName]
+  },
+  getConstraintCounts: state => facetName => {
+    return state.constraintCounts[facetName]
+  },
+  getNumDocsPerPage: state => {
+    return constants.numDocsPerPage
+  },
+  getMaxNumberOfDocsToBeShow: state => {
+    return constants.maxPagesToBeShow * constants.numDocsPerPage
+  },
   getResults: state => {
-    if (state.results.hits) {
-      return state.results.hits.hits
-    }
-    return []
-  },
-  getResultsQueryString: state => {
-    return state.queryPayload.query
-  },
-  getAggregations: state => {
-    if (state.results.aggregations) {
-      return state.results.aggregations
-    }
-    return {}
+    return state.results.hits ? state.results.hits.hits : []
   },
   getResultsAmount: state => {
-    if (state.results.hits) {
-      return state.results.hits.total
-    }
-    return 0
+    return state.results.hits ? state.results.hits.total : 0
   },
-  getFacetsModel: state => {
-    return state.facetsModel
+  getOnlyFacetsWithSelectedConstraints: state => {
+    let obj = {}
+    facetsprovider.getFacetNames().forEach(facetName => {
+      let arr = state.selectedConstraints[facetName]
+      if (arr.length > 0) {
+        obj[facetName] = arr
+      }
+    })
+    return obj
   },
-  areAnyFacetValueSelected: state => {
-    return state.facetsModel.selectedPublishers.length || state.facetsModel.selectedAuthors.length || state.facetsModel.selectedYears.length || state.facetsModel.selectedLanguages.length
+  areAnyConstraintsSelected: state => {
+    return Object.values(state.selectedConstraints).some(arr => arr.length > 0)
   },
-  areAnyFacetFilteringApplied: state => {
-    return state.facetsModel.selectedPublishersForLastFiltering.length || state.facetsModel.selectedAuthorsForLastFiltering.length || state.facetsModel.selectedYearsForLastFiltering.length || state.facetsModel.selectedLanguagesForLastFiltering.length
+  wereAnyConstraintsApplied: state => {
+    return Object.values(state.previouslyAppliedConstraints).some(arr => arr.length > 0)
   }
 }
 
-// actions
 const actions = {
   search({ commit, state }, payload) {
-    let querystring = payload.query
-    let currentPage = payload.currentPage
-    if (state.queryPayload.query !== querystring) {
-      commit('setSearchingStatus', true)
-      commit('setQueryPayload', payload)
-      commit('setResults', [])
-      var url = '/api/search?'
-      if (currentPage) {
-        url = url.concat('&from=').concat(currentPage * state.numDocsPerPage - state.numDocsPerPage)
-      }
-      url = url.concat('&size=').concat(state.numDocsPerPage)
-      axios.post(url,
-        querybuilder.buildQuery(querystring, {}))
-        .then(function (response) {
-          commit('setResults', response.data)
-          commit('initFacetsModel')
-          commit('setSearchingStatus', false)
-        })
-        .catch(function (error) {
-          console.log(error)
-          commit('setSearchingStatus', false)
-        })
-    }
-  },
-  filter({ commit, state }, facetsModel) {
     commit('setSearchingStatus', true)
-    let currentPage = state.queryPayload.currentPage
     commit('setResults', [])
-    var url = '/api/search?'
-    if (currentPage) {
-      url = url.concat('&from=').concat(currentPage * state.numDocsPerPage - state.numDocsPerPage)
+    var queryStringFromQuery = payload.queryString
+    var currentPageFromQuery = helper.sanitizePageNumber(payload.currentPage)
+    var constraintsFromQuery = helper.sanitizeConstraints(payload.selectedConstraints)
+    var query = querybuilder.buildQuery(
+      queryStringFromQuery,
+      constraintsFromQuery
+    )
+    var url = constants.apiUrlPrefix + '&size=' + constants.numDocsPerPage
+    if (currentPageFromQuery > 1) {
+      url += '&from=' + (currentPageFromQuery - 1) * constants.numDocsPerPage
     }
-    url = url.concat('&size=').concat(state.numDocsPerPage)
-    axios.post(url,
-      querybuilder.buildQuery(state.queryPayload.query, facetsModel))
-    .then(function(response) {
-      commit('setResults', response.data)
-      commit('updateFacetsModel')
-      commit('setSearchingStatus', false)
-    })
-    .catch(function(error) {
-      console.log(error)
-      commit('setSearchingStatus', false)
-    })
-  },
-  resetState({commit, state}) {
-    commit('setResults', [])
-    commit('setQueryPayload', [])
-    commit('setFacetsModel', {
-      selectedPublishers: [],
-      selectedYears: [],
-      selectedAuthors: [],
-      selectedLanguages: [],
-      selectedPublishersForLastFiltering: [],
-      selectedYearsForLastFiltering: [],
-      selectedAuthorsForLastFiltering: [],
-      selectedLanguagesForLastFiltering: [],
-      countsOfAllPublishers: {},
-      countsOfAllYears: {},
-      countsOfAllAuthors: {},
-      countsOfAllLanguages: {}
-    })
+    axios.post(url, query)
+      .then(function (response) {
+        commit('setResults', response.data)
+        commit('setConstraintsFromQuery', constraintsFromQuery)
+        commit('updateFacetsModel', queryStringFromQuery)
+        commit('setSearchingStatus', false)
+      })
+      .catch(function(error) {
+        console.log(error)
+        commit('setSearchingStatus', false)
+      })
   }
 }
 
-// mutations
 const mutations = {
-  setSearchingStatus (state, bool) {
+  setConstraintsForAFacet(state, payload) {
+    state.selectedConstraints[payload.facetName] = payload.arr || []
+  },
+  setConstraintsFromQuery(state, constraintsFromQuery) {
+    facetsprovider.getFacetNames().forEach(facetName => {
+      state.selectedConstraints[facetName] =
+        constraintsFromQuery[facetName] || []
+    })
+  },
+  setSearchingStatus(state, bool) {
     state.isSearching = bool
   },
-  setResults (state, results) {
+  setResults(state, results) {
     state.results = results
   },
-  setQueryPayload (state, payload) {
-    state.queryPayload = payload
-  },
-  setFacetsModel (state, newModel) {
-    state.facetsModel = newModel
-  },
-  initFacetsModel (state) {
-    function fromBuckets (buckets, converter = x => x) {
-      var res = {}
-      buckets.forEach(x => { res[converter(x.key)] = x.doc_count })
-      return res
+  updateFacetsModel(state, queryStringFromQuery) {
+    if (queryStringFromQuery === state.previousQueryString && getters.areAnyConstraintsSelected(state)) {
+      // Which facets have constraints added? Are the counts invalid due to any constraint removal?
+      let addedConstraints = {}
+      let previousCountsInvalid = false
+      facetsprovider.getFacetNames().forEach(facetName => {
+        let currentSelection = state.selectedConstraints[facetName]
+        let lastSelection = state.previouslyAppliedConstraints[facetName]
+        addedConstraints[facetName] = !currentSelection.every(e =>
+          lastSelection.includes(e)
+        )
+        previousCountsInvalid |= !lastSelection.every(e =>
+          currentSelection.includes(e)
+        )
+      })
+      // Update counts of facet depending of any changes
+      facetsprovider.getFacetNames().forEach(facetName => {
+        if (previousCountsInvalid) {
+          if (addedConstraints[facetName]) {
+            mutations.updateAConstraintFromResult(state, facetName, true, false)
+          } else {
+            mutations.updateAConstraintFromResult(state, facetName)
+          }
+        } else if (!addedConstraints[facetName]) {
+          mutations.updateAConstraintFromResult(state, facetName, true)
+        }
+      })
+    } else {
+      mutations.updateAllConstraintCountsFromResults(state)
     }
-    state.facetsModel = {
-      countsOfAllPublishers: fromBuckets(state.results.aggregations.Publisher.buckets),
-      countsOfAllAuthors: fromBuckets(state.results.aggregations.Creator.buckets),
-      countsOfAllYears: fromBuckets(state.results.aggregations.PublicationYear.buckets, x => new Date(x).getYear() + 1900),
-      countsOfAllLanguages: fromBuckets(state.results.aggregations.Language.buckets),
-      selectedPublishers: [],
-      selectedYears: [],
-      selectedAuthors: [],
-      selectedLanguages: [],
-      selectedPublishersForLastFiltering: [],
-      selectedYearsForLastFiltering: [],
-      selectedAuthorsForLastFiltering: [],
-      selectedLanguagesForLastFiltering: []
-    }
+    // store for next search/filtering
+    state.previousQueryString = queryStringFromQuery
+    facetsprovider.getFacetNames().forEach(facetName => {
+      state.previouslyAppliedConstraints[facetName] = state.selectedConstraints[
+        facetName
+      ].slice(0)
+    })
   },
-  updateFacetsModel (state) {
-
-    function anyFacetValuesAddedOrOmitted(lastSelection, currentSelection) {
-      return {
-        added: !currentSelection.every(e => lastSelection.includes(e)),
-        omitted: !lastSelection.every(e => currentSelection.includes(e))
+  updateAllConstraintCountsFromResults(state) {
+    facetsprovider.getFacetNames().forEach(facetName => {
+      mutations.updateAConstraintFromResult(state, facetName)
+    })
+  },
+  updateAConstraintFromResult(
+    state,
+    facetName,
+    amendConstraintsNotPresentInResults = false,
+    setAmendedConstraintsToZero = true
+  ) {
+    var updatedCounts = {}
+    if (amendConstraintsNotPresentInResults) {
+      if (setAmendedConstraintsToZero) {
+        Object.keys(state.constraintCounts[facetName]).forEach(constraint => {
+          updatedCounts[constraint] = 0
+        })
+      } else {
+        Object.values(state.constraintCounts[facetName]).forEach(
+          (constraint, count) => {
+            updatedCounts[constraint] = count
+          }
+        )
       }
     }
-
-    function updatedCounts (counts, buckets, invalidPreviousCounts, converter = x => x) {
-      let updated_counts = {}
-      if (!invalidPreviousCounts) {
-        Object.keys(counts).forEach(k => { updated_counts[k] = 0 })
-      }
-      buckets.forEach(x => { updated_counts[converter(x.key)] = x.doc_count })
-      return updated_counts
-    }
-
-    let fm = state.facetsModel
-    let publishersValues = anyFacetValuesAddedOrOmitted(fm.selectedPublishersForLastFiltering, fm.selectedPublishers)
-    let authorsValues = anyFacetValuesAddedOrOmitted(fm.selectedAuthorsForLastFiltering, fm.selectedAuthors)
-    let yearsValues = anyFacetValuesAddedOrOmitted(fm.selectedYearsForLastFiltering, fm.selectedYears)
-    let languagesValues = anyFacetValuesAddedOrOmitted(fm.selectedLanguagesForLastFiltering, fm.selectedLanguages)
-    let invalidPreviousCounts = publishersValues.omitted || authorsValues.omitted || yearsValues.omitted || languagesValues.omitted
-
-    if (publishersValues.omitted || publishersValues.added || invalidPreviousCounts) {
-      fm.countsOfAllPublishers = updatedCounts(fm.countsOfAllPublishers, state.results.aggregations.Publisher.buckets, invalidPreviousCounts)
-    }
-    if (authorsValues.omitted || authorsValues.added || invalidPreviousCounts) {
-      fm.countsOfAllAuthors = updatedCounts(fm.countsOfAllAuthors, state.results.aggregations.Creator.buckets, invalidPreviousCounts)
-    }
-    if (yearsValues.omitted || yearsValues.added || invalidPreviousCounts) {
-      fm.countsOfAllYears = updatedCounts(fm.countsOfAllYears, state.results.aggregations.PublicationYear.buckets, invalidPreviousCounts, x => new Date(x).getYear() + 1900)
-    }
-    if (languagesValues.omitted || languagesValues.added || invalidPreviousCounts) {
-      fm.countsOfAllLanguages = updatedCounts(fm.countsOfAllLanguages, state.results.aggregations.Language.buckets, invalidPreviousCounts)
-    }
-
-    // save current facets
-    fm.selectedPublishersForLastFiltering = fm.selectedPublishers.slice(0)
-    fm.selectedYearsForLastFiltering = fm.selectedYears.slice(0)
-    fm.selectedAuthorsForLastFiltering = fm.selectedAuthors.slice(0)
-    fm.selectedLanguagesForLastFiltering = fm.selectedLanguages.slice(0)
+    var converter = facetsprovider.getFacet(facetName).converter || (x => x)
+    state.results.aggregations[facetName].buckets.forEach(bucketEntry => {
+      updatedCounts[converter(bucketEntry.key)] = bucketEntry.doc_count
+    })
+    state.constraintCounts[facetName] = updatedCounts
   }
 }
 

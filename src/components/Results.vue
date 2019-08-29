@@ -15,15 +15,15 @@
  */
 <template>
 <div class="results">
-  <search-mask :query-value="$route.query.q"></search-mask>
+  <search-mask :query-value="queryString" />
   <b-container>
     <b-row>
-      <b-col v-if="anyResults">
-        <h6 class="results-annotation"><b>{{ numResults }}</b> results found for <b> {{$route.query.q}} </b></h6>
+      <b-col v-if="wereAnyResultsFound">
+        <h6 class="results-annotation"><b>{{ numResults }}</b> results found for <b> {{ queryString }} </b></h6>
       </b-col>
       <b-col v-else-if="isSearching">
         <div class="text-center">
-          <b-spinner class="m-4" variant="primary" label="Spinning"></b-spinner>
+          <b-spinner class="m-4" variant="primary" label="Spinning" />
         </div>
       </b-col>
       <b-col v-else>
@@ -32,17 +32,17 @@
         </b-alert>
       </b-col>
     </b-row>
-    <b-row v-if="anyResults || anyFacetFilteringApplied">
+    <b-row v-if="wereAnyResultsFound || wereAnyConstraintsApplied">
       <b-col cols="3">
         <search-facets/>
       </b-col>
-      <b-col v-if="anyResults" cols="9">
-        <search-result-entry id="result-list" v-for="result in results" :result="result" :key="result._id"></search-result-entry>
+      <b-col v-if="wereAnyResultsFound" cols="9">
+        <search-result-entry id="result-list" v-for="result in results" :result="result" :key="result._id" />
       </b-col>
     </b-row>
-    <b-row v-if="anyResults">
+    <b-row v-if="wereAnyResultsFound">
       <b-col>
-        <b-pagination align="center" size="md" :total-rows="numResults" v-model="currentPage" :per-page="numDocsPerPage" @change="paginationInput"/>
+        <b-pagination align="center" size="md" :total-rows="numResultsToBeShown" v-model="currentPage" :per-page="numDocsPerPage" @change="applyPagination"/>
       </b-col>
     </b-row>
   </b-container>
@@ -55,21 +55,23 @@ export default {
   name: 'results',
   data() {
     return {
-      numDocsPerPage: 10,
       loadedBookmarks: false
     }
   },
   computed: {
-    isSearching: function() {
+    queryString() {
+      return decodeURIComponent(this.$route.query.q)
+    },
+    isSearching() {
       return this.$store.getters.isSearching
     },
-    anyFacetFilteringApplied: function() {
-      return this.$store.getters.areAnyFacetFilteringApplied
+    wereAnyConstraintsApplied() {
+      return this.$store.getters.wereAnyConstraintsApplied
     },
-    anyResults: function() {
+    wereAnyResultsFound() {
       return (this.$store.getters.getResultsAmount > 0)
     },
-    isChecked: function () {
+    isChecked() {
       return this.$gerdi.aai.isChecked()
     },
     currentPage() {
@@ -78,11 +80,23 @@ export default {
       }
       return parseInt(this.$route.query.p)
     },
-    results: function() {
+    results() {
       return this.$store.getters.getResults
     },
-    numResults: function() {
+    numResults() {
       return this.$store.getters.getResultsAmount
+    },
+    numResultsToBeShown() {
+      return Math.min(this.$store.getters.getMaxNumberOfDocsToBeShow, this.numResults)
+    },
+    numDocsPerPage() {
+      return this.$store.getters.getNumDocsPerPage
+    },
+    areAnyConstraintsSelected() {
+      return this.$store.getters.areAnyConstraintsSelected
+    },
+    onlyFacetsWithSelectedConstraints() {
+      return this.$store.getters.getOnlyFacetsWithSelectedConstraints
     }
   },
   created() {
@@ -90,7 +104,7 @@ export default {
   },
   watch: {
     '$route.query': 'search',
-    isChecked: function () {
+    isChecked() {
       if (this.loadedBookmarks === true || this.$gerdi.aai.getUser() === null) return
       var self = this
       this.$store.dispatch('refreshCollections', { vm: this }).then(function () { self.loadedBookmarks = true })
@@ -98,20 +112,25 @@ export default {
   },
   methods: {
     search() {
-      let q = this.$route.query.q
-      let page = this.currentPage
       this.$store.dispatch('search', {
-        query: q,
-        currentPage: page
+        queryString: this.queryString,
+        currentPage: this.currentPage,
+        selectedConstraints: this.$route.query.s ? JSON.parse(decodeURIComponent(this.$route.query.s)) : {}
       })
     },
-    paginationInput(val) {
+    applyPagination(val) {
+      var newQuery = {
+        q: this.$route.query.q
+      }
+      if (val > 1) {
+        newQuery.p = val
+      }
+      if (this.areAnyConstraintsSelected) {
+        newQuery.s = encodeURIComponent(JSON.stringify(this.onlyFacetsWithSelectedConstraints))
+      }
       this.$router.push({
         name: 'results',
-        query: {
-          q: this.$route.query.q,
-          p: val
-        }
+        query: newQuery
       })
     }
   }

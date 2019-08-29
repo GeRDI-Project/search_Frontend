@@ -38,10 +38,10 @@
         </option>
       </optgroup>
     </b-form-select>
-    <b-spinner v-else label="Logging you in..."></b-spinner>
+    <b-spinner v-else label="Logging you in..." />
   </b-modal>
   <b-modal id="modal-center" centered ref="createCollection" title="Create a new Collection" @ok="createNewCollection" :ok-disabled="!validCollectionName">
-    <b-form-input v-model="collectionName" type="text" placeholder="Please enter a name for the new Collection"></b-form-input>
+    <b-form-input v-model="collectionName" type="text" placeholder="Please enter a name for the new Collection" />
   </b-modal>
   <b-modal id="modal-center" centered ref="logIn" title="Save Document to a Collection" @ok="memoAndSignIn()" ok-title="Log me in">
     You need to be logged in in order to save a Document to a Collection.
