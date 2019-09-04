@@ -82,7 +82,7 @@ const getters = {
     return state.results.hits ? state.results.hits.hits : []
   },
   getResultsAmount: state => {
-    return state.results.hits ? state.results.hits.total : 0
+    return state.results.hits ? state.results.hits.total.value : 0
   },
   getOnlyFacetsWithSelectedConstraints: state => {
     let obj = {}
