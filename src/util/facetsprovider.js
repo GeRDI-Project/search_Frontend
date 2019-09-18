@@ -18,8 +18,8 @@ const availableFacets = {
   publisher: {
     name: 'publisher',
     title: 'Publisher',
-    fieldName: 'publisher.raw',
-    subFieldName: 'publisher'
+    fieldName: 'publisher.value.raw',
+    subFieldName: 'publisher.value'
   },
   author: {
     name: 'author',
